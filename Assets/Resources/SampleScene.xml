@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <game>
-  <conversation id="1">
+  <conversation id="1" voice="genovese_threat">
     <character>
-      <line>Hey, is this thing working?!!</line>
-      <line>Hello...???</line>
-      <line>.........</line>
+      <line>Ehhhhh heheheheheheheheheheheheheh...</line>
     </character>
 
-    <character name="???">
-      <line>...Oh... Hi!</line>
-      <line>Thank GOD this works, holy cow.</line>
-      <line>You've absolutely no idea how tedious this is to get working. I've been here for the better part of an afternoon...</line>
-      <line>Don't get me wrong, it's pretty fun, but I have no clue how to get Rich Text to work with XML.</line>
-      <line>...yet...</line>
-      <line>At least the name and conversation system work!</line>
+    <character name="Genovese">
+      <line>My, you've been a naughty girl!</line>
+      <line>I was originally planning on letting you leave with only minor bodily harm, but...</line>
+      <line>After they way you just pissed my off by rummaging through my things,</line>
+      <line>I'd think I rather enjoy watching someone clean what's left of you out of my carpet.</line>
+      <line>...Shall we begin?</line>
     </character>
 
   </conversation>

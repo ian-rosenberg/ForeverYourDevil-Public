@@ -9,10 +9,11 @@ using UnityEngine.SceneManagement;
 /**A collection of lines to load when a conversation is triggered or an option is chosen*/
 public class Conversation
 {
-    public string Id { get; set; }                            /**Conversation name identifier. Can be blank*/
-    public List<DialogueLine> DialogueLines { get; set; }       /**A list of dialogue lines to display*/
+    public string Id { get; set; }                            /**Conversation name identifier. Cannot be blank*/
+    public AudioClip VoiceLine { get; set; }                               /**Wav file containing voice line to play with conversation.*/
+    public List<DialogueLine> DialogueLines { get; set; }     /**A list of dialogue lines to display*/
 
-public Conversation()
+    public Conversation()
     {
         Id = "";
         DialogueLines = new List<DialogueLine>();
@@ -84,7 +85,7 @@ public class ParseXML : MonoBehaviour
         }
     }
 
-    public Dictionary<string,Conversation> conversationList;
+    public Dictionary<string, Conversation> conversationList;
 
     // Start is called before the first frame update
     void Start()
@@ -98,7 +99,6 @@ public class ParseXML : MonoBehaviour
         XmlDocument xml = new XmlDocument();
         xml.LoadXml(file.text);
         Debug.Log("LoadXml");
-
 
         //Get a list of all conversations
         XmlNodeList nodelist = xml.SelectSingleNode("/game").SelectNodes("conversation"); // get all <conversation> nodes
@@ -115,6 +115,10 @@ public class ParseXML : MonoBehaviour
             if (HasAttributes(conv, "id"))
                 conversation.Id = conv.Attributes["id"].Value;
             Debug.Log(conv.Attributes["id"].Value);
+            //Set voice line (if present)
+            if (HasAttributes(conv, "voice"))
+                conversation.VoiceLine = Resources.Load<AudioClip>("Audio/" + conv.Attributes["voice"].Value);
+            Debug.Log(conv.Attributes["voice"].Value);
 
             //Get characters
             XmlNodeList characterList = conv.SelectNodes("character");
@@ -136,7 +140,7 @@ public class ParseXML : MonoBehaviour
                     DialogueLine d = new DialogueLine(
                         characterName,
                         line.InnerText//,
-                        //null //List of sprites to show
+                                      //null //List of sprites to show
                         );
                     Debug.Log("Dialog line created");
 
@@ -157,7 +161,7 @@ public class ParseXML : MonoBehaviour
             //Store local lines into conversation
             conversation.DialogueLines = dialogueList;
             //Store conversation in conversationList
-            conversationList.Add(conversation.Id,conversation);
+            conversationList.Add(conversation.Id, conversation);
 
         }//end get conversation
 

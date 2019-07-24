@@ -12,6 +12,11 @@ public class Dialogue : MonoBehaviour
     string currentId; //Conversation id to choose;
     int sentenceIndex; //Index of sentence to go to
 
+    [Header("Audio")]
+    public AudioSpectrum spectrumManager;
+    public VoiceLineSyncer voiceManager;
+    public AudioSource source;
+
     [Header("Display")]
     public TextMeshProUGUI textDisplay; //Display for text
 
@@ -29,11 +34,13 @@ public class Dialogue : MonoBehaviour
         parser = ParseXML.Instance;
         canPress = false;
         sentenceIndex = 0;
+        source = spectrumManager.source = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
+        //Advance/Skip Dialogue no KeyPress
         if (Input.anyKeyDown)
         {
             if (canPress)
@@ -58,7 +65,13 @@ public class Dialogue : MonoBehaviour
 
         //Play animation, then activate first line of text
         currentId = conversationID;
+        Debug.Log(parser.conversationList[currentId].VoiceLine.name); //Set voiceline
+
+        source.clip = parser.conversationList[currentId].VoiceLine; //Set voiceline
         sentenceIndex = 0;
+
+        //Play voice
+        source.Play();
 
         AdvanceLine();
     }
@@ -76,7 +89,7 @@ public class Dialogue : MonoBehaviour
         {
             Debug.Log("END");
             //Disable conversation box (replace with animation)
-        textDisplay.transform.parent.transform.parent.gameObject.SetActive(true);
+            textDisplay.transform.parent.transform.parent.gameObject.SetActive(false);
         }
 
         //Set name
@@ -90,6 +103,7 @@ public class Dialogue : MonoBehaviour
         textDisplay.text = ""; //Reset Text to blank
 
         //Display line to read from conversationlist
+
         StartCoroutine(TypeText(dialog[sentenceIndex].Content));
         sentenceIndex++;
     }
@@ -100,26 +114,38 @@ public class Dialogue : MonoBehaviour
      */
     IEnumerator TypeText(string s)
     {
+        Debug.Log("Running coroutine.");
+        
+        char[] chars = s.ToCharArray();
 
-        foreach (char c in s.ToCharArray())
+        //Increment through all characters in string
+        for (int i = 0; i < chars.Length; i++)
         {
-            textDisplay.text += c;
-
             if (skip)
             {
+                //Add all text and stop loop
                 textDisplay.text = s;
                 break;
                 //yield return new WaitForSeconds(0.00f);
             }
+            else if (voiceManager.canAddChar) //Set by VoiceLineSyncer
+            {
+                textDisplay.text += chars[i];
+                yield return new WaitForSeconds(textDelay);
+
+                //    //Add delay for certain punctuation
+                //    if (new Regex(@"^[,.;:]*$").IsMatch(c.ToString()))
+                //        yield return new WaitForSeconds(textDelay + 0.5f);
+                //    else if (new Regex(@"^[?!]*$").IsMatch(c.ToString()))
+                //        yield return new WaitForSeconds(textDelay + 0.2f);
+                //    else
+                //        yield return new WaitForSeconds(textDelay);
+                //}
+            }
             else
             {
-                //Add delay for certain punctuation
-                if (new Regex(@"^[,.;:]*$").IsMatch(c.ToString()))
-                    yield return new WaitForSeconds(textDelay + 0.5f);
-                else if (new Regex(@"^[?!]*$").IsMatch(c.ToString()))
-                    yield return new WaitForSeconds(textDelay + 0.2f);
-                else
-                    yield return new WaitForSeconds(textDelay);
+                i--;
+                yield return new WaitForFixedUpdate();
             }
         }
         skip = false;
