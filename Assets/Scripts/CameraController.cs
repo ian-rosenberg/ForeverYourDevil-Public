@@ -35,7 +35,7 @@ public class CameraController : MonoBehaviour
             StartCoroutine(ResetCamera());
         }
 
-        if (Input.GetMouseButton(1)) //If hold right click
+        if (Input.GetMouseButton(1) && !isCameraReseting) //If hold right click
         {
             transform.RotateAround(player.transform.position, Vector3.up, Input.GetAxis("Mouse X") * rotateSpeed);
         }
