@@ -117,9 +117,10 @@ public class ParseXML : MonoBehaviour
             Debug.Log(conv.Attributes["id"].Value);
             //Set voice line (if present)
             if (HasAttributes(conv, "voice"))
+            {
                 conversation.VoiceLine = Resources.Load<AudioClip>("Audio/" + conv.Attributes["voice"].Value);
-            Debug.Log(conv.Attributes["voice"].Value);
-
+                Debug.Log(conv.Attributes["voice"].Value);
+            }
             //Get characters
             XmlNodeList characterList = conv.SelectNodes("character");
             Debug.Log("characters: " + characterList.Count);

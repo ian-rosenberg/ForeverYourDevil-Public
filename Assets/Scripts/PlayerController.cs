@@ -13,6 +13,8 @@ using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour
 {
+    gameManager gameManager;
+
     public Animator anim;
 
     [Tooltip("Specify what layer(s) to use in raycast")]
@@ -28,6 +30,7 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        gameManager = gameManager.Instance;
         //rb = GetComponent<Rigidbody>();
     }
 
@@ -41,43 +44,55 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Set if anim is in run or idle
-        anim.SetFloat("Speed", agent.velocity.magnitude);
-
-        //Click to move (w/pathfinding)
-        if (Input.GetMouseButtonDown(0)) //If left click (not hold)
+        //Traveling Movement
+        if (gameManager.gameState == gameManager.STATE.TRAVELING)
         {
-            //Determine if walkable
-            Ray ray = cam.ScreenPointToRay(Input.mousePosition); //create ray obj from camera to click point
-            RaycastHit hit;
+            //Set if anim is in run or idle
+            anim.SetFloat("Speed", agent.velocity.magnitude);
 
-            //If ray hit walkable area
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask)) //cast ray. if hit land, move
+            //Click to move (w/pathfinding)
+            if (Input.GetMouseButtonDown(0)) //If left click (not hold)
             {
-                //Check hit layer
-                if (hit.transform.gameObject.layer == 9) //If click ground
+                //Determine if walkable
+                Ray ray = cam.ScreenPointToRay(Input.mousePosition); //create ray obj from camera to click point
+                RaycastHit hit;
+
+                //If ray hit walkable area
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask)) //cast ray. if hit land, move
                 {
-                    //Set indicator where clicked
-                    clickIndicator.SetActive(true);
-                    clickIndicator.transform.position = hit.point + new Vector3(0, 0.5f, 0);
+                    //Check hit layer
+                    if (hit.transform.gameObject.layer == 9) //If click ground
+                    {
+                        //Set indicator where clicked
+                        clickIndicator.SetActive(true);
+                        clickIndicator.transform.position = hit.point + new Vector3(0, 2f, 0);
 
-                    //Move player/agent to hit point
-                    agent.SetDestination(hit.point);
+                        //Move player/agent to hit point
+                        agent.SetDestination(hit.point);
+                    }
                 }
-            }
 
-        }
-        if (!clickIndicator.activeSelf)
-        {
+            }
             float vertical = Input.GetAxis("Vertical");
             float horizontal = Input.GetAxis("Horizontal");
-            agent.velocity = new Vector3(horizontal, 0, vertical) * agent.speed;
+            if (Mathf.Abs(vertical) > 0 || Mathf.Abs(horizontal) > 0)
+            {
+                agent.ResetPath();
+                agent.velocity = new Vector3(horizontal, 0, vertical) * agent.speed;
+                clickIndicator.SetActive(false);
+            }
+        }
+
+        else if (gameManager.gameState == gameManager.STATE.TALKING)
+        {
+            agent.ResetPath(); //Resets directions to agent to stop it
         }
     }
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("ClickIndicator"))
         {
+            agent.ResetPath(); //Stop agent if it hits indicator
             clickIndicator.SetActive(false);
         }
     }

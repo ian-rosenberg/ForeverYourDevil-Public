@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<game>
+  <conversation id="1">
+    <character name="Tan Pill">
+      <line>Why, hello there!</line>
+      <line>Wonderful weather we're having, eh?</line>
+    </character>
+    <character name="Blue Pill">
+      <line>Uh, I'm sorry. Who are you?</line>
+    </character>
+    <character name="Tan Pill">
+      <line>Who am I?</line>
+      <line>WHO AM I???!!!!!</line>
+      <line>...</line>
+      <line>I DON'T KNOW!!!!</line>
+    </character>
+    <character name="Blue Pill">
+      <line>...</line>
+      <line>Are you high?</line>
+    </character>
+    <character name="Tan Pill">
+      <line>Yep. Took too many pills.</line>
+    </character>
+    <character>
+    <line>A rimshot is heard echoing in the distance...</line>
+    </character>
+  </conversation>
+</game>
