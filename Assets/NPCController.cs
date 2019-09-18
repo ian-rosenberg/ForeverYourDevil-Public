@@ -30,7 +30,8 @@ public class NPCController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player") ) {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
+        {
             canTalk = true;
             talkIndicator.SetActive(true);
         }
@@ -38,7 +39,7 @@ public class NPCController : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             canTalk = false;
             talkIndicator.SetActive(false);

@@ -22,14 +22,14 @@ public class FollowObject : MonoBehaviour
     [Tooltip("Does this follow obj's z position?")]
     public bool z_pos;
 
-    Vector3 offset;
+    public Vector3 offset;
 
     Vector3 new_pos; /**New position for this obj*/
 
     // Start is called before the first frame update
     void Start()
     {
-        offset = transform.position;
+        //offset = transform.position;
 
 
         //Warning if none selected
