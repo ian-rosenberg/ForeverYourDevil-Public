@@ -25,7 +25,7 @@ public class Dialogue : MonoBehaviour
     string currentId; //Conversation id to choose;
     int sentenceIndex; //Index of sentence to go to
 
-    [Header("Audio")]
+   [Header("Audio")]
     //public AudioSpectrum spectrumManager;
     //public VoiceLineSyncer voiceManager;
     public AudioSource source;
@@ -37,6 +37,8 @@ public class Dialogue : MonoBehaviour
     public TextMeshProUGUI textDisplay; //Display for text
     public Image nameBoxFrame; //Background frame of textbox
     public Image textBoxFrame; //Background frame of textbox
+    public Image LeftmostChar; //Leftmost Character
+    public Image RightmostChar; //Rightmost Char
     public Animator canvasAnim; //Animator object to turn on exit animation
 
     public float textDelay = 0.001f;
@@ -116,7 +118,16 @@ public class Dialogue : MonoBehaviour
         Canvas.SetActive(true);
         textDisplay.transform.parent.transform.parent.gameObject.SetActive(true);
 
+        //Get conversation
         currentId = convID;
+
+        Debug.Log("Sprites: " + parser.conversationList[currentId].DialogueLines[0].Sprites[0].name + ", "
+            + parser.conversationList[currentId].DialogueLines[0].Sprites[1].name);
+
+        //Get sprites
+       LeftmostChar.sprite = parser.conversationList[currentId].DialogueLines[0].Sprites[0];
+       RightmostChar.sprite = parser.conversationList[currentId].DialogueLines[0].Sprites[1];
+
         // Debug.Log(parser.conversationList[currentId].VoiceLine.name); //Set voiceline
 
         //Wait for animation to end before starting line and voice
@@ -149,6 +160,8 @@ public class Dialogue : MonoBehaviour
      */
     public void AdvanceLine()
     {
+        Debug.Log("SentenceIndex: " + sentenceIndex);
+
         canPress = false;
         AdvanceSprite.SetActive(false);
 
@@ -165,6 +178,12 @@ public class Dialogue : MonoBehaviour
         }
         else //If there are more lines
         {
+            Debug.Log("Sprites: " + dialog[sentenceIndex].Sprites[0].name + ", " + dialog[sentenceIndex].Sprites[1].name);
+
+            //Set sprites
+            LeftmostChar.sprite = dialog[sentenceIndex].Sprites[0];
+            RightmostChar.sprite = dialog[sentenceIndex].Sprites[1];
+
             //Set name
             if (!dialog[sentenceIndex].Name.Equals(""))
             {

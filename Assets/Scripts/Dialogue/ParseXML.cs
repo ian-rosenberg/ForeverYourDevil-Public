@@ -5,12 +5,13 @@ using System.IO;
 using System.Xml;
 using UnityEngine.SceneManagement;
 
-
-/**A collection of lines to load when a conversation is triggered or an option is chosen*/
+/**
+ * @brief A collection of lines to load when a conversation is triggered or an option is chosen
+ */
 public class Conversation
 {
     public string Id { get; set; }                            /**Conversation name identifier. Cannot be blank*/
-    public AudioClip VoiceLine { get; set; }                               /**Wav file containing voice line to play with conversation.*/
+    public AudioClip VoiceLine { get; set; }                  /**Optional Wav file containing voice line to play with conversation.*/
     public List<DialogueLine> DialogueLines { get; set; }     /**A list of dialogue lines to display*/
 
     public Conversation()
@@ -36,21 +37,22 @@ public class Conversation
 
 }
 
-/**A dialogue object containing the line and sprites to display and their information*/
+/**
+ * @brief A dialogue object containing the line and sprites to display and their information
+ */
 public class DialogueLine
 {
     public string Name { get; set; }              /**Name of Character saying the dialogue
-                                           /**If null, there will be no name displayed*/
+                                                  /**If null, there will be no name displayed*/
 
     public string Content { get; set; }           /**Dialogue text displayed in the DialogueBox*/
-
-    Dictionary<Sprite, Vector2> Sprites;   /**Sprites to show/hide on screen*/
-    Dictionary<string, string> Options;    /**Options labels and the conversation id they go to when selected*/
+    public List<Sprite> Sprites;          /**Sprites to show/hide on screen*/
+    public Dictionary<string, string> Options;           /**Options labels and the conversation id they go to when selected*/
 
     /**
-     * Create a DialogueLine without any options
+     * Create a DialogueLine without any options or sprites
      */
-    public DialogueLine(string name, string content/*, Dictionary<Sprite, Vector2> sprites*/)
+    public DialogueLine(string name, string content)
     {
         Name = name;
         Content = content;
@@ -58,9 +60,19 @@ public class DialogueLine
     }
 
     /**
-     * Create a DialogueLine without options
+     * Create a DialogueLine without any options but with sprites
      */
-    public DialogueLine(string name, string content,/* Dictionary<Sprite, Vector2> sprites,*/ Dictionary<string, string> options)
+    public DialogueLine(string name, string content, List<Sprite> sprites)
+    {
+        Name = name;
+        Content = content;
+        Sprites = sprites;
+    }
+
+    /**
+     * Create a DialogueLine with options but no sprites
+     */
+    public DialogueLine(string name, string content, Dictionary<string, string> options)
     {
         Name = name;
         Content = content;
@@ -68,11 +80,21 @@ public class DialogueLine
         Options = options;
     }
 
+    /**
+     * Create a DialogueLine with options and sprites
+     */
+    public DialogueLine(string name, string content, List<Sprite> sprites, Dictionary<string, string> options)
+    {
+        Name = name;
+        Content = content;
+        Sprites = sprites;
+        Options = options;
+    }
+
 }
 
 public class ParseXML : MonoBehaviour
 {
-
     private static ParseXML instance;
 
     public static ParseXML Instance
@@ -85,10 +107,10 @@ public class ParseXML : MonoBehaviour
         }
     }
 
-    public Dictionary<string, Conversation> conversationList;
+    public Dictionary<string, Conversation> conversationList;   /**A list of conversations to store parsed info*/
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         Debug.Log("Started");
         //Initialize Conversation List
@@ -103,7 +125,6 @@ public class ParseXML : MonoBehaviour
         //Get a list of all conversations
         XmlNodeList nodelist = xml.SelectSingleNode("/game").SelectNodes("conversation"); // get all <conversation> nodes
         Debug.Log("/conversations: " + nodelist.Count);
-
         foreach (XmlNode conv in nodelist) // for each <conversation> node
         {
             //Create conversation Obj
@@ -113,8 +134,10 @@ public class ParseXML : MonoBehaviour
 
             //Set conversationID
             if (HasAttributes(conv, "id"))
+            {
                 conversation.Id = conv.Attributes["id"].Value;
-            Debug.Log(conv.Attributes["id"].Value);
+                Debug.Log(conv.Attributes["id"].Value);
+            }
             //Set voice line (if present)
             if (HasAttributes(conv, "voice"))
             {
@@ -126,6 +149,8 @@ public class ParseXML : MonoBehaviour
             Debug.Log("characters: " + characterList.Count);
             foreach (XmlNode character in characterList)
             {
+                List<Sprite> spriteList = new List<Sprite>();
+
                 //Store Character Name
                 string characterName = "";
                 if (HasAttributes(character, "name"))
@@ -135,26 +160,63 @@ public class ParseXML : MonoBehaviour
                 //Get their lines
                 XmlNodeList lineList = character.SelectNodes("line");
                 Debug.Log("Dialog line nodes created: " + lineList.Count);
-
                 foreach (XmlNode line in lineList)
                 {
+                    //Debug.Log("sprite1 = " + HasAttributes(line, "sprite1"));
+
+                    //If sprite attribute is not specified, use the sprites from the previous line.
+                    if (HasAttributes(line, "sprite1") || HasAttributes(line, "sprite2") || HasAttributes(line, "sprite3") || HasAttributes(line, "sprite4"))
+                    {
+                        spriteList.Clear();
+                        //Use sprites specified
+                        {
+                            //Get sprites from line (if they exist)
+                            if (HasAttributes(line, "sprite1"))
+                            {
+                                Sprite sprite = Resources.Load<Sprite>("Sprites/" + line.Attributes["sprite1"].Value);
+                                spriteList.Add(sprite);
+                            }
+                            //Get sprites from line (if they exist)
+                            if (HasAttributes(line, "sprite2"))
+                            {
+                                Sprite sprite = Resources.Load<Sprite>("Sprites/" + line.Attributes["sprite2"].Value);
+                                spriteList.Add(sprite);
+                            }
+                            //Get sprites from line (if they exist)
+                            if (HasAttributes(line, "sprite3"))
+                            {
+                                Sprite sprite = Resources.Load<Sprite>("Sprites/" + line.Attributes["sprite3"].Value);
+                                spriteList.Add(sprite);
+                            }
+                            //Get sprites from line (if they exist)
+                            if (HasAttributes(line, "sprite4"))
+                            {
+                                Sprite sprite = Resources.Load<Sprite>("Sprites/" + line.Attributes["sprite4"].Value);
+                                spriteList.Add(sprite);
+                            }
+                        }
+                    }
+                    ////Print sprites read
+                    //string debug = "";
+                    //for (int i = 0; i < spriteList.Count; i++)
+                    //    debug += spriteList[i].name + ", ";
+                    //Debug.Log("Spritelist: " + debug);
+                    
+                    //Create a new dialogue line
                     DialogueLine d = new DialogueLine(
                         characterName,
-                        line.InnerText//,
-                                      //null //List of sprites to show
+                        line.InnerText,
+                        spriteList     //List of sprites to show
                         );
                     Debug.Log("Dialog line created");
-
 
                     //Add line to dialogue list
                     Debug.Log(d.Name);
                     Debug.Log(d.Content);
+                    
                     dialogueList.Add(d);
 
                     Debug.Log("Dialog line stored");
-
-                    //sentences.Add(line.InnerText);
-                    //Debug.Log(sentences[sentences.Count - 1]);
 
                 }//end get lines
 

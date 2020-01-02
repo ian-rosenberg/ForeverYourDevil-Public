@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <game>
+  <!--Tan Pill Meets Blue Pill-->
   <conversation id="1">
     <character name="Tan Pill">
       <line>Why, hello there!</line>
@@ -22,7 +23,20 @@
       <line>Yep. Took too many pills.</line>
     </character>
     <character>
-    <line>A rimshot is heard echoing in the distance...</line>
+      <line>A rimshot is heard echoing in the distance...</line>
+    </character>
+  </conversation>
+
+  <!--Testing sprites-->
+  <conversation id="2">
+    <character name="Chibi">
+      <line sprite1="01" sprite2="mermaid">Image testing!!!!!!!</line>
+    </character>
+    <character name="Adult">
+      <line sprite1="01" sprite2="mermaid">IMAGE TESTINGGGG!!!!!</line>
+    </character>
+    <character name="Both">
+      <line sprite2="01" sprite1="mermaid">WEEEEEEEEEEEEEEEEEEEEEEEEEEE!!!!!</line>
     </character>
   </conversation>
 </game>
