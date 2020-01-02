@@ -1,4 +1,4 @@
-﻿//using System.Collections;
+﻿using System.Collections;
 //using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -22,9 +22,11 @@ public class PlayerController : MonoBehaviour
 
     public Camera cam; /**Main camera to raycast to floor to determine if hit is possible*/
     NavMeshAgent agent; /**Player Agent Component for pathfinding movement*/
+    public float normalSpeed, sprintSpeed;
     //public Rigidbody rb;
 
-    public GameObject clickIndicator;
+    public GameObject clickIndicator; //Has 2 particle effects, one for normal and one for turning off.
+    public Animator clickIndicAnim;
 
     // Awake is called before start
     void Awake()
@@ -47,9 +49,6 @@ public class PlayerController : MonoBehaviour
         //Traveling Movement
         if (gameManager.gameState == gameManager.STATE.TRAVELING)
         {
-            //Set if anim is in run or idle (set by number in blend tree)
-            anim.SetFloat("Speed", agent.velocity.magnitude / agent.speed);
-
             //Click to move (w/pathfinding)
             if (Input.GetMouseButtonDown(0)) //If left click (not hold)
             {
@@ -65,6 +64,7 @@ public class PlayerController : MonoBehaviour
                     {
                         //Set indicator where clicked
                         clickIndicator.SetActive(true);
+                        clickIndicAnim.SetTrigger("On");
                         clickIndicator.transform.position = hit.point + new Vector3(0, 2f, 0);
 
                         //Move player/agent to hit point
@@ -73,6 +73,22 @@ public class PlayerController : MonoBehaviour
                 }
 
             }
+
+            //Right click to sprint
+            if (Input.GetMouseButton(1))
+            {
+                agent.speed = sprintSpeed;
+                //Set if anim is in run or idle (set by number in blend tree)
+                anim.SetFloat("Speed", agent.velocity.magnitude / agent.speed);
+            }
+            else
+            {
+                agent.speed = normalSpeed;
+                //Set if anim is in run or idle (set by number in blend tree)
+                anim.SetFloat("Speed", (agent.velocity.magnitude / agent.speed) * .5f);
+            }
+
+            //Keyboard movement
             float vertical = Input.GetAxis("Vertical");
             float horizontal = Input.GetAxis("Horizontal");
             if (Mathf.Abs(vertical) > 0 || Mathf.Abs(horizontal) > 0)
@@ -93,7 +109,16 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.CompareTag("ClickIndicator"))
         {
             agent.ResetPath(); //Stop agent if it hits indicator
-            clickIndicator.SetActive(false);
+            StartCoroutine(ClickOff());
         }
+    }
+
+    //Turn Click Indicator off (called by anim event)
+    IEnumerator ClickOff()
+    {
+        clickIndicAnim.SetTrigger("Off");
+        yield return new WaitForSeconds(0.25f);
+        clickIndicator.SetActive(false);
+
     }
 }
