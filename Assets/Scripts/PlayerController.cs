@@ -47,8 +47,8 @@ public class PlayerController : MonoBehaviour
         //Traveling Movement
         if (gameManager.gameState == gameManager.STATE.TRAVELING)
         {
-            //Set if anim is in run or idle
-            anim.SetFloat("Speed", agent.velocity.magnitude);
+            //Set if anim is in run or idle (set by number in blend tree)
+            anim.SetFloat("Speed", agent.velocity.magnitude / agent.speed);
 
             //Click to move (w/pathfinding)
             if (Input.GetMouseButtonDown(0)) //If left click (not hold)

@@ -412,8 +412,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8215923946756862468}
   m_LocalRotation: {x: -0, y: -0, z: -0.0000000074505797, w: 1}
-  m_LocalPosition: {x: 0.15, y: -0.05, z: 0.13}
-  m_LocalScale: {x: 0.91519994, y: 0.91520005, z: 0.9152}
+  m_LocalPosition: {x: 0.183, y: -0.13, z: 0.13}
+  m_LocalScale: {x: 0.7567655, y: 0.7567656, z: 0.75676554}
   m_Children: []
   m_Father: {fileID: 8215923945884509043}
   m_RootOrder: 1
@@ -736,8 +736,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8215923947207440927}
   m_LocalRotation: {x: -0, y: -0.000000007450581, z: -0, w: 1}
-  m_LocalPosition: {x: -0.22, y: -0.05, z: 0.05}
-  m_LocalScale: {x: 0.9151999, y: 0.9151999, z: 0.9151998}
+  m_LocalPosition: {x: -0.199, y: -0.116, z: 0.05}
+  m_LocalScale: {x: 0.7567655, y: 0.7567655, z: 0.7567654}
   m_Children: []
   m_Father: {fileID: 8215923946588554143}
   m_RootOrder: 1
@@ -885,7 +885,7 @@ GameObject:
   - component: {fileID: 8215923947439261811}
   - component: {fileID: 8215923947439261804}
   m_Layer: 0
-  m_Name: Face
+  m_Name: Penny's Face
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
