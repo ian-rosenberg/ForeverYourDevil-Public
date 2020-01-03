@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-
+    //Camera controls
     public FollowObject followScript;
+    public Transform FollowY, FollowX;
     GameObject player;
 
     public float rotateSpeed;
     public float cameraResetSpd;
 
-    Vector3 orig_pos;
-    Quaternion orig_rot;
+    Quaternion orig_rot_x, orig_rot_y;
+    float mouseX, mouseY;
 
     bool isCameraReseting;
 
@@ -30,6 +31,7 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //TRAVELING CAMERA
         if (Input.GetButtonDown("Camera Reset") && !isCameraReseting)
         {
             StartCoroutine(ResetCamera());
@@ -37,8 +39,19 @@ public class CameraController : MonoBehaviour
 
         if (Input.GetMouseButton(1) && !isCameraReseting) //If hold right click
         {
-            transform.RotateAround(player.transform.position, Vector3.up, Input.GetAxis("Mouse X") * rotateSpeed);
+            mouseX += Input.GetAxis("Mouse X") * rotateSpeed;
+            mouseY += Input.GetAxis("Mouse Y") * rotateSpeed;
+
+            mouseY = Mathf.Clamp(mouseY, -30, 45);
+
+            FollowX.rotation = Quaternion.Euler(0f, mouseX, 0f);
+            FollowY.localRotation = Quaternion.Euler(-mouseY, 0f, 0f);
+
+            //transform.RotateAround(player.transform.position, Vector3.up, mouseX);
+            // FollowY.RotateAround(player.transform.position, transform.right, mouseY);
         }
+
+
     }
 
     /**
@@ -46,8 +59,11 @@ public class CameraController : MonoBehaviour
      */
     void InitializeCamera()
     {
-        orig_pos = transform.localPosition; // Set default pos to current pos
-        orig_rot = transform.localRotation; // Set default rot to current rot
+        orig_rot_x = FollowX.rotation; // Set default pos to current pos
+        mouseX = -45;
+        orig_rot_y = FollowY.localRotation; // Set default rot to current rot
+        mouseY = orig_rot_y.x;
+        Debug.Log ("mouse X start: " + mouseX);
         isCameraReseting = false;
     }
 
@@ -56,11 +72,18 @@ public class CameraController : MonoBehaviour
      */
     public IEnumerator ResetCamera()
     {
+        float limit = 0;
         isCameraReseting = true;
-        while (transform.localPosition != orig_pos && transform.localRotation != orig_rot)
+        while (true)
         {
-            transform.localPosition = Vector3.Lerp(transform.localPosition, orig_pos, cameraResetSpd);
-            transform.localRotation = Quaternion.Lerp(transform.localRotation, orig_rot, cameraResetSpd);
+            limit += Time.deltaTime;
+            FollowX.localRotation = Quaternion.Lerp(FollowX.rotation, orig_rot_x, cameraResetSpd);
+            mouseX = Mathf.Lerp(mouseX, -45, cameraResetSpd);
+            FollowY.localRotation = Quaternion.Lerp(FollowY.localRotation, orig_rot_y, cameraResetSpd);
+            mouseY = Mathf.Lerp(mouseY, orig_rot_y.x, cameraResetSpd);
+
+            if (limit >= .3f)
+                break;
             yield return null; //advance frame
         }
         isCameraReseting = false;

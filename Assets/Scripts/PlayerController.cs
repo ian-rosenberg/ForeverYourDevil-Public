@@ -75,7 +75,7 @@ public class PlayerController : MonoBehaviour
             }
 
             //Right click to sprint
-            if (Input.GetMouseButton(1))
+            if (Input.GetButton("Sprint"))
             {
                 agent.speed = sprintSpeed;
                 //Set if anim is in run or idle (set by number in blend tree)
