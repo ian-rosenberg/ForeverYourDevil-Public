@@ -672,7 +672,7 @@ MonoBehaviour:
     m_Bits: 768
   cam: {fileID: 518323077}
   normalSpeed: 11.91
-  sprintSpeed: 20.6
+  sprintSpeed: 21.97
   clickIndicator: {fileID: 280213417}
   clickIndicAnim: {fileID: 280213422}
 --- !u!195 &420275645
