@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using UnityEngine;
 using System.IO;
 using System.Xml;
@@ -47,7 +48,7 @@ public class DialogueLine
 
     public string Content { get; set; }           /**Dialogue text displayed in the DialogueBox*/
     public List<Sprite> Sprites;          /**Sprites to show/hide on screen*/
-    public Dictionary<string, string> Options;           /**Options labels and the conversation id they go to when selected*/
+    public OrderedDictionary Options;           /**Options labels and the conversation id they go to when selected*/
 
     /**
      * Create a DialogueLine without any options or sprites
@@ -72,7 +73,7 @@ public class DialogueLine
     /**
      * Create a DialogueLine with options but no sprites
      */
-    public DialogueLine(string name, string content, Dictionary<string, string> options)
+    public DialogueLine(string name, string content, OrderedDictionary options)
     {
         Name = name;
         Content = content;
@@ -83,7 +84,7 @@ public class DialogueLine
     /**
      * Create a DialogueLine with options and sprites
      */
-    public DialogueLine(string name, string content, List<Sprite> sprites, Dictionary<string, string> options)
+    public DialogueLine(string name, string content, List<Sprite> sprites, OrderedDictionary options)
     {
         Name = name;
         Content = content;
@@ -149,7 +150,11 @@ public class ParseXML : MonoBehaviour
             Debug.Log("characters: " + characterList.Count);
             foreach (XmlNode character in characterList)
             {
+                //Create New SpriteList
                 List<Sprite> spriteList = new List<Sprite>();
+
+                //Store text from before in case options are specified
+                string previousLine = "";
 
                 //Store Character Name
                 string characterName = "";
@@ -157,78 +162,65 @@ public class ParseXML : MonoBehaviour
                     characterName = character.Attributes["name"].Value;
                 //Debug.Log(character.Attributes["name"].Value);
 
-                //Get their lines
-                XmlNodeList lineList = character.SelectNodes("line");
+                //Get their lines (could be options or lines)
+                XmlNodeList lineList = character.ChildNodes;
                 Debug.Log("Dialog line nodes created: " + lineList.Count);
                 foreach (XmlNode line in lineList)
                 {
-                    //Debug.Log("sprite1 = " + HasAttributes(line, "sprite1"));
-
-                    //If sprite attribute is not specified, use the sprites from the previous line.
-                    if (HasAttributes(line, "sprite1") || HasAttributes(line, "sprite2") || HasAttributes(line, "sprite3") || HasAttributes(line, "sprite4"))
+                    //Parse dialogue lines
+                    if (line.Name == "line")
                     {
-                        spriteList.Clear();
-                        //Use sprites specified
-                        {
-                            //Get sprites from line (if they exist)
-                            if (HasAttributes(line, "sprite1"))
-                            {
-                                Sprite sprite = Resources.Load<Sprite>("Sprites/" + line.Attributes["sprite1"].Value);
-                                spriteList.Add(sprite);
-                            }
-                            //Get sprites from line (if they exist)
-                            if (HasAttributes(line, "sprite2"))
-                            {
-                                Sprite sprite = Resources.Load<Sprite>("Sprites/" + line.Attributes["sprite2"].Value);
-                                spriteList.Add(sprite);
-                            }
-                            //Get sprites from line (if they exist)
-                            if (HasAttributes(line, "sprite3"))
-                            {
-                                Sprite sprite = Resources.Load<Sprite>("Sprites/" + line.Attributes["sprite3"].Value);
-                                spriteList.Add(sprite);
-                            }
-                            //Get sprites from line (if they exist)
-                            if (HasAttributes(line, "sprite4"))
-                            {
-                                Sprite sprite = Resources.Load<Sprite>("Sprites/" + line.Attributes["sprite4"].Value);
-                                spriteList.Add(sprite);
-                            }
-                        }
+                        previousLine = line.InnerText;
+
+                        //Get sprites from line
+                        GetSprites(spriteList, line);
+
+                        //Create a new dialogue line
+                        DialogueLine d = new DialogueLine(characterName, line.InnerText, spriteList);
+                        Debug.Log("Dialog line created");
+
+                        //Add line to dialogue list
+                        dialogueList.Add(d);
+                        Debug.Log("Dialog line stored");
                     }
-                    ////Print sprites read
-                    //string debug = "";
-                    //for (int i = 0; i < spriteList.Count; i++)
-                    //    debug += spriteList[i].name + ", ";
-                    //Debug.Log("Spritelist: " + debug);
-                    
-                    //Create a new dialogue line
-                    DialogueLine d = new DialogueLine(
-                        characterName,
-                        line.InnerText,
-                        spriteList     //List of sprites to show
-                        );
-                    Debug.Log("Dialog line created");
 
-                    //Add line to dialogue list
-                    Debug.Log(d.Name);
-                    Debug.Log(d.Content);
-                    
-                    dialogueList.Add(d);
+                    ////Parse options and choices
+                    //else if (line.Name == "options")
+                    //{
+                    //    //Create New Options List
+                    //    OrderedDictionary optionList = new OrderedDictionary();
 
-                    Debug.Log("Dialog line stored");
+                    //    //Get all choices within option tag
+                    //    XmlNodeList options = character.ChildNodes;
+                    //    Debug.Log("Dialog line nodes created: " + lineList.Count);
+                    //    foreach (XmlNode line in lineList) { }
 
-                }//end get lines
+                    //    //Parse options into list
+                    //    if (HasAttributes(line, "id"))
+                    //    {
+                    //        optionList.Add(line.InnerText, line.Attributes["id"].Value);
+                    //    }
 
-            }//end get characters
+                    //    //Create a new dialogue line
+                    //    DialogueLine d = new DialogueLine(characterName, line.InnerText, spriteList);
+                    //    Debug.Log("Dialog line created");
+
+                    //    //Add line to dialogue list
+                    //    dialogueList.Add(d);
+                    //    Debug.Log("Dialog line stored");
+                    //}
+
+                } //end get lines
+            } //end get characters
+
             //Store local lines into conversation
             conversation.DialogueLines = dialogueList;
             //Store conversation in conversationList
             conversationList.Add(conversation.Id, conversation);
 
-        }//end get conversation
+        } //end get conversation
 
-    }//end ParseXML
+    } //end ParseXML
 
     /**
      * @brief Check if there are attributes within the XMLNode given
@@ -236,7 +228,6 @@ public class ParseXML : MonoBehaviour
      * @param attribute optional specific attribute to search for 
      * @return true if attributes present and optional attribute is found, else false
      */
-
     bool HasAttributes(XmlNode node, string attribute = "")
     {
         //Check if any attributes at all
@@ -254,6 +245,47 @@ public class ParseXML : MonoBehaviour
             return true;
         }
         else return false;
+    }
+
+    /**
+     * @brief Get all sprite attributes in spriteList and add them to the spriteList given.
+     * @param spriteList The list of sprites. If no sprites are specified, the last sprites given are used.
+     * @param line The line from the XML script to get sprites from.
+     */
+    void GetSprites(List<Sprite> spriteList, XmlNode line)
+    {
+        //If sprite attribute is not specified, use the sprites from the previous line.
+        if (HasAttributes(line, "sprite1") || HasAttributes(line, "sprite2") || HasAttributes(line, "sprite3") || HasAttributes(line, "sprite4"))
+        {
+            spriteList.Clear();
+            //Use sprites specified
+            {
+                //Get sprites from line (if they exist)
+                if (HasAttributes(line, "sprite1"))
+                {
+                    Sprite sprite = Resources.Load<Sprite>("Sprites/" + line.Attributes["sprite1"].Value);
+                    spriteList.Add(sprite);
+                }
+                //Get sprites from line (if they exist)
+                if (HasAttributes(line, "sprite2"))
+                {
+                    Sprite sprite = Resources.Load<Sprite>("Sprites/" + line.Attributes["sprite2"].Value);
+                    spriteList.Add(sprite);
+                }
+                //Get sprites from line (if they exist)
+                if (HasAttributes(line, "sprite3"))
+                {
+                    Sprite sprite = Resources.Load<Sprite>("Sprites/" + line.Attributes["sprite3"].Value);
+                    spriteList.Add(sprite);
+                }
+                //Get sprites from line (if they exist)
+                if (HasAttributes(line, "sprite4"))
+                {
+                    Sprite sprite = Resources.Load<Sprite>("Sprites/" + line.Attributes["sprite4"].Value);
+                    spriteList.Add(sprite);
+                }
+            }
+        }
     }
 
 }

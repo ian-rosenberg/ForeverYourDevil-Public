@@ -118,7 +118,7 @@ public class PlayerController : MonoBehaviour
     {
         clickIndicAnim.SetTrigger("Off");
         yield return new WaitForSeconds(0.25f);
-        clickIndicator.SetActive(false);
+        //clickIndicator.SetActive(false);
 
     }
 }

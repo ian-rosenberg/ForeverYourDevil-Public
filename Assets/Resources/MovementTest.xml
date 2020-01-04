@@ -33,7 +33,20 @@
       <line sprite1="01" sprite2="mermaid">Image testing!!!!!!!</line>
     </character>
     <character name="Adult">
-      <line sprite1="01" sprite2="mermaid">IMAGE TESTINGGGG!!!!!</line>
+      <line>IMAGE TESTINGGGG!!!!!</line>
+    </character>
+    <character name="Both">
+      <line sprite2="01" sprite1="mermaid">WEEEEEEEEEEEEEEEEEEEEEEEEEEE!!!!!</line>
+    </character>
+  </conversation>
+
+  <!--Testing sprites-->
+  <conversation id="3">
+    <character name="Chibi">
+      <line sprite1="01" sprite2="mermaid">Alright, Adult me, be honest.</line>
+    </character>
+    <character name="Adult">
+      <line>IMAGE TESTINGGGG!!!!!</line>
     </character>
     <character name="Both">
       <line sprite2="01" sprite1="mermaid">WEEEEEEEEEEEEEEEEEEEEEEEEEEE!!!!!</line>

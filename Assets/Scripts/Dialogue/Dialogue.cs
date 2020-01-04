@@ -5,6 +5,7 @@ using UnityEngine.UI;
 //using UnityEngine.UI;
 using TMPro;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 public class Dialogue : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class Dialogue : MonoBehaviour
     string currentId; //Conversation id to choose;
     int sentenceIndex; //Index of sentence to go to
 
-   [Header("Audio")]
+    [Header("Audio")]
     //public AudioSpectrum spectrumManager;
     //public VoiceLineSyncer voiceManager;
     public AudioSource source;
@@ -125,8 +126,8 @@ public class Dialogue : MonoBehaviour
             + parser.conversationList[currentId].DialogueLines[0].Sprites[1].name);
 
         //Get sprites
-       LeftmostChar.sprite = parser.conversationList[currentId].DialogueLines[0].Sprites[0];
-       RightmostChar.sprite = parser.conversationList[currentId].DialogueLines[0].Sprites[1];
+        LeftmostChar.sprite = parser.conversationList[currentId].DialogueLines[0].Sprites[0];
+        RightmostChar.sprite = parser.conversationList[currentId].DialogueLines[0].Sprites[1];
 
         // Debug.Log(parser.conversationList[currentId].VoiceLine.name); //Set voiceline
 
@@ -178,11 +179,16 @@ public class Dialogue : MonoBehaviour
         }
         else //If there are more lines
         {
-            Debug.Log("Sprites: " + dialog[sentenceIndex].Sprites[0].name + ", " + dialog[sentenceIndex].Sprites[1].name);
+            //Debug.Log("Sprites: " + dialog[sentenceIndex].Sprites[0].name + ", " + dialog[sentenceIndex].Sprites[1].name);
 
             //Set sprites
-            LeftmostChar.sprite = dialog[sentenceIndex].Sprites[0];
-            RightmostChar.sprite = dialog[sentenceIndex].Sprites[1];
+            if (dialog[sentenceIndex].Sprites.Any())
+            {
+                if (dialog[sentenceIndex].Sprites[0])
+                    LeftmostChar.sprite = dialog[sentenceIndex].Sprites[0];
+                if (dialog[sentenceIndex].Sprites[1])
+                    RightmostChar.sprite = dialog[sentenceIndex].Sprites[1];
+            }
 
             //Set name
             if (!dialog[sentenceIndex].Name.Equals(""))
