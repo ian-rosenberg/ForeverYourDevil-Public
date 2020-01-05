@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using UnityEngine;
 using UnityEngine.UI;
-//using UnityEngine.UI;
 using TMPro;
 using System.Text.RegularExpressions;
 using System.Linq;
@@ -93,7 +92,7 @@ public class Dialogue : MonoBehaviour
 
     void InitializeDialogue()
     {
-     
+
         //Clear and hide Namebox
         nameBox.gameObject.transform.parent.gameObject.SetActive(false); //Replace with fade out animation
         nameBox.text = "";
@@ -177,6 +176,7 @@ public class Dialogue : MonoBehaviour
      */
     IEnumerator EndDialogue()
     {
+        Debug.Log("End Dialogue Called");
         textDisplay.transform.parent.transform.parent.gameObject.SetActive(false);
         canvasAnim.SetTrigger("Exit");
         yield return new WaitForSeconds(0.633f);
@@ -189,6 +189,7 @@ public class Dialogue : MonoBehaviour
      */
     public void AdvanceLine()
     {
+        Debug.Log("Advance Line Called");
         Debug.Log("SentenceIndex: " + sentenceIndex);
 
         canPress = false;
