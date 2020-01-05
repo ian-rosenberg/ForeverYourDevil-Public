@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using UnityEngine;
 using UnityEngine.UI;
 //using UnityEngine.UI;
@@ -42,8 +43,12 @@ public class Dialogue : MonoBehaviour
     public Image RightmostChar; //Rightmost Char
     public Animator canvasAnim; //Animator object to turn on exit animation
 
+    [Header("Text and choices")]
     public float textDelay = 0.001f;
 
+    public Transform choiceArea; //Area where choice objects are spawned
+    public GameObject choicePrefab;
+    public float choiceDist; //Distance between choices
     public GameObject AdvanceSprite; //Set Active if line is done
 
     //Colors
@@ -104,35 +109,55 @@ public class Dialogue : MonoBehaviour
     public void TriggerDialogue(string conversationID)
     {
         InitializeDialogue();
-        StartCoroutine(StartDialogue(conversationID));
+        StartCoroutine(StartDialogue(conversationID, true));
     }
 
     /**
      * @brief Waits for animation to finish before starting dialogue. (private)
      */
-    IEnumerator StartDialogue(string convID)
+    IEnumerator StartDialogue(string convID, bool start)
     {
-        //Set gamestate
-        gameManager.gameState = gameManager.STATE.TALKING;
+        AdvanceSprite.SetActive(false);
 
-        //Turn on Canvas
-        Canvas.SetActive(true);
-        textDisplay.transform.parent.transform.parent.gameObject.SetActive(true);
+        //Set gamestate
+        if (start)
+        {
+            gameManager.gameState = gameManager.STATE.TALKING;
+
+            //Turn on Canvas
+            Canvas.SetActive(true);
+            textDisplay.transform.parent.transform.parent.gameObject.SetActive(true);
+        }
+        else
+        {
+            //Destroy Buttons
+            foreach (Transform button in choiceArea)
+            {
+                Debug.Log(button.gameObject.name);
+                button.gameObject.GetComponent<Animator>().SetTrigger("Off");
+            }
+
+            //Wait for fadeout animation to end
+            canvasAnim.SetTrigger("Choice");
+            yield return new WaitForSeconds(1.35f);
+        }
 
         //Get conversation
         currentId = convID;
 
-        Debug.Log("Sprites: " + parser.conversationList[currentId].DialogueLines[0].Sprites[0].name + ", "
-            + parser.conversationList[currentId].DialogueLines[0].Sprites[1].name);
-
-        //Get sprites
-        LeftmostChar.sprite = parser.conversationList[currentId].DialogueLines[0].Sprites[0];
-        RightmostChar.sprite = parser.conversationList[currentId].DialogueLines[0].Sprites[1];
+        //Set sprites
+        if (parser.conversationList[currentId].DialogueLines[0].Sprites.Any())
+        {
+            if (parser.conversationList[currentId].DialogueLines[0].Sprites[0])
+                LeftmostChar.sprite = parser.conversationList[currentId].DialogueLines[0].Sprites[0];
+            if (parser.conversationList[currentId].DialogueLines[0].Sprites[1])
+                RightmostChar.sprite = parser.conversationList[currentId].DialogueLines[0].Sprites[1];
+        }
 
         // Debug.Log(parser.conversationList[currentId].VoiceLine.name); //Set voiceline
 
         //Wait for animation to end before starting line and voice
-        yield return new WaitForSeconds(1.917f);
+        if (start) yield return new WaitForSeconds(1.533f);
 
         if (parser.conversationList[currentId].VoiceLine)
             source.clip = parser.conversationList[currentId].VoiceLine; //Set voiceline
@@ -142,6 +167,9 @@ public class Dialogue : MonoBehaviour
         if (source.clip)
             source.Play();
 
+
+
+        //Go to next line
         AdvanceLine();
     }
 
@@ -177,10 +205,29 @@ public class Dialogue : MonoBehaviour
             textDisplay.transform.parent.transform.parent.gameObject.SetActive(false);
             StartCoroutine(EndDialogue());
         }
+
+        //else if the next line is a set of options
+        else if (dialog[sentenceIndex].Options != null)
+        {
+            float multiplier = 1;
+            foreach (DictionaryEntry option in dialog[sentenceIndex].Options)
+            {
+                //Place each subsequent choice higher than the other
+                Vector2 pos = new Vector2(0, choiceDist * multiplier);
+
+                //Create button and set properties
+                var choice = Instantiate(choicePrefab, pos, Quaternion.identity);
+                choice.transform.SetParent(choiceArea.transform, false); //Set child into parent object
+                choice.GetComponent<DialogueChoice>().convID = (string)option.Value; //Set Conversation ID of button
+                choice.GetComponentInChildren<TextMeshProUGUI>().text = (string)option.Key; //Set Button Text
+
+                //Increment position
+                multiplier++;
+            }
+        }
+
         else //If there are more lines
         {
-            //Debug.Log("Sprites: " + dialog[sentenceIndex].Sprites[0].name + ", " + dialog[sentenceIndex].Sprites[1].name);
-
             //Set sprites
             if (dialog[sentenceIndex].Sprites.Any())
             {
@@ -196,7 +243,7 @@ public class Dialogue : MonoBehaviour
                 nameBox.gameObject.transform.parent.gameObject.SetActive(true); //Replace with fade in animation
                 nameBox.text = dialog[sentenceIndex].Name;
                 //Give special color/frame image to special names
-                if (nameBox.text == "Blue Pill")
+                if (nameBox.text == "Adult")
                     SetFrameTextColor(cerulianBlue, cerulianBlue);
                 else
                     SetFrameTextColor(tanOrange, tanOrange);
@@ -209,10 +256,24 @@ public class Dialogue : MonoBehaviour
             textDisplay.text = ""; //Reset Text to blank
 
             //Display line to read from conversationlist
-
             StartCoroutine(TypeText(dialog[sentenceIndex].Content));
             sentenceIndex++;
         }
+    }
+
+    /**
+     * @brief Change the conversation upon clicking a choice
+     * @param convID the conversation to go to upon button click
+     */
+    public void ChangeConversation(string convID)
+    {
+        Debug.Log("Running Change Conversation : " + convID);
+        //Change ID and reset sentence index to the beginning
+        currentId = convID;
+        sentenceIndex = 0;
+
+        //Start new dialogue
+        StartCoroutine(StartDialogue(convID, false));
     }
 
     /**
@@ -233,13 +294,10 @@ public class Dialogue : MonoBehaviour
                 //Add all text and stop loop
                 textDisplay.text = s;
                 break;
-                //yield return new WaitForSeconds(0.00f);
             }
-            else/* if (voiceManager.canAddChar) //Set by VoiceLineSyncer*/
+            else
             {
                 textDisplay.text += chars[i];
-                //yield return new WaitForSeconds(textDelay);
-
                 //Add delay for certain punctuation
                 if (new Regex(@"^[,.;:]*$").IsMatch(chars[i].ToString()))
                     yield return new WaitForSeconds(textDelay + 0.37f);
@@ -247,14 +305,9 @@ public class Dialogue : MonoBehaviour
                     yield return new WaitForSeconds(textDelay + 0.16f);
                 else
                     yield return new WaitForSeconds(textDelay);
-                //}
             }
-            //else
-            //{
-            //    i--;
-            //    yield return new WaitForFixedUpdate();
-            //}
         }
+        //Allow advancement
         skip = false;
         Debug.Log("skip = false");
         canPress = true;

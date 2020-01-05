@@ -184,31 +184,32 @@ public class ParseXML : MonoBehaviour
                         Debug.Log("Dialog line stored");
                     }
 
-                    ////Parse options and choices
-                    //else if (line.Name == "options")
-                    //{
-                    //    //Create New Options List
-                    //    OrderedDictionary optionList = new OrderedDictionary();
+                    //Parse options and choices
+                    else if (line.Name == "options")
+                    {
+                        //Create New Options List
+                        OrderedDictionary optionList = new OrderedDictionary();
 
-                    //    //Get all choices within option tag
-                    //    XmlNodeList options = character.ChildNodes;
-                    //    Debug.Log("Dialog line nodes created: " + lineList.Count);
-                    //    foreach (XmlNode line in lineList) { }
+                        //Get all choices within option tag
+                        XmlNodeList choiceList = line.ChildNodes;
+                        Debug.Log("Option nodes created: " + choiceList.Count);
+                        foreach (XmlNode choice in choiceList)
+                        {
+                            //Parse options into list
+                            if (HasAttributes(choice, "id"))
+                            {
+                                optionList.Add(choice.InnerText, choice.Attributes["id"].Value);
+                            }
+                        }
 
-                    //    //Parse options into list
-                    //    if (HasAttributes(line, "id"))
-                    //    {
-                    //        optionList.Add(line.InnerText, line.Attributes["id"].Value);
-                    //    }
+                        //Create a new dialogue line
+                        DialogueLine d = new DialogueLine(characterName, previousLine, optionList);
+                        Debug.Log("Option list created");
 
-                    //    //Create a new dialogue line
-                    //    DialogueLine d = new DialogueLine(characterName, line.InnerText, spriteList);
-                    //    Debug.Log("Dialog line created");
-
-                    //    //Add line to dialogue list
-                    //    dialogueList.Add(d);
-                    //    Debug.Log("Dialog line stored");
-                    //}
+                        //Add line to dialogue list
+                        dialogueList.Add(d);
+                        Debug.Log("Option list stored");
+                    }
 
                 } //end get lines
             } //end get characters

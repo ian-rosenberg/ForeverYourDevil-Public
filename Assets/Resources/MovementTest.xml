@@ -46,10 +46,47 @@
       <line sprite1="01" sprite2="mermaid">Alright, Adult me, be honest.</line>
     </character>
     <character name="Adult">
-      <line>IMAGE TESTINGGGG!!!!!</line>
+      <line>What's up, Chibi me? Honest about what?</line>
     </character>
-    <character name="Both">
-      <line sprite2="01" sprite1="mermaid">WEEEEEEEEEEEEEEEEEEEEEEEEEEE!!!!!</line>
+    <character name="Chibi">
+      <line>Who do the people really want to see here?</line>
+      <options>
+        <choice id="Tan Pill">Tan Pill!</choice>
+        <choice id="Mermaids">Mermaids!</choice>
+        <choice id="No one">Neither!</choice>
+      </options>
     </character>
   </conversation>
+
+  <conversation id="Tan Pill">
+    <character name="Tan Pill">
+      <line sprite1="Player" sprite2="NPC">Aha!!! Tan Pill returns!!!!</line>
+      <line>I'm glad to be back in the flesh!</line>
+      <line>Guess that's settled!</line>
+    </character>
+  </conversation>
+
+  <conversation id="Mermaids">
+    <character name="Chibi">
+      <line sprite1="01" sprite2="mermaid">Oh thank the stars...</line>
+      <line>I'm really glad that the player picked us.</line>
+    </character>
+    <character name="Adult">
+      <line>Now doesn't that feel better?</line>
+      <line>Hope that helps with your insecurity!</line>
+    </character>
+    <character name="Chibi">
+      <line>...</line>
+      <line>didYouReallyHaveToBeThatBluntAboutIt??? 0_0</line>
+    </character>
+  </conversation>
+
+  <conversation id="No one">
+    <character name="Chibi">
+      <line sprite1="01" sprite2="mermaid">...</line>
+      <line>Guess that's settled...</line>
+      <line>Ughhhhh...</line>
+    </character>
+  </conversation>
+
 </game>
