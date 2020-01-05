@@ -60,10 +60,11 @@ public class Dialogue : MonoBehaviour
 
     private void Start()
     {
-        parser = ParseXML.Instance;
-        gameManager = gameManager.Instance;
         canPress = false;
         sentenceIndex = 0;
+
+        parser = ParseXML.Instance;
+        gameManager = gameManager.Instance;
         source = /*spectrumManager.source =*/ GetComponent<AudioSource>();
         InitializeDialogue();
     }
@@ -92,6 +93,7 @@ public class Dialogue : MonoBehaviour
 
     void InitializeDialogue()
     {
+     
         //Clear and hide Namebox
         nameBox.gameObject.transform.parent.gameObject.SetActive(false); //Replace with fade out animation
         nameBox.text = "";
@@ -118,6 +120,8 @@ public class Dialogue : MonoBehaviour
     IEnumerator StartDialogue(string convID, bool start)
     {
         AdvanceSprite.SetActive(false);
+        canPress = false;
+        sentenceIndex = 0;
 
         //Set gamestate
         if (start)
@@ -139,7 +143,7 @@ public class Dialogue : MonoBehaviour
 
             //Wait for fadeout animation to end
             canvasAnim.SetTrigger("Choice");
-            yield return new WaitForSeconds(1.35f);
+            yield return new WaitForSeconds(1.533f);
         }
 
         //Get conversation
@@ -154,20 +158,15 @@ public class Dialogue : MonoBehaviour
                 RightmostChar.sprite = parser.conversationList[currentId].DialogueLines[0].Sprites[1];
         }
 
-        // Debug.Log(parser.conversationList[currentId].VoiceLine.name); //Set voiceline
-
         //Wait for animation to end before starting line and voice
-        if (start) yield return new WaitForSeconds(1.533f);
+        if (start) yield return new WaitForSeconds(1.717f);
 
         if (parser.conversationList[currentId].VoiceLine)
             source.clip = parser.conversationList[currentId].VoiceLine; //Set voiceline
-        sentenceIndex = 0;
 
         //Play voice
         if (source.clip)
             source.Play();
-
-
 
         //Go to next line
         AdvanceLine();
@@ -178,6 +177,7 @@ public class Dialogue : MonoBehaviour
      */
     IEnumerator EndDialogue()
     {
+        textDisplay.transform.parent.transform.parent.gameObject.SetActive(false);
         canvasAnim.SetTrigger("Exit");
         yield return new WaitForSeconds(0.633f);
         Canvas.SetActive(false);
@@ -202,7 +202,6 @@ public class Dialogue : MonoBehaviour
         {
             Debug.Log("END");
             //Disable conversation box (replace with animation)
-            textDisplay.transform.parent.transform.parent.gameObject.SetActive(false);
             StartCoroutine(EndDialogue());
         }
 
