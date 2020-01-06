@@ -1,96 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Schema must be removed before gameplay
 <game
 xmlns="https://www.w3schools.com"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="https://www.w3schools.com/xml VN_Schema.xsd">
-  
-  <!--Tan Pill Meets Blue Pill-->
-  <conversation id="1">
-    <character name="Tan Pill">
-      <line>Why, hello there!</line>
-      <line>Wonderful weather we're having, eh?</line>
-    </character>
-    <character name="Blue Pill">
-      <line>Uh, I'm sorry. Who are you?</line>
-    </character>
-    <character name="Tan Pill">
-      <line>Who am I?</line>
-      <line>WHO AM I???!!!!!</line>
-      <line>...</line>
-      <line>I DON'T KNOW!!!!</line>
-    </character>
-    <character name="Blue Pill">
-      <line>...</line>
-      <line>Are you high?</line>
-    </character>
-    <character name="Tan Pill">
-      <line>Yep. Took too many pills.</line>
-    </character>
-    <character>
-      <line>A rimshot is heard echoing in the distance...</line>
-    </character>
-  </conversation>
+  -->
+<game>
+<!--Tan Pill Meets Blue Pill-->
+<conversation id="1">
+  <character name="Tan Pill">
+    <line>Why, hello there!</line>
+    <line>Wonderful weather we're having, eh?</line>
+  </character>
+  <character name="Blue Pill">
+    <line>Uh, I'm sorry. Who are you?</line>
+  </character>
+  <character name="Tan Pill">
+    <line>Who am I?</line>
+    <line>WHO AM I???!!!!!</line>
+    <line>...</line>
+    <line>I DON'T KNOW!!!!</line>
+  </character>
+  <character name="Blue Pill">
+    <line>...</line>
+    <line>Are you high?</line>
+  </character>
+  <character name="Tan Pill">
+    <line>Yep. Took too many pills.</line>
+  </character>
+  <character>
+    <line>A rimshot is heard echoing in the distance...</line>
+  </character>
+</conversation>
 
-  <!--Testing sprites-->
-  <conversation id="2">
-    <character name="Chibi">
-      <line sprite1="01" sprite2="mermaid">Image testing!!!!!!!</line>
-    </character>
-    <character name="Adult">
-      <line>IMAGE TESTINGGGG!!!!!</line>
-    </character>
-    <character name="Both">
-      <line sprite2="01" sprite1="mermaid">WEEEEEEEEEEEEEEEEEEEEEEEEEEE!!!!!</line>
-    </character>
-  </conversation>
+<!--Testing sprites-->
+<conversation id="2">
+  <character name="Chibi">
+    <line sprite1="01" sprite2="mermaid">Image testing!!!!!!!</line>
+  </character>
+  <character name="Adult">
+    <line>IMAGE TESTINGGGG!!!!!</line>
+  </character>
+  <character name="Both">
+    <line sprite2="01" sprite1="mermaid">WEEEEEEEEEEEEEEEEEEEEEEEEEEE!!!!!</line>
+  </character>
+</conversation>
 
-  <!--Testing sprites-->
-  <conversation id="3">
-    <character name="Chibi">
-      <line sprite1="01" sprite2="mermaid">Alright, Adult me, be honest.</line>
-    </character>
-    <character name="Adult">
-      <line>What's up, Chibi me? Honest about what?</line>
-    </character>
-    <character name="Chibi">
-      <line>Who do the people really want to see here?</line>
-      <options>
-        <choice id="Tan Pill">Tan Pill!</choice>
-        <choice id="Mermaids">Mermaids!</choice>
-        <choice id="No one">Neither!</choice>
-      </options>
-    </character>
-  </conversation>
+<!--Testing sprites-->
+<conversation id="3">
+  <character name="Chibi">
+    <line sprite1="01" sprite2="mermaid">Alright, Adult me, be honest.</line>
+  </character>
+  <character name="Adult">
+    <line>What's up, Chibi me? Honest about what?</line>
+  </character>
+  <character name="Chibi">
+    <line>Who do the people really want to see here?</line>
+    <options>
+      <choice id="Tan Pill">Tan Pill!</choice>
+      <choice id="Mermaids">Mermaids!</choice>
+      <choice id="No one">Neither!</choice>
+    </options>
+  </character>
+</conversation>
 
-  <conversation id="Tan Pill">
-    <character name="Tan Pill">
-      <line sprite1="Player" sprite2="NPC">Aha!!! Tan Pill returns!!!!</line>
-      <line>I'm glad to be back in the flesh!</line>
-      <line>Guess that's settled!</line>
-    </character>
-  </conversation>
+<conversation id="Tan Pill">
+  <character name="Tan Pill">
+    <line sprite1="Player" sprite2="NPC">Aha!!! Tan Pill returns!!!!</line>
+    <line>I'm glad to be back in the flesh!</line>
+    <line>Guess that's settled!</line>
+  </character>
+</conversation>
 
-  <conversation id="Mermaids">
-    <character name="Chibi">
-      <line sprite1="01" sprite2="mermaid">Oh thank the stars...</line>
-      <line>I'm really glad that the player picked us.</line>
-    </character>
-    <character name="Adult">
-      <line>Now doesn't that feel better?</line>
-      <line>Hope that helps with your insecurity!</line>
-    </character>
-    <character name="Chibi">
-      <line>...</line>
-      <line>didYouReallyHaveToBeThatBluntAboutIt??? 0_0</line>
-    </character>
-  </conversation>
+<conversation id="Mermaids">
+  <character name="Chibi">
+    <line sprite1="01" sprite2="mermaid">Oh thank the stars...</line>
+    <line>I'm really glad that the player picked us.</line>
+  </character>
+  <character name="Adult">
+    <line>Now doesn't that feel better?</line>
+    <line>Hope that helps with your insecurity!</line>
+  </character>
+  <character name="Chibi">
+    <line>...</line>
+    <line>didYouReallyHaveToBeThatBluntAboutIt??? 0_0</line>
+  </character>
+</conversation>
 
-  <conversation id="No one">
-    <character name="Chibi">
-      <line sprite1="01" sprite2="mermaid">...</line>
-      <line>Guess that's settled...</line>
-      <line>Ughhhhh...</line>
-    </character>
-  </conversation>
+<conversation id="No one">
+  <character name="Chibi">
+    <line sprite1="01" sprite2="mermaid">...</line>
+    <line>Guess that's settled...</line>
+    <line>Ughhhhh...</line>
+  </character>
+</conversation>
 
 </game>
