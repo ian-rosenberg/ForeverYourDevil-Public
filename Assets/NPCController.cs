@@ -21,7 +21,7 @@ public class NPCController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (canTalk && gameManager.gameState == gameManager.STATE.TRAVELING && Input.GetKeyDown(KeyCode.E))
+        if (canTalk && gameManager.gameState == gameManager.STATE.TRAVELING && Input.GetButtonDown("Interact"))
         {
             diagManager.TriggerDialogue(conversationID);
             talkIndicator.SetActive(false);
