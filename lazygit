@@ -7,6 +7,8 @@ branch=${branch//\*\ /}
 printf "\nCommitting to $branch.\n\nEnter commit message: \n"
 read message
 
+printf "\n"
+
 git add --all
 git commit -am "$message"
 git push origin $branch

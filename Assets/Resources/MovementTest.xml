@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<game>
+<game
+xmlns="https://www.w3schools.com"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="https://www.w3schools.com/xml VN_Schema.xsd">
+  
   <!--Tan Pill Meets Blue Pill-->
   <conversation id="1">
     <character name="Tan Pill">
