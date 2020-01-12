@@ -5,6 +5,8 @@ using UnityEngine;
 public class gameManager : MonoBehaviour
 {
 
+    public GameObject pauseMenu;
+
     private static gameManager instance;
     public static gameManager Instance
     {
@@ -37,30 +39,36 @@ public class gameManager : MonoBehaviour
         if (Input.GetButtonDown("Pause"))
         {
             Debug.Log("Pressed Enter/Escape");
-            PauseGame();
+            if (isPaused) UnPauseGame();
+            else PauseGame();
         }
 
     }
 
-    void PauseGame()
+    public void PauseGame()
     {
-        if (isPaused)
+        if (!isPaused)
         {
-            gameState = prevState;
-            prevState = STATE.PAUSED;
-            isPaused = false;
-            Debug.Log("gameState = " + gameState);
-            Debug.Log("prevState = " + prevState);
-            Time.timeScale = 1;
-        }
-        else
-        {
+            pauseMenu.SetActive(true);
             prevState = gameState;
             gameState = STATE.PAUSED;
             isPaused = true;
             Debug.Log("gameState = " + gameState);
             Debug.Log("prevState = " + prevState);
             Time.timeScale = 0;
+        }
+    }
+    public void UnPauseGame()
+    {
+        if (isPaused)
+        {
+            pauseMenu.SetActive(false);
+            gameState = prevState;
+            prevState = STATE.PAUSED;
+            isPaused = false;
+            Debug.Log("gameState = " + gameState);
+            Debug.Log("prevState = " + prevState);
+            Time.timeScale = 1;
         }
     }
 
