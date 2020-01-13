@@ -18,7 +18,7 @@ public class gameManager : MonoBehaviour
         }
     }
 
-    public enum STATE { TRAVELING, COMBAT, PAUSED, TALKING }
+    public enum STATE { START, TRAVELING, COMBAT, PAUSED, TALKING }
 
     public STATE gameState; //Current State of the game
     bool isPaused; //Is the game paused?
@@ -28,8 +28,7 @@ public class gameManager : MonoBehaviour
     void Start()
     {
         isPaused = false;
-        gameState = STATE.TRAVELING; //Start out of combat
-        prevState = STATE.TRAVELING; //Start out of combat
+        prevState = STATE.START; //Start out of combat
     }
 
     // Update is called once per frame

@@ -103,6 +103,10 @@ public class PlayerController : MonoBehaviour
         {
             agent.ResetPath(); //Resets directions to agent to stop it
         }
+
+        else if (gameManager.gameState == gameManager.STATE.COMBAT) { 
+            
+        }
     }
     void OnTriggerEnter(Collider other)
     {
