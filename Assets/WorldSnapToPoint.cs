@@ -33,7 +33,7 @@ public class WorldSnapToPoint : MonoBehaviour
 
             //Place indicator
             sphere.transform.position = hit.point;
-            block.transform.position = gridPoint + new Vector3(0, 0.5f, 0);
+            block.transform.position = Vector3.Lerp(block.transform.position, gridPoint + new Vector3(0, 0.5f, 0), 0.5f);
             Debug.Log(gridPoint);
             //Check hit layer
             //if (hit.transform.gameObject.layer == 9) //If click ground
