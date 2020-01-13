@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour
 {
     gameManager gameManager;
 
+    public grid grid;
+
     public Animator anim;
 
     [Tooltip("Specify what layer(s) to use in raycast")]
@@ -49,6 +51,9 @@ public class PlayerController : MonoBehaviour
         //Traveling Movement
         if (gameManager.gameState == gameManager.STATE.TRAVELING)
         {
+            anim.SetBool("Traveling", true);
+            anim.SetBool("Combat", false);
+
             //Click to move (w/pathfinding)
             if (Input.GetMouseButtonDown(0)) //If left click (not hold)
             {
@@ -104,8 +109,42 @@ public class PlayerController : MonoBehaviour
             agent.ResetPath(); //Resets directions to agent to stop it
         }
 
-        else if (gameManager.gameState == gameManager.STATE.COMBAT) { 
-            
+        else if (gameManager.gameState == gameManager.STATE.COMBAT)
+        {
+            anim.SetBool("Traveling", false);
+            anim.SetBool("Combat", true);
+
+            //Click to move (w/pathfinding)
+            if (Input.GetMouseButtonDown(0)) //If left click (not hold)
+            {
+                //Determine if walkable
+                Ray ray = cam.ScreenPointToRay(Input.mousePosition); //create ray obj from camera to click point
+                RaycastHit hit;
+
+                //If ray hit walkable area
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask)) //cast ray. if hit land, move
+                {
+                    //Check hit layer
+                    if (hit.transform.gameObject.layer == 9) //If click ground
+                    {
+                        //Set indicator where clicked
+                        clickIndicator.SetActive(true);
+                        clickIndicAnim.SetTrigger("On");
+
+                        Vector3 gridPoint = grid.NearestGridPoint(hit.point);
+
+                        clickIndicator.transform.position = gridPoint + new Vector3(0, 2f, 0);
+
+                        //Move player/agent to hit point
+                        agent.SetDestination(gridPoint);
+                    }
+                }
+
+            }
+
+            agent.speed = normalSpeed;
+            //Set if anim is in run or idle (set by number in blend tree)
+            anim.SetFloat("Speed", (agent.velocity.magnitude / agent.speed));
         }
     }
     void OnTriggerEnter(Collider other)

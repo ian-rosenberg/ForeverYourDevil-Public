@@ -6,7 +6,7 @@ using UnityEngine;
 public class grid : MonoBehaviour
 {
     public float size = 1f;
-
+    public GameObject gridThing;
     //Get nearest grid point to whichever position is specified (ideally mouse position)
     public Vector3 NearestGridPoint(Vector3 position)
     {
@@ -31,25 +31,36 @@ public class grid : MonoBehaviour
     //Draw the grid in Editor. 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.yellow;
+        Gizmos.color = Color.green;
         for (float x = 0; x < 40; x += size)
         {
             for (float z = 0; z < 40; z += size)
             {
                 var point = NearestGridPoint(new Vector3(transform.position.x + x, 0f, transform.position.z + z));
-                Gizmos.DrawSphere(point, 0.1f);
+                //Gizmos.DrawSphere(point, size * 0.1f);
+                Gizmos.DrawWireCube(point, new Vector3(size * 1, 0f, size * 1));
             }
         }
+        
     }
     // Start is called before the first frame update
     void Start()
     {
-
+        makeGrid();
     }
 
     // Update is called once per frame
-    void Update()
+    void makeGrid()
     {
+        for (float x = 0; x < 40; x += size)
+        {
+            for (float z = 0; z < 40; z += size)
+            {
+                var point = NearestGridPoint(new Vector3(transform.position.x + x, 0f, transform.position.z + z));
+                //Gizmos.DrawSphere(point, size * 0.1f);
+                Instantiate(gridThing, point,gridThing.transform.rotation);
+            }
+        }
 
     }
 }

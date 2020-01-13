@@ -18,7 +18,7 @@ public class WorldSnapToPoint : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         //Raycast to see if hit the grid
         Ray ray = cam.ScreenPointToRay(Input.mousePosition); //create ray obj from camera to click point
@@ -33,7 +33,7 @@ public class WorldSnapToPoint : MonoBehaviour
 
             //Place indicator
             sphere.transform.position = hit.point;
-            block.transform.position = gridPoint + new Vector3(0, 1f, 0);
+            block.transform.position = gridPoint + new Vector3(0, 0.5f, 0);
             Debug.Log(gridPoint);
             //Check hit layer
             //if (hit.transform.gameObject.layer == 9) //If click ground
