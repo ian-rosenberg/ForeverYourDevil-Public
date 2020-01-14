@@ -62,15 +62,15 @@ public class CameraController : MonoBehaviour
         //Zoom in and out with mouse wheel.
         if (Input.GetAxis("Mouse ScrollWheel") < 0) // back
         {
-            zoom -= .5f;
-            zoom = Mathf.Clamp(zoom, -25, 25);
+            zoom -= 1f;
+            zoom = Mathf.Clamp(zoom, -6, 7);
             transform.localPosition = orig_zoom + (transform.forward * zoom);
 
         }
         if (Input.GetAxis("Mouse ScrollWheel") > 0) // forward
         {
-            zoom += .5f;
-            zoom = Mathf.Clamp(zoom, -25, 25);
+            zoom += 1f;
+            zoom = Mathf.Clamp(zoom, -6, 7);
             transform.localPosition = orig_zoom + (transform.forward * zoom);
         }
 
