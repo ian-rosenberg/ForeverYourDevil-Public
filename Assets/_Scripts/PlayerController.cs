@@ -51,8 +51,12 @@ public class PlayerController : MonoBehaviour
         //Traveling Movement
         if (gameManager.gameState == gameManager.STATE.TRAVELING)
         {
-            anim.SetBool("Traveling", true);
-            anim.SetBool("Combat", false);
+            if (!anim.GetBool("Traveling"))
+            {
+                anim.SetBool("Traveling", true);
+                anim.SetTrigger("TravelingTrigger");
+                anim.SetBool("Combat", false);
+            }
 
             //Click to move (w/pathfinding)
             if (Input.GetMouseButtonDown(0)) //If left click (not hold)
@@ -111,8 +115,12 @@ public class PlayerController : MonoBehaviour
 
         else if (gameManager.gameState == gameManager.STATE.COMBAT)
         {
-            anim.SetBool("Traveling", false);
-            anim.SetBool("Combat", true);
+            if (!anim.GetBool("Combat"))
+            {
+                anim.SetBool("Traveling", false);
+                anim.SetTrigger("CombatTrigger");
+                anim.SetBool("Combat", true);
+            }
 
             //Click to move (w/pathfinding)
             if (Input.GetMouseButtonDown(0)) //If left click (not hold)

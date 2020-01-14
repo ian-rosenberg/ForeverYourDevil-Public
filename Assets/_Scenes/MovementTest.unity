@@ -751,6 +751,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 4575319264998672481}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &445563148 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5564548128705112788, guid: 1077b9c134daf4d4fafa024392b5fc9e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1202235300}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25a8cc30a467a5541901c7f201fcb537, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &455533525 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7432381530934373670, guid: 6759e93c909b70b4a8bd129be701aaba,
@@ -1474,7 +1486,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseMenu: {fileID: 1291242769}
-  gameState: 0
+  gameState: 1
 --- !u!1 &1061123594
 GameObject:
   m_ObjectHideFlags: 0
@@ -4037,6 +4049,11 @@ PrefabInstance:
       propertyPath: clickIndicAnim
       value: 
       objectReference: {fileID: 280213422}
+    - target: {fileID: 4575319265417342429, guid: 39fe31d3047666d4da335f3bce57026d,
+        type: 3}
+      propertyPath: grid
+      value: 
+      objectReference: {fileID: 445563148}
     - target: {fileID: 4881587977216278975, guid: 39fe31d3047666d4da335f3bce57026d,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
