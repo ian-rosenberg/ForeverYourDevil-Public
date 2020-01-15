@@ -42,7 +42,8 @@ public class EnemyController : MonoBehaviour
                 , enemySpeed);
 
             //If lost sight, go back to idle
-            if (!fov.canSee) {
+            if (!fov.canSee)
+            {
                 state = enemyState.IDLE;
                 anim.SetTrigger("Unspotted");
             }
@@ -57,9 +58,10 @@ public class EnemyController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == 10) //Player
+        if (other.gameObject.layer == 10 && gameManager.gameState != gameManager.STATE.COMBAT) //Player
         {
             Debug.Log("Call Combat Trigger");
+            state = enemyState.COMBAT;
             gameManager.TriggerCombat(gameObject);
         }
 

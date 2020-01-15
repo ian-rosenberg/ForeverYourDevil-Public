@@ -10,7 +10,7 @@ public class WorldSnapToPoint : MonoBehaviour
     public Camera cam; /**Main camera to raycast to floor to determine if hit is possible*/
     public GameObject block;
     public grid grid;
-    public gameManager gameManager;
+    gameManager gameManager;
 
     // Start is called before the first frame update
     void Start()

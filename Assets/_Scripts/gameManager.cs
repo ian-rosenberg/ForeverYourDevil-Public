@@ -7,10 +7,18 @@ public class gameManager : MonoBehaviour
 {
     bool canPause = true; //Allow pausing?
 
+    GameObject enemyCombatTriggerer; //The enemy that triggered combat last (temporary value)
+
+    public FollowObject mainCamera; //Main parent object for camera
     public GameObject pauseMenu;
     public Animator battleAnim; //Canvas for battle transition
     public Image screenCapRegion; //Place to display image on
     public GameObject player; //Reference to player character
+
+    [Header("Combat")]
+    public Transform[] playerSpawn, enemySpawn;
+    public Transform cameraSpawn;
+
 
     public GameObject normalWorld; //Represents overworld
     public GameObject battleWorld; //Represents battlefield
@@ -43,22 +51,26 @@ public class gameManager : MonoBehaviour
     void Update()
     {
         //Pause Game
-        if (Input.GetButtonDown("Pause"))
+        if (Input.GetButtonDown("Pause") && canPause)
         {
             Debug.Log("Pressed Enter/Escape");
-            if (isPaused) {
+            if (isPaused)
+            {
                 pauseMenu.SetActive(false);
-                UnPauseGame(); }
-            else {
+                UnPauseGame();
+            }
+            else
+            {
                 pauseMenu.SetActive(true);
-                PauseGame(); }
+                PauseGame();
+            }
         }
 
     }
 
     public void PauseGame()
     {
-        if (!isPaused && canPause)
+        if (!isPaused)
         {
             prevState = gameState;
             gameState = STATE.PAUSED;
@@ -70,7 +82,7 @@ public class gameManager : MonoBehaviour
     }
     public void UnPauseGame()
     {
-        if (isPaused && canPause)
+        if (isPaused)
         {
             gameState = prevState;
             prevState = STATE.PAUSED;
@@ -90,9 +102,39 @@ public class gameManager : MonoBehaviour
     {
         // StartCoroutine(ScreenCap());
         Debug.Log("Triggering Combat");
+        enemyCombatTriggerer = enemy;
         PauseGame();
         SetCanPause(false);
         battleAnim.SetTrigger("Battle");
+        StartCoroutine(LoadCombatDelay());
+    }
+
+    IEnumerator LoadCombatDelay()
+    {
+        Debug.Log("Loading Combatant Delay");
+        yield return new WaitForSecondsRealtime(2.3f);
+        LoadCombatants();
+    }
+
+    public void LoadCombatants()
+    {
+        Debug.Log("Loading Combatants");
+        UnPauseGame();
+
+        normalWorld.SetActive(false);
+        battleWorld.SetActive(true);
+
+        player.transform.position = playerSpawn[0].position;
+        enemyCombatTriggerer.transform.position = enemySpawn[0].position;
+        enemyCombatTriggerer = null;
+        mainCamera.SetOffset(cameraSpawn.transform.position);
+        
+
+        gameState = STATE.COMBAT;
+        prevState = STATE.TRAVELING;
+
+        battleAnim.SetTrigger("Loaded");
+        SetCanPause(true);
     }
 
     IEnumerator ScreenCap()

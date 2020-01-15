@@ -29,7 +29,7 @@ public class FollowObject : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        offset = transform.position-obj.transform.position;
+        offset = transform.position - obj.transform.position;
 
 
         //Warning if none selected
@@ -52,5 +52,10 @@ public class FollowObject : MonoBehaviour
 
         //Reset new_pos
         new_pos = Vector3.zero;
+    }
+
+    public void SetOffset(Vector3 newOffset)
+    {
+        offset = newOffset - obj.transform.position;
     }
 }
