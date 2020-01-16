@@ -112,7 +112,7 @@ public class gameManager : MonoBehaviour
     IEnumerator LoadCombatDelay()
     {
         Debug.Log("Loading Combatant Delay");
-        yield return new WaitForSecondsRealtime(2.3f);
+        yield return new WaitForSecondsRealtime(3f);
         LoadCombatants();
     }
 
