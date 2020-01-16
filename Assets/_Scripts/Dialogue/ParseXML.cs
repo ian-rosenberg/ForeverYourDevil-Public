@@ -265,6 +265,7 @@ public class ParseXML : MonoBehaviour
                 if (HasAttributes(line, "sprite1"))
                 {
                     Sprite sprite = Resources.Load<Sprite>("Sprites/" + line.Attributes["sprite1"].Value);
+                    Debug.Log(sprite.name);
                     spriteList.Add(sprite);
                 }
                 //Get sprites from line (if they exist)
