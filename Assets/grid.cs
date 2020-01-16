@@ -34,14 +34,17 @@ public class grid : MonoBehaviour
         Gizmos.color = Color.green;
         for (float x = 0; x < 40; x += size)
         {
+
             for (float z = 0; z < 40; z += size)
             {
-                var point = NearestGridPoint(new Vector3(transform.position.x + x, 0f, transform.position.z + z));
+                // var point = NearestGridPoint(new Vector3(transform.position.x + x, 0f, transform.position.z + z));
+                var point = NearestGridPoint(new Vector3(transform.position.x + x, transform.position.y, transform.position.z + z));
                 //Gizmos.DrawSphere(point, size * 0.1f);
                 Gizmos.DrawWireCube(point, new Vector3(size * 1, 0f, size * 1));
             }
+
+
         }
-        
     }
     // Start is called before the first frame update
     void Start()
@@ -54,13 +57,17 @@ public class grid : MonoBehaviour
     {
         for (float x = 0; x < 40; x += size)
         {
+
             for (float z = 0; z < 40; z += size)
             {
-                var point = NearestGridPoint(new Vector3(transform.position.x + x, 0f, transform.position.z + z));
-                //Gizmos.DrawSphere(point, size * 0.1f);
-                Instantiate(gridThing, point,gridThing.transform.rotation);
-            }
-        }
+                // var point = NearestGridPoint(new Vector3(transform.position.x + x, 0f, transform.position.z + z));
+                var point = NearestGridPoint(new Vector3(transform.position.x + x, transform.position.y, transform.position.z + z));
 
+                //Gizmos.DrawSphere(point, size * 0.1f);
+                Instantiate(gridThing, point, gridThing.transform.rotation);
+            }
+
+
+        }
     }
 }

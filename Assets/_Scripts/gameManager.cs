@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.UI;
 
 public class gameManager : MonoBehaviour
@@ -124,7 +125,12 @@ public class gameManager : MonoBehaviour
         normalWorld.SetActive(false);
         battleWorld.SetActive(true);
 
+        NavMeshAgent playerAgent = player.GetComponent<NavMeshAgent>();
+        playerAgent.ResetPath();
+        playerAgent.enabled = false;
+
         player.transform.position = playerSpawn[0].position;
+        playerAgent.enabled = true;
         enemyCombatTriggerer.transform.position = enemySpawn[0].position;
         enemyCombatTriggerer = null;
         mainCamera.SetOffset(cameraSpawn.transform.position);
