@@ -8,8 +8,7 @@ public class gameManager : MonoBehaviour
 {
     bool canPause = true; //Allow pausing?
 
-    GameObject enemyCombatTriggerer; //The enemy that triggered combat last (temporary value)
-
+    //public GameObject CameraX, CameraY;
     public FollowObject mainCamera; //Main parent object for camera
     public GameObject pauseMenu;
     public Animator battleAnim; //Canvas for battle transition
@@ -19,7 +18,7 @@ public class gameManager : MonoBehaviour
     [Header("Combat")]
     public Transform[] playerSpawn, enemySpawn;
     public Transform cameraSpawn;
-
+    GameObject enemyCombatTriggerer; //The enemy that triggered combat last (temporary value)
 
     public GameObject normalWorld; //Represents overworld
     public GameObject battleWorld; //Represents battlefield
