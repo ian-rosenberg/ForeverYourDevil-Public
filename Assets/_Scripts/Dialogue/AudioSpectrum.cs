@@ -5,6 +5,7 @@ using UnityEngine;
 /**
  * @brief A modified tutorial script that captures audiosource spectrum data.
  * @author @RenaissanceCode | modified by Omar Ilyas
+ * @Depreciated
  * https://github.com/coderDarren/RenaissanceCoders_UnityScripting
  */
 

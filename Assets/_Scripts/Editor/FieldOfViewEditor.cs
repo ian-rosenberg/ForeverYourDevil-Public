@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-//Original Credit to Johanne Assis - jaa67@njit.edu 
-
+/**
+ * @brief Draws a radius and view angle representing the field of view of a selected gameobject.
+ * @author Johanne Assis - jaa67@njit.edu | modified by Omar Ilyas 
+ */
 [CustomEditor(typeof(FieldOfView))]
 public class FieldOfViewEditor : Editor
 {

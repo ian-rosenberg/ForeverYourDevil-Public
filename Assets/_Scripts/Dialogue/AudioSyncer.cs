@@ -5,6 +5,7 @@ using UnityEngine;
 /**
  * @brief A modified tutorial that extracts all data from AudioSpectrum.cs into different properties
  * @author @RenaissanceCode | modified by Omar Ilyas
+ * @Depreciated
  * https://github.com/coderDarren/RenaissanceCoders_UnityScripting
  */
 

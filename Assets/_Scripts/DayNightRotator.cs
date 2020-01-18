@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+/**
+ * @brief Directional lightsource rotator to emulate time of day.
+ * @author Omar Ilyas
+ * @Depreciated
+ */
+
 public class DayNightRotator : MonoBehaviour
 {
     [Tooltip("Speed at which light rotates at")]
     public float speed;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()

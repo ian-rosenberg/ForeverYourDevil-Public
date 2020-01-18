@@ -5,6 +5,7 @@ using UnityEngine;
 /**
  * @brief Syncs dialogue display with a voice line given.
  * @author Omar Ilyas
+ * @Depreciated
  */
 
 public class VoiceLineSyncer : AudioSyncer

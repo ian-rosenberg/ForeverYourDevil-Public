@@ -95,6 +95,9 @@ $(document).ready(function(){initNavTree('class_dialogue.html',''); initResizabl
 <div class="title">Dialogue Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Manager for displaying images, text, etc from parsed dialogue from <a class="el" href="class_parse_x_m_l.html" title="Manager that parses lines from an XML file with the current scene name and sorts them into a list.">ParseXML</a>.  
+ <a href="class_dialogue.html#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for Dialogue:</div>
 <div class="dyncontent">
@@ -105,13 +108,13 @@ Inheritance diagram for Dialogue:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a9fdb316a6492c708e7663349532f6492"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_dialogue.html#a9fdb316a6492c708e7663349532f6492">TriggerDialogue</a> (string conversationID)</td></tr>
-<tr class="memdesc:a9fdb316a6492c708e7663349532f6492"><td class="mdescLeft">&#160;</td><td class="mdescRight">Activate dialogue box and load from this conversation.  <a href="class_dialogue.html#a9fdb316a6492c708e7663349532f6492">More...</a><br /></td></tr>
+<tr class="memdesc:a9fdb316a6492c708e7663349532f6492"><td class="mdescLeft">&#160;</td><td class="mdescRight">Activate dialogue box and load from conversation specified.  <a href="class_dialogue.html#a9fdb316a6492c708e7663349532f6492">More...</a><br /></td></tr>
 <tr class="separator:a9fdb316a6492c708e7663349532f6492"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5d95f9fb1fbb6a87107a28b1fa111566"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_dialogue.html#a5d95f9fb1fbb6a87107a28b1fa111566">AdvanceLine</a> ()</td></tr>
 <tr class="memdesc:a5d95f9fb1fbb6a87107a28b1fa111566"><td class="mdescLeft">&#160;</td><td class="mdescRight">Advance one line in conversation dialogue list chosen and display on screen.  <a href="class_dialogue.html#a5d95f9fb1fbb6a87107a28b1fa111566">More...</a><br /></td></tr>
 <tr class="separator:a5d95f9fb1fbb6a87107a28b1fa111566"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9be8eb7a2d93471e6a6ff7a02ef304bd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_dialogue.html#a9be8eb7a2d93471e6a6ff7a02ef304bd">ChangeConversation</a> (string convID)</td></tr>
-<tr class="memdesc:a9be8eb7a2d93471e6a6ff7a02ef304bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change the conversation upon clicking a choice.  <a href="class_dialogue.html#a9be8eb7a2d93471e6a6ff7a02ef304bd">More...</a><br /></td></tr>
+<tr class="memdesc:a9be8eb7a2d93471e6a6ff7a02ef304bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change the conversation and conversation id upon clicking a choice.  <a href="class_dialogue.html#a9be8eb7a2d93471e6a6ff7a02ef304bd">More...</a><br /></td></tr>
 <tr class="separator:a9be8eb7a2d93471e6a6ff7a02ef304bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -153,11 +156,13 @@ Properties</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
 <tr class="memitem:a83bc943ea718f1994f81a4f61db8a4c2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_dialogue.html#a83bc943ea718f1994f81a4f61db8a4c2">Start</a> ()</td></tr>
+<tr class="memdesc:a83bc943ea718f1994f81a4f61db8a4c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize dialogue manager and get parsed dialogue from <a class="el" href="class_parse_x_m_l.html" title="Manager that parses lines from an XML file with the current scene name and sorts them into a list.">ParseXML</a>.  <a href="class_dialogue.html#a83bc943ea718f1994f81a4f61db8a4c2">More...</a><br /></td></tr>
 <tr class="separator:a83bc943ea718f1994f81a4f61db8a4c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a937cf54e94dd6b365b10c13fea21035d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_dialogue.html#a937cf54e94dd6b365b10c13fea21035d">FixedUpdate</a> ()</td></tr>
+<tr class="memdesc:a937cf54e94dd6b365b10c13fea21035d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main game loop. Advance line of text or skip it depending on input.  <a href="class_dialogue.html#a937cf54e94dd6b365b10c13fea21035d">More...</a><br /></td></tr>
 <tr class="separator:a937cf54e94dd6b365b10c13fea21035d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af1466320a5a3808b560007f0fdab2fe9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_dialogue.html#af1466320a5a3808b560007f0fdab2fe9">InitializeDialogue</a> ()</td></tr>
-<tr class="memdesc:af1466320a5a3808b560007f0fdab2fe9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear dialogue box for a new set of dialogue.  <a href="class_dialogue.html#af1466320a5a3808b560007f0fdab2fe9">More...</a><br /></td></tr>
+<tr class="memdesc:af1466320a5a3808b560007f0fdab2fe9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize/Clear dialogue box for a new set of dialogue.  <a href="class_dialogue.html#af1466320a5a3808b560007f0fdab2fe9">More...</a><br /></td></tr>
 <tr class="separator:af1466320a5a3808b560007f0fdab2fe9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab7bce9370195180f187842f874ee2915"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_dialogue.html#ab7bce9370195180f187842f874ee2915">StartDialogue</a> (string convID, bool start)</td></tr>
 <tr class="memdesc:ab7bce9370195180f187842f874ee2915"><td class="mdescLeft">&#160;</td><td class="mdescRight">Waits for animation to finish before starting dialogue. (private)  <a href="class_dialogue.html#ab7bce9370195180f187842f874ee2915">More...</a><br /></td></tr>
@@ -166,7 +171,7 @@ Private Member Functions</h2></td></tr>
 <tr class="memdesc:acdb43219cf940a3735628e20dd05f503"><td class="mdescLeft">&#160;</td><td class="mdescRight">Waits for animation to finish before turning off dialogue canvas.  <a href="class_dialogue.html#acdb43219cf940a3735628e20dd05f503">More...</a><br /></td></tr>
 <tr class="separator:acdb43219cf940a3735628e20dd05f503"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8e60ca48817294934ded107015ff52a"><td class="memItemLeft" align="right" valign="top">IEnumerator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_dialogue.html#ac8e60ca48817294934ded107015ff52a">TypeText</a> (string s)</td></tr>
-<tr class="memdesc:ac8e60ca48817294934ded107015ff52a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Coroutine that displays text char by char until line is exhausted.  <a href="class_dialogue.html#ac8e60ca48817294934ded107015ff52a">More...</a><br /></td></tr>
+<tr class="memdesc:ac8e60ca48817294934ded107015ff52a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Coroutine that displays text char by char until line is exhausted or skipped.  <a href="class_dialogue.html#ac8e60ca48817294934ded107015ff52a">More...</a><br /></td></tr>
 <tr class="separator:ac8e60ca48817294934ded107015ff52a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aefcf7b070eb75f14acf7927b99479e04"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_dialogue.html#aefcf7b070eb75f14acf7927b99479e04">SetFrameTextColor</a> (Color frameColor, Color textColor)</td></tr>
 <tr class="memdesc:aefcf7b070eb75f14acf7927b99479e04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change color of background frame and text.  <a href="class_dialogue.html#aefcf7b070eb75f14acf7927b99479e04">More...</a><br /></td></tr>
@@ -196,7 +201,10 @@ Static Private Attributes</h2></td></tr>
 <tr class="memitem:a49a90d4a15b0df93b9accd5a77ec5372"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_dialogue.html">Dialogue</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_dialogue.html#a49a90d4a15b0df93b9accd5a77ec5372">instance</a></td></tr>
 <tr class="separator:a49a90d4a15b0df93b9accd5a77ec5372"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Manager for displaying images, text, etc from parsed dialogue from <a class="el" href="class_parse_x_m_l.html" title="Manager that parses lines from an XML file with the current scene name and sorts them into a list.">ParseXML</a>. </p>
+<dl class="section author"><dt>Author</dt><dd>Omar Ilyas </dd></dl>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a5d95f9fb1fbb6a87107a28b1fa111566"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5d95f9fb1fbb6a87107a28b1fa111566">&#9670;&nbsp;</a></span>AdvanceLine()</h2>
 
@@ -232,7 +240,7 @@ Static Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Change the conversation upon clicking a choice. </p>
+<p>Change the conversation and conversation id upon clicking a choice. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">convID</td><td>the conversation to go to upon button click </td></tr>
@@ -292,6 +300,8 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Main game loop. Advance line of text or skip it depending on input. </p>
+
 </div>
 </div>
 <a id="af1466320a5a3808b560007f0fdab2fe9"></a>
@@ -317,7 +327,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Clear dialogue box for a new set of dialogue. </p>
+<p>Initialize/Clear dialogue box for a new set of dialogue. </p>
 
 </div>
 </div>
@@ -356,6 +366,13 @@ Static Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Change color of background frame and text. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">frameColor</td><td>the new color of the background frame </td></tr>
+    <tr><td class="paramname">textColor</td><td>the new color of the text </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -381,6 +398,9 @@ Static Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Initialize dialogue manager and get parsed dialogue from <a class="el" href="class_parse_x_m_l.html" title="Manager that parses lines from an XML file with the current scene name and sorts them into a list.">ParseXML</a>. </p>
+<p>Display all characters at once if true, one at a time if false </p>
 
 </div>
 </div>
@@ -438,7 +458,7 @@ Static Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Activate dialogue box and load from this conversation. </p>
+<p>Activate dialogue box and load from conversation specified. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">conversationID</td><td>id of conversation to load </td></tr>
@@ -472,7 +492,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Coroutine that displays text char by char until line is exhausted. </p>
+<p>Coroutine that displays text char by char until line is exhausted or skipped. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">s</td><td>string to display </td></tr>
@@ -494,6 +514,7 @@ Static Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Distance between choices </p>
 
 </div>
 </div>
@@ -516,6 +537,7 @@ Static Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Text color </p>
 
 </div>
 </div>
@@ -530,6 +552,7 @@ Static Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Voice line audio source </p>
 
 </div>
 </div>
@@ -544,6 +567,7 @@ Static Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Rightmost Char </p>
 
 </div>
 </div>
@@ -566,6 +590,7 @@ Static Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Text color </p>
 
 </div>
 </div>
@@ -580,6 +605,7 @@ Static Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Delay between each character while displaying text </p>
 
 </div>
 </div>
@@ -608,6 +634,7 @@ Static Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Area where choice objects are spawned </p>
 
 </div>
 </div>
@@ -652,6 +679,7 @@ Static Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Parser index containing all sentences in List </p>
 
 </div>
 </div>
@@ -674,6 +702,7 @@ Static Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Master manager controlling game state </p>
 
 </div>
 </div>
@@ -688,6 +717,7 @@ Static Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Background frame of textbox </p>
 
 </div>
 </div>
@@ -702,6 +732,7 @@ Static Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Canvas holding dialogue box, etc </p>
 
 </div>
 </div>
@@ -716,6 +747,7 @@ Static Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Display for text </p>
 
 </div>
 </div>
@@ -752,6 +784,7 @@ Static Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Leftmost Character </p>
 
 </div>
 </div>
@@ -774,6 +807,7 @@ Static Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p><a class="el" href="class_conversation.html" title="A collection of lines to load when a conversation is triggered or an option is chosen.">Conversation</a> id to choose </p>
 
 </div>
 </div>
@@ -796,6 +830,7 @@ Static Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Is the user allowed to advance the text? </p>
 
 </div>
 </div>
@@ -810,6 +845,7 @@ Static Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Index of sentence to go to </p>
 
 </div>
 </div>
@@ -832,6 +868,7 @@ Static Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Set Active if line is done </p>
 
 </div>
 </div>
@@ -846,6 +883,7 @@ Static Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Background frame of textbox </p>
 
 </div>
 </div>
@@ -860,6 +898,7 @@ Static Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Animator object to turn on exit animation </p>
 
 </div>
 </div>
@@ -874,6 +913,7 @@ Static Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Display name if given </p>
 
 </div>
 </div>
@@ -897,6 +937,7 @@ Static Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Create singleton instance Create singleton instance </p>
 
 </div>
 </div>

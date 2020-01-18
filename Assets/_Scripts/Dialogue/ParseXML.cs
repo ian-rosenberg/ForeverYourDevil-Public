@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 
 /**
  * @brief A collection of lines to load when a conversation is triggered or an option is chosen
+ * @author Omar Ilyas
  */
 public class Conversation
 {
@@ -40,6 +41,7 @@ public class Conversation
 
 /**
  * @brief A dialogue object containing the line and sprites to display and their information
+ * @author Omar Ilyas
  */
 public class DialogueLine
 {
@@ -47,11 +49,13 @@ public class DialogueLine
                                                   /**If null, there will be no name displayed*/
 
     public string Content { get; set; }           /**Dialogue text displayed in the DialogueBox*/
-    public List<Sprite> Sprites;          /**Sprites to show/hide on screen*/
-    public OrderedDictionary Options;           /**Options labels and the conversation id they go to when selected*/
+    public List<Sprite> Sprites;                  /**Sprites to show/hide on screen*/
+    public OrderedDictionary Options;             /**Options labels and the conversation id they go to when selected*/
 
     /**
-     * Create a DialogueLine without any options or sprites
+     * @brief Create a DialogueLine without any options or sprites
+     * @param name Name of character speaking
+     * @param content Dialogue that the character is saying
      */
     public DialogueLine(string name, string content)
     {
@@ -62,6 +66,9 @@ public class DialogueLine
 
     /**
      * Create a DialogueLine without any options but with sprites
+     * @param name Name of character speaking
+     * @param content Dialogue that the character is saying
+     * @param sprites List of sprites to display
      */
     public DialogueLine(string name, string content, List<Sprite> sprites)
     {
@@ -72,6 +79,9 @@ public class DialogueLine
 
     /**
      * Create a DialogueLine with options but no sprites
+     * @param name Name of character speaking
+     * @param content Dialogue that the character is saying
+     * @param options List of choices and conversationIDs to go to
      */
     public DialogueLine(string name, string content, OrderedDictionary options)
     {
@@ -83,6 +93,10 @@ public class DialogueLine
 
     /**
      * Create a DialogueLine with options and sprites
+     * @param name Name of character speaking
+     * @param content Dialogue that the character is saying
+     * @param options List of choices and conversationIDs to go to
+     * @param sprites List of sprites to display
      */
     public DialogueLine(string name, string content, List<Sprite> sprites, OrderedDictionary options)
     {
@@ -94,11 +108,15 @@ public class DialogueLine
 
 }
 
+/**
+ * @brief Manager that parses lines from an XML file with the current scene name and sorts them into a list
+ * @author Omar Ilyas
+ */
 public class ParseXML : MonoBehaviour
 {
-    private static ParseXML instance;
+    private static ParseXML instance;                          /**Create singleton instance*/
 
-    public static ParseXML Instance
+    public static ParseXML Instance                            /**Create singleton instance*/
     {
         get
         {
@@ -110,7 +128,9 @@ public class ParseXML : MonoBehaviour
 
     public Dictionary<string, Conversation> conversationList;   /**A list of conversations to store parsed info*/
 
-    // Start is called before the first frame update
+    /**
+     * @brief Parse an XML file with the current scene name and store info into a list to send to Dialogue.cs
+     */
     void Awake()
     {
         Debug.Log("Started");

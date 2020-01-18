@@ -7,14 +7,20 @@ using TMPro;
 using System.Text.RegularExpressions;
 using System.Linq;
 
+
+/**
+ * @brief Manager for displaying images, text, etc from parsed dialogue from ParseXML
+ * @author Omar Ilyas
+ */
+
 public class Dialogue : MonoBehaviour
 {
-    ParseXML parser; //Parser index containing all sentences in List
-    gameManager gameManager;
+    ParseXML parser;                        /**Parser index containing all sentences in List*/
+    gameManager gameManager;                /**Master manager controlling game state*/
 
-    private static Dialogue instance;
+    private static Dialogue instance;       /**Create singleton instance*/
 
-    public static Dialogue Instance
+    public static Dialogue Instance         /**Create singleton instance*/
     {
         get
         {
@@ -23,39 +29,43 @@ public class Dialogue : MonoBehaviour
             return instance;
         }
     }
-    string currentId; //Conversation id to choose;
-    int sentenceIndex; //Index of sentence to go to
+    string currentId;                       /**Conversation id to choose*/
+    int sentenceIndex;                      /**Index of sentence to go to*/
 
     [Header("Audio")]
     //public AudioSpectrum spectrumManager;
     //public VoiceLineSyncer voiceManager;
-    public AudioSource source;
+    public AudioSource source;              /**Voice line audio source*/
 
     [Header("Display")]
-    public GameObject Canvas; //Canvas holding dialogue box and stuff
+    public GameObject Canvas;               /**Canvas holding dialogue box, etc*/
 
-    public TextMeshProUGUI nameBox; //Display name if given
-    public TextMeshProUGUI textDisplay; //Display for text
-    public Image nameBoxFrame; //Background frame of textbox
-    public Image textBoxFrame; //Background frame of textbox
-    public Image LeftmostChar; //Leftmost Character
-    public Image RightmostChar; //Rightmost Char
-    public Animator canvasAnim; //Animator object to turn on exit animation
+    public TextMeshProUGUI nameBox;         /**Display name if given*/
+    public TextMeshProUGUI textDisplay;     /**Display for text*/
+    public Image nameBoxFrame;              /**Background frame of textbox*/
+    public Image textBoxFrame;              /**Background frame of textbox*/
+    public Image LeftmostChar;              /**Leftmost Character*/
+    public Image RightmostChar;             /**Rightmost Char*/
+    public Animator canvasAnim;             /**Animator object to turn on exit animation*/
 
     [Header("Text and choices")]
-    public float textDelay = 0.001f;
+    public float textDelay = 0.001f;        /**Delay between each character while displaying text*/
 
-    public Transform choiceArea; //Area where choice objects are spawned
+    public Transform choiceArea;            /**Area where choice objects are spawned*/
     public GameObject choicePrefab;
-    public float choiceDist; //Distance between choices
-    public GameObject AdvanceSprite; //Set Active if line is done
+    public float choiceDist;                /**Distance between choices*/
+    public GameObject AdvanceSprite;        /**Set Active if line is done*/
 
     //Colors
-    Color tanOrange = new Color(0.8018868f, 0.304684f, 0.1777768f);
-    Color cerulianBlue = new Color(0.1764706f, 0.6452591f, 0.8f);
+    Color tanOrange = new Color(0.8018868f, 0.304684f, 0.1777768f); /**Text color*/
+    Color cerulianBlue = new Color(0.1764706f, 0.6452591f, 0.8f);   /**Text color*/
 
-    bool canPress = false;
-    bool skip = false; //Skip text
+    bool canPress = false;                  /**Is the user allowed to advance the text?*/
+    bool skip = false;                      /**Display all characters at once if true, one at a time if false*/
+
+    /**
+     * @brief Initialize dialogue manager and get parsed dialogue from ParseXML
+     */
 
     private void Start()
     {
@@ -68,7 +78,9 @@ public class Dialogue : MonoBehaviour
         InitializeDialogue();
     }
 
-    // Update is called once per frame
+    /**
+     * @brief Main game loop. Advance line of text or skip it depending on input.
+     */
     void FixedUpdate()
     {
         //Advance/Skip Dialogue no KeyPress
@@ -87,12 +99,11 @@ public class Dialogue : MonoBehaviour
     }
 
     /**
-     * @brief Clear dialogue box for a new set of dialogue
+     * @brief Initialize/Clear dialogue box for a new set of dialogue
      */
 
     void InitializeDialogue()
     {
-
         //Clear and hide Namebox
         nameBox.gameObject.transform.parent.gameObject.SetActive(false); //Replace with fade out animation
         nameBox.text = "";
@@ -103,7 +114,7 @@ public class Dialogue : MonoBehaviour
     }
 
     /**
-     * @brief Activate dialogue box and load from this conversation.
+     * @brief Activate dialogue box and load from conversation specified.
      * @param conversationID id of conversation to load
      */
 
@@ -262,7 +273,7 @@ public class Dialogue : MonoBehaviour
     }
 
     /**
-     * @brief Change the conversation upon clicking a choice
+     * @brief Change the conversation and conversation id upon clicking a choice
      * @param convID the conversation to go to upon button click
      */
     public void ChangeConversation(string convID)
@@ -277,7 +288,7 @@ public class Dialogue : MonoBehaviour
     }
 
     /**
-     * @brief Coroutine that displays text char by char until line is exhausted
+     * @brief Coroutine that displays text char by char until line is exhausted or skipped
      * @param s string to display
      */
     IEnumerator TypeText(string s)
@@ -316,6 +327,8 @@ public class Dialogue : MonoBehaviour
 
     /**
      * @brief Change color of background frame and text
+     * @param frameColor the new color of the background frame
+     * @param textColor the new color of the text
      */
     void SetFrameTextColor(Color frameColor, Color textColor)
     {

@@ -93,6 +93,9 @@ $(document).ready(function(){initNavTree('class_dialogue_choice.html',''); initR
 <div class="title">DialogueChoice Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>A button that when clicked will play an animation and skip to the conversation given.  
+ <a href="class_dialogue_choice.html#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for DialogueChoice:</div>
 <div class="dyncontent">
@@ -103,12 +106,16 @@ Inheritance diagram for DialogueChoice:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:abfa19ad0fa2baed7a1630b1a5b32374a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_dialogue_choice.html#abfa19ad0fa2baed7a1630b1a5b32374a">OnClick</a> ()</td></tr>
+<tr class="memdesc:abfa19ad0fa2baed7a1630b1a5b32374a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run an animation when button is clicked (with delay)  <a href="class_dialogue_choice.html#abfa19ad0fa2baed7a1630b1a5b32374a">More...</a><br /></td></tr>
 <tr class="separator:abfa19ad0fa2baed7a1630b1a5b32374a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af3b69cf6f768cfd15cdd5fdbe270f4dd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_dialogue_choice.html#af3b69cf6f768cfd15cdd5fdbe270f4dd">FadeOut</a> ()</td></tr>
+<tr class="memdesc:af3b69cf6f768cfd15cdd5fdbe270f4dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run an animation when conversation is being loaded.  <a href="class_dialogue_choice.html#af3b69cf6f768cfd15cdd5fdbe270f4dd">More...</a><br /></td></tr>
 <tr class="separator:af3b69cf6f768cfd15cdd5fdbe270f4dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adced5c2f03efeaae9bd5f067d5840fc9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_dialogue_choice.html#adced5c2f03efeaae9bd5f067d5840fc9">ChangeConversation</a> ()</td></tr>
+<tr class="memdesc:adced5c2f03efeaae9bd5f067d5840fc9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change conversation in <a class="el" href="class_dialogue.html" title="Manager for displaying images, text, etc from parsed dialogue from ParseXML.">Dialogue</a> manager (triggered from an animation event)  <a href="class_dialogue_choice.html#adced5c2f03efeaae9bd5f067d5840fc9">More...</a><br /></td></tr>
 <tr class="separator:adced5c2f03efeaae9bd5f067d5840fc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5a315bb2c2ad2a089de6880620ac1e2d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_dialogue_choice.html#a5a315bb2c2ad2a089de6880620ac1e2d">DestroyButton</a> ()</td></tr>
+<tr class="memdesc:a5a315bb2c2ad2a089de6880620ac1e2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete the button gameObject upon having the choice be selected.  <a href="class_dialogue_choice.html#a5a315bb2c2ad2a089de6880620ac1e2d">More...</a><br /></td></tr>
 <tr class="separator:a5a315bb2c2ad2a089de6880620ac1e2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -121,16 +128,18 @@ Public Attributes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
 <tr class="memitem:a37004ae3e75bbfa2e3cc05a06573b137"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_dialogue_choice.html#a37004ae3e75bbfa2e3cc05a06573b137">Start</a> ()</td></tr>
+<tr class="memdesc:a37004ae3e75bbfa2e3cc05a06573b137"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize dialogue manager.  <a href="class_dialogue_choice.html#a37004ae3e75bbfa2e3cc05a06573b137">More...</a><br /></td></tr>
 <tr class="separator:a37004ae3e75bbfa2e3cc05a06573b137"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af66e7a13db099bc2569028119a25f4d2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_dialogue_choice.html#af66e7a13db099bc2569028119a25f4d2">Update</a> ()</td></tr>
-<tr class="separator:af66e7a13db099bc2569028119a25f4d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a8dbb3146bb9986af6a70d69b215888fe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_dialogue.html">Dialogue</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_dialogue_choice.html#a8dbb3146bb9986af6a70d69b215888fe">dialogueManager</a></td></tr>
 <tr class="separator:a8dbb3146bb9986af6a70d69b215888fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>A button that when clicked will play an animation and skip to the conversation given. </p>
+<dl class="section author"><dt>Author</dt><dd>Omar Ilyas </dd></dl>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="adced5c2f03efeaae9bd5f067d5840fc9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adced5c2f03efeaae9bd5f067d5840fc9">&#9670;&nbsp;</a></span>ChangeConversation()</h2>
 
@@ -145,6 +154,8 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Change conversation in <a class="el" href="class_dialogue.html" title="Manager for displaying images, text, etc from parsed dialogue from ParseXML.">Dialogue</a> manager (triggered from an animation event) </p>
 
 </div>
 </div>
@@ -163,6 +174,8 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Delete the button gameObject upon having the choice be selected. </p>
+
 </div>
 </div>
 <a id="af3b69cf6f768cfd15cdd5fdbe270f4dd"></a>
@@ -180,6 +193,8 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Run an animation when conversation is being loaded. </p>
+
 </div>
 </div>
 <a id="abfa19ad0fa2baed7a1630b1a5b32374a"></a>
@@ -196,6 +211,8 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Run an animation when button is clicked (with delay) </p>
 
 </div>
 </div>
@@ -222,30 +239,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-</div>
-</div>
-<a id="af66e7a13db099bc2569028119a25f4d2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af66e7a13db099bc2569028119a25f4d2">&#9670;&nbsp;</a></span>Update()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void DialogueChoice.Update </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
+<p>Initialize dialogue manager. </p>
+<p>Animator to play animations from </p>
 
 </div>
 </div>
@@ -261,6 +256,7 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p><a class="el" href="class_conversation.html" title="A collection of lines to load when a conversation is triggered or an option is chosen.">Conversation</a> id to go to when clicked </p>
 
 </div>
 </div>
@@ -275,6 +271,7 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Master dialogue manager to display conversation </p>
 
 </div>
 </div>
