@@ -6,7 +6,32 @@ ModelImporter:
   - first:
       74: -203655887218126122
     second: mixamo.com
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Hair_Color
+    second: {fileID: 2100000, guid: 6aff21b7fa947e74189ab1b591b0e92d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Pants_Clothes
+    second: {fileID: 2100000, guid: 5ec4ed6f53bb81f4b8a88856c2a34792, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Shoes
+    second: {fileID: 2100000, guid: 84ec5de1f16384844a1d54697227ac74, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Skin
+    second: {fileID: 2100000, guid: aac30feeece6dba47acf354f2eacad5a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Top_Clothes
+    second: {fileID: 2100000, guid: 93a8e9a937667cb4eb101ac49f040e38, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
