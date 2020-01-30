@@ -57,8 +57,9 @@ public class Dialogue : MonoBehaviour
     public GameObject AdvanceSprite;        /**Set Active if line is done*/
 
     //Colors
-    Color tanOrange = new Color(0.8018868f, 0.304684f, 0.1777768f); /**Text color*/
-    Color cerulianBlue = new Color(0.1764706f, 0.6452591f, 0.8f);   /**Text color*/
+    public Color tanOrange = new Color(0.8018868f, 0.304684f, 0.1777768f); /**Text color*/
+    public Color pennyGreen = new Color(0.8018868f, 0.304684f, 0.1777768f); /**Text color*/
+    public Color cerulianBlue = new Color(0.1764706f, 0.6452591f, 0.8f);   /**Text color*/
 
     bool canPress = false;                  /**Is the user allowed to advance the text?*/
     bool skip = false;                      /**Display all characters at once if true, one at a time if false*/
@@ -178,6 +179,9 @@ public class Dialogue : MonoBehaviour
         if (source.clip)
             source.Play();
 
+        Debug.Log(LeftmostChar.sprite.name);
+        Debug.Log(RightmostChar.sprite.name);
+
         //Go to next line
         AdvanceLine();
     }
@@ -248,6 +252,9 @@ public class Dialogue : MonoBehaviour
                     RightmostChar.sprite = dialog[sentenceIndex].Sprites[1];
             }
 
+            Debug.Log(LeftmostChar.sprite.name);
+            Debug.Log(RightmostChar.sprite.name);
+
             //Set name
             if (!dialog[sentenceIndex].Name.Equals(""))
             {
@@ -256,6 +263,8 @@ public class Dialogue : MonoBehaviour
                 //Give special color/frame image to special names
                 if (nameBox.text == "Adult")
                     SetFrameTextColor(cerulianBlue, cerulianBlue);
+                else if (nameBox.text == "Penny")
+                    SetFrameTextColor(pennyGreen, pennyGreen);
                 else
                     SetFrameTextColor(tanOrange, tanOrange);
             }

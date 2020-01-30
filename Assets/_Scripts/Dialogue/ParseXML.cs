@@ -170,9 +170,6 @@ public class ParseXML : MonoBehaviour
             Debug.Log("characters: " + characterList.Count);
             foreach (XmlNode character in characterList)
             {
-                //Create New SpriteList
-                List<Sprite> spriteList = new List<Sprite>();
-
                 //Store text from before in case options are specified
                 string previousLine = "";
 
@@ -187,6 +184,9 @@ public class ParseXML : MonoBehaviour
                 Debug.Log("Dialog line nodes created: " + lineList.Count);
                 foreach (XmlNode line in lineList)
                 {
+                    //Create New SpriteList
+                    List<Sprite> spriteList = new List<Sprite>();
+
                     //Parse dialogue lines
                     if (line.Name == "line")
                     {
