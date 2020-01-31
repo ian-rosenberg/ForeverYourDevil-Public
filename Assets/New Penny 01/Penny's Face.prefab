@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8215923945850150881}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.069301575, y: -0.090924084, z: 0.01255545}
+  m_LocalPosition: {x: -0.082, y: -0.113, z: 0.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8215923946748373199}
@@ -45,6 +45,7 @@ SpriteMask:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -136,13 +137,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8215923946211754801}
-  m_LocalRotation: {x: 0.7062715, y: 0.034359105, z: 0.034359116, w: 0.7062715}
-  m_LocalPosition: {x: 0, y: 0.08199918, z: -0.20599908}
+  m_LocalRotation: {x: 0.70870435, y: -0.004339506, z: 0.0033771903, w: 0.7054841}
+  m_LocalPosition: {x: -0.00000006996561, y: 0.08199903, z: -0.20599896}
   m_LocalScale: {x: 0.2372586, y: 0.2372586, z: 0.2372586}
   m_Children: []
   m_Father: {fileID: 8215923947439261811}
   m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 95.57001, y: -90, z: -90}
+  m_LocalEulerAnglesHint: {x: 90.27301, y: 16.324997, z: 16.949997}
 --- !u!212 &8215923946211754803
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -157,6 +158,7 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -250,7 +252,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8215923946609017857}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.016, y: -0.09, z: 0.053}
+  m_LocalPosition: {x: 0.039, y: -0.092, z: 0.006}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8215923947287694553}
@@ -270,6 +272,7 @@ SpriteMask:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -351,6 +354,7 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -413,7 +417,7 @@ Transform:
   m_GameObject: {fileID: 8215923946756862468}
   m_LocalRotation: {x: -0, y: -0, z: -0.0000000074505797, w: 1}
   m_LocalPosition: {x: 0.183, y: -0.116, z: 0.05}
-  m_LocalScale: {x: 0.7567655, y: 0.7567656, z: 0.75676554}
+  m_LocalScale: {x: 0.7567655, y: 0.7567656, z: 0.7567655}
   m_Children: []
   m_Father: {fileID: 8215923945884509043}
   m_RootOrder: 1
@@ -432,6 +436,7 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -513,6 +518,7 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -574,7 +580,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8215923946985965670}
   m_LocalRotation: {x: 0.7062715, y: 0.034359105, z: 0.034359116, w: 0.7062715}
-  m_LocalPosition: {x: -0.003, y: 0.033999145, z: -0.08999914}
+  m_LocalPosition: {x: -0.001, y: 0.048, z: -0.098}
   m_LocalScale: {x: 0.2372586, y: 0.2372586, z: 0.2372586}
   m_Children: []
   m_Father: {fileID: 8215923947439261811}
@@ -594,6 +600,7 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -675,6 +682,7 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -756,6 +764,7 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -838,6 +847,7 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
