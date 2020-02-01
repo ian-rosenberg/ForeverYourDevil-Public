@@ -6,7 +6,7 @@ public class CameraController : MonoBehaviour
 {
     //Camera controls
     public FollowObject followScript;
-    public Transform FollowY, FollowX;
+    public Transform FollowY, FollowX, CameraResetPoint;
     GameObject player;
 
     public float rotateSpeed;
@@ -14,7 +14,6 @@ public class CameraController : MonoBehaviour
     float zoom = 0f;
 
     Quaternion orig_rot_x, orig_rot_y;
-    Vector3 orig_zoom;
     float mouseX, mouseY;
 
     bool isCameraReseting;
@@ -63,17 +62,19 @@ public class CameraController : MonoBehaviour
         if (Input.GetAxis("Mouse ScrollWheel") < 0) // back
         {
             ResetCameraNotification.SetActive(true);
-            zoom -= 1f;
-            zoom = Mathf.Clamp(zoom, -6, 7);
-            transform.localPosition = orig_zoom + (transform.forward * zoom);
-
+            if (zoom >= -.8f)
+            {
+                zoom += Input.GetAxisRaw("Mouse ScrollWheel");
+                transform.position -= transform.forward;
+            }
         }
         if (Input.GetAxis("Mouse ScrollWheel") > 0) // forward
         {
-            ResetCameraNotification.SetActive(true);
-            zoom += 1f;
-            zoom = Mathf.Clamp(zoom, -6, 7);
-            transform.localPosition = orig_zoom + (transform.forward * zoom);
+            if (zoom <= .8f)
+            {
+                zoom += Input.GetAxisRaw("Mouse ScrollWheel");
+                transform.position += transform.forward;
+            }
         }
 
     }
@@ -87,7 +88,6 @@ public class CameraController : MonoBehaviour
         mouseX = -45;
         orig_rot_y = FollowY.localRotation; // Set default rot to current rot
         mouseY = orig_rot_y.x;
-        orig_zoom = transform.localPosition;
         isCameraReseting = false;
     }
 
@@ -106,9 +106,10 @@ public class CameraController : MonoBehaviour
             mouseX = Mathf.Lerp(mouseX, -45, cameraResetSpd);
             FollowY.localRotation = Quaternion.Lerp(FollowY.localRotation, orig_rot_y, cameraResetSpd);
             mouseY = Mathf.Lerp(mouseY, orig_rot_y.x, cameraResetSpd);
-            transform.localPosition = Vector3.Lerp(transform.localPosition, orig_zoom, cameraResetSpd);
+            zoom = 0f;
+            transform.position = Vector3.Lerp(transform.position, CameraResetPoint.position, cameraResetSpd);
 
-            if (limit >= .6f)
+            if (limit >= .7f)
                 break;
             yield return null; //advance frame
         }
