@@ -72,11 +72,27 @@ xsi:schemaLocation="https://www.w3schools.com/xml VN_Schema.xsd">
       <line sprite1="Penny_Normal" sprite2="Player">But I'm gonna be patient! I can't wait for more progress!</line>
     </character>
     <character name="Tan Pill">
-      <line>I'm really excited myself! Say hi to Wren for me!</line>
+      <line>I'm really excited myself!</line>
+      <line>Say, got any questions for the all mighty power that is TAN PILL?!!</line>
+      <options>
+        <choice id="Why">Why are you a pill..?</choice>
+        <choice id="How">How can you talk..?</choice>
+        <choice id="Nope">Nope!</choice>
+      </options>
+    </character>
+  </conversation>
+
+  <conversation id="Nope">
+    <character name="Penny">
+      <line sprite1="Penny_Sweat" sprite2="Player">Nope, not a one...</line>
+      <line>Sorry, I must be drawing a blank...</line>
+      <line sprite1="Penny_Normal" sprite2="Player">But I really appreciate the talk, Tan Pill!</line>
+    </character>
+    <character name="Tan Pill">
+      <line>Eyyyyyy, that's ok! See ya in the next time space compendiummmmm!</line>
     </character>
     <character name="Penny">
-      <line sprite1="Penny_Wow" sprite2="Player">You got it!!!</line>
-      <line sprite1="Penny_Normal" sprite2="Player">Bye!</line>
+      <line>Byeeeee!</line>
     </character>
   </conversation>
 
