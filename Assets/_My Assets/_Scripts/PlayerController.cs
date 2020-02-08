@@ -1,23 +1,29 @@
 ﻿using System.Collections;
-//using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
 /**
  * PlayerController - Script for player movement out-ofcombat and within combat
  * 
- * Author - Omar Ilyas
+ * Authors - Omar Ilyas, Ian Rosenberg
  * 
  * Tutorials used: Brackys - Navmesh Tutorials - https://www.youtube.com/watch?v=CHV1ymlw-P8&t=11s
  */
 
-public class PlayerController : MonoBehaviour
+public class PlayerController<Character> : MonoBehaviour, IAStarPathfinding<Character>
 {
-    gameManager gameManager;
+    private gameManager gameManager;
 
-    public grid grid;
+    private AStarNode combatPosition; // node representing the grid position of the player
 
-    public Animator anim;
+    private List<AStarNode> path; // The most efficient path
+
+    public List<AStarNode> possibleMoves; // all possible tiles that lead to the target
+
+    public grid grid; // the grid we are currently navigating
+
+    public Animator anim; // animation controller for player
 
     [Tooltip("Specify what layer(s) to use in raycast")]
     public LayerMask layerMask;
@@ -30,11 +36,15 @@ public class PlayerController : MonoBehaviour
     public GameObject clickIndicator; //Has 2 particle effects, one for normal and one for turning off.
     public Animator clickIndicAnim;
 
+
+
+
     // Awake is called before start
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         gameManager = gameManager.Instance;
+        combatPosition = new AStarNode();
         //rb = GetComponent<Rigidbody>();
     }
 
