@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using AStarPathfinding;
 
 /**
  * PlayerController - Script for player movement out-ofcombat and within combat
@@ -11,9 +12,11 @@ using UnityEngine.AI;
  * Tutorials used: Brackys - Navmesh Tutorials - https://www.youtube.com/watch?v=CHV1ymlw-P8&t=11s
  */
 
-public class PlayerController<Character> : MonoBehaviour, IAStarPathfinding<Character>
+public class PlayerController: MonoBehaviour
 {
     private gameManager gameManager;
+
+    private CharacterPathfinding<PlayerController> pathfinder;
 
     private AStarNode combatPosition; // node representing the grid position of the player
 
@@ -43,8 +46,7 @@ public class PlayerController<Character> : MonoBehaviour, IAStarPathfinding<Char
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-        gameManager = gameManager.Instance;
-        combatPosition = new AStarNode();
+        gameManager = gameManager.Instance; 
         //rb = GetComponent<Rigidbody>();
     }
 

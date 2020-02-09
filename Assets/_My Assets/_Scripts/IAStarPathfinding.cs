@@ -10,14 +10,16 @@ using UnityEngine;
  * Tutorials used: Random Art Attack - Custom Movement on a Grid and Path-Finding: Unity 3D Tutorial
  - https://www.youtube.com/watch?v=fUiNDDcU_I4&start=10s
  */
-
-interface IAStarPathfinding<Character>
+namespace AStarPathfinding
 {
-    List<AStarNode> GetNeighbors(Character c, AStarNode node);
+    interface IAStarPathfinding<Character>
+    {
+        List<AStarNode> GetNeighborsCloserToTarget(AStarNode node, AStarNode target);
 
-    uint CalculateDistanceMetric(Character c, AStarNode target);
+        float CalculateDistanceMetric(AStarNode target);
 
-    void ExpandTarversableRange(Character c, List<AStarNode> nodeList);
+        void ExpandTarversableRange(ref List<AStarNode> nodeList, ref int []distsToTarget);
 
-    void MoveCharacter(Character c);
+        void MoveCharacter(AStarNode target);
+    }
 }
