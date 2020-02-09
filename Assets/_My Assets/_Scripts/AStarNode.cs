@@ -38,7 +38,12 @@ public class AStarNode
         inCalc = false;
     }
 
-    void BubbleSortList(ref List<AStarNode> nodes)
+    public void ToggleSpaceValid()
+    {
+        validSpace = !validSpace;
+    }
+
+    public void BubbleSortList(ref List<AStarNode> nodes)
     {
         bool done = false;
         int i = 0;
