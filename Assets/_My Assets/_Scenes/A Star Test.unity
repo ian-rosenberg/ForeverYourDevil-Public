@@ -575,7 +575,7 @@ MonoBehaviour:
     spaceCount: 3
     wordCount: 4
     linkCount: 0
-    lineCount: 1
+    lineCount: 13
     pageCount: 1
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
@@ -1120,6 +1120,21 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 5564548128070328973}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1065933846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1065933844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 467c89b691a0991419e4bec5e22931e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scale: {x: 1, y: 1, z: 1}
+  gridThing: {fileID: 2894692937171874163, guid: 7176d8b38d256d24e84cde7c48d6397b,
+    type: 3}
 --- !u!4 &1177138973 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7736120608106499299, guid: 5912e50a99c2e3748adad53e6d7c74c2,
@@ -1343,10 +1358,16 @@ PrefabInstance:
       propertyPath: block
       value: 
       objectReference: {fileID: 1065933844}
+    - target: {fileID: 5564548128705112791, guid: 1077b9c134daf4d4fafa024392b5fc9e,
+        type: 3}
+      propertyPath: grid
+      value: 
+      objectReference: {fileID: 1065933846}
     - target: {fileID: 5564548128705112794, guid: 1077b9c134daf4d4fafa024392b5fc9e,
         type: 3}
       propertyPath: m_Name
       value: Grid
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5564548128705112788, guid: 1077b9c134daf4d4fafa024392b5fc9e, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 1077b9c134daf4d4fafa024392b5fc9e, type: 3}

@@ -24,7 +24,7 @@ public class PlayerController: MonoBehaviour
 
     public List<AStarNode> possibleMoves; // all possible tiles that lead to the target
 
-    public grid grid; // the grid we are currently navigating
+    public Grid grid; // the grid we are currently navigating
 
     public Animator anim; // animation controller for player
 

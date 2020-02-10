@@ -6,9 +6,11 @@ public class AStarNode
 {
     public AStarNode [,]neighbors;
 
+    public int id;
+
     //gird coords
-    public int gridX;
-    public int gridZ;
+    public int gridX = -1;
+    public int gridZ = -1;
 
     public Vector3 worldPosition;
 
@@ -18,7 +20,7 @@ public class AStarNode
 
     //Can we use this neigbor?
     public bool validSpace;
-    //
+    //Are we being used in pathfinding at this moment?
     public bool inCalc;
     
     // Start is called before the first frame update
@@ -64,5 +66,16 @@ public class AStarNode
                 done = true;
             }
         }
+    }
+
+    public void SetID(int i)
+    {
+        this.id = i;
+    }
+
+    public void SetCoords(int x, int z)
+    {
+        this.gridX = x;
+        this.gridZ = z;
     }
 }
