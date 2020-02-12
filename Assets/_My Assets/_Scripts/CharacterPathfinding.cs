@@ -28,7 +28,8 @@ public class CharacterPathfinding : MonoBehaviour
     public bool GetNeighborsCloserToTarget(ref List<AStarNode> neighbors, ref AStarNode node, TileGrid grid)
     {
 
-        Debug.Log(node.gridX + ' ' + node.gridZ);
+        Debug.Log(node.gridX + "," + node.gridZ);
+        
         //Check for northern neighbor
         if(node.neighbors[1,2] != null)
         {
@@ -100,6 +101,8 @@ public class CharacterPathfinding : MonoBehaviour
                 pctToNextTile = GetDistanceCoveredPct(current, next);
                 continue;
             }
+
+            loopStarted = true;
             
             List<float> dists = new List<float>();
             

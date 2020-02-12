@@ -24,23 +24,6 @@ public class AStarNode
     public bool validSpace;
     //Are we being used in pathfinding at this moment?
     public bool inCalc;
-    
-    // Start is called before the first frame update
-    void Awake()
-    {
-        neighbors = new AStarNode[3, 3];
-
-        gridX = -1;
-        gridZ = -1;
-        worldPosition = new Vector3(-1, -1, -1);
-        distToTarget = -1;
-        distToInitial = -1;
-
-        totalCost = -1f;
-
-        validSpace = true;
-        inCalc = false;
-    }
 
     public void ToggleSpaceValid()
     {

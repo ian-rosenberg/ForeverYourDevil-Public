@@ -153,7 +153,7 @@ public class PlayerController: MonoBehaviour
                         clickIndicator.transform.position = gridPoint + new Vector3(0, 2f, 0);
 
                         //Move player/agent to hit point
-                        pathfinder.MoveCharacter(grid.NearestGridNode(transform.position), grid.NearestGridNode(hit.point), grid);
+                        pathfinder.MoveCharacter(grid.NearestGridNode(transform.position), grid.NearestGridNode(gridPoint), grid);
                     }
                 }
 

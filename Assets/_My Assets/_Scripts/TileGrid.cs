@@ -41,24 +41,6 @@ public class TileGrid : MonoBehaviour
 
     public AStarNode NearestGridNode(Vector3 position)
     {
-        AStarNode node = null;
-        
-        //Subtract offset from math, then add it back in
-        position -= transform.position;
-
-        //Get the point closest to where your mouse is via rounding
-        int xCount = Mathf.RoundToInt(position.x / scale.x);
-        int yCount = Mathf.RoundToInt(position.y / scale.y);
-        int zCount = Mathf.RoundToInt(position.z / scale.z);
-
-        //Form vector with this point and separate by scale
-        Vector3 result = new Vector3(
-            (float)xCount * scale.x,
-            (float)yCount * scale.y,
-            (float)zCount * scale.z);
-
-        //Add offset back
-        Vector3 pos = result + transform.position;
         float closest = 10000000;
         Vector2Int index = Vector2Int.zero;
 
@@ -66,7 +48,7 @@ public class TileGrid : MonoBehaviour
         {
             for (int j = 0; j < dimensionsX; j++)
             {
-                float newVal = Vector3.Distance(position, new Vector3(nodeGrid[i, j].gridX, position.y, nodeGrid[i, j].gridZ));
+                float newVal = Vector3.Distance(position, new Vector3(nodeGrid[i, j].worldPosition.x, position.y, nodeGrid[i, j].worldPosition.z));
 
                 if (newVal < closest) 
                 {
@@ -122,7 +104,7 @@ public class TileGrid : MonoBehaviour
                 //Gizmos.DrawSphere(point, scale * 0.1f);
                 var clone = Instantiate(gridThing, point, gridThing.transform.rotation);
 
-                SetGridNodePosition(x, z, true);
+                SetGridNodePosition(x, z, true, point);
             }
         }
 
@@ -152,7 +134,7 @@ public class TileGrid : MonoBehaviour
     }
 
     //Self explanatory
-    public void SetGridNodePosition(int x, int z, bool walkableSpace)
+    public void SetGridNodePosition(int x, int z, bool walkableSpace, Vector3 p)
     {
         AStarNode node = new AStarNode();
 
@@ -160,6 +142,7 @@ public class TileGrid : MonoBehaviour
 
         node.validSpace = walkableSpace;
         node.inCalc = false;
+        node.worldPosition = p;
 
         nodeGrid[z, x] = node;
     }
@@ -168,11 +151,10 @@ public class TileGrid : MonoBehaviour
     public void PopulateNeighbors(int x, int z)
     {
         AStarNode node = nodeGrid[z, x];
+        node.neighbors = new AStarNode[3, 3];
 
         AStarNode[,] nArray = new AStarNode[3, 3];
 
-
-        Console.WriteLine("{0},{1}", node.gridX, node.gridZ);
 
         //North
         if (node.gridZ + 1 > -1 &&
@@ -181,6 +163,7 @@ public class TileGrid : MonoBehaviour
             if (nodeGrid[node.gridZ + 1, node.gridX].validSpace)
             {
                 nArray[1, 2] = nodeGrid[node.gridZ + 1, node.gridX];
+                node.neighbors[1,2] = nodeGrid[node.gridZ + 1, node.gridX];
             }
         }
 
@@ -191,6 +174,7 @@ public class TileGrid : MonoBehaviour
             if (nodeGrid[node.gridZ, node.gridX + 1].validSpace)
             {
                 nArray[2, 1] = nodeGrid[node.gridZ, node.gridX + 1];
+                node.neighbors[2, 1] = nodeGrid[node.gridZ, node.gridX + 1];
             }
         }
 
@@ -201,6 +185,7 @@ public class TileGrid : MonoBehaviour
             if (nodeGrid[node.gridZ - 1, node.gridX].validSpace)
             {
                 nArray[1, 0] = nodeGrid[node.gridZ - 1, node.gridX];
+                node.neighbors[1,0] = nodeGrid[node.gridZ - 1, node.gridX];
             }
         }
 
@@ -211,6 +196,7 @@ public class TileGrid : MonoBehaviour
             if (nodeGrid[node.gridZ, node.gridX - 1].validSpace)
             {
                 nArray[0, 1] = nodeGrid[node.gridZ, node.gridX - 1];
+                node.neighbors[0,1] = nodeGrid[node.gridZ, node.gridX - 1];
             }
         }
 
