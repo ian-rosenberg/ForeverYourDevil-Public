@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //Tutorial Used: https://www.youtube.com/watch?v=VBZFYGWvm4A
-public class Grid : MonoBehaviour
+public class TileGrid : MonoBehaviour
 {
     public const int homeFromNeighborValue = 1;
 
@@ -37,6 +37,47 @@ public class Grid : MonoBehaviour
 
         //Add offset back
         return result += transform.position;
+    }
+
+    public AStarNode NearestGridNode(Vector3 position)
+    {
+        AStarNode node = null;
+        
+        //Subtract offset from math, then add it back in
+        position -= transform.position;
+
+        //Get the point closest to where your mouse is via rounding
+        int xCount = Mathf.RoundToInt(position.x / scale.x);
+        int yCount = Mathf.RoundToInt(position.y / scale.y);
+        int zCount = Mathf.RoundToInt(position.z / scale.z);
+
+        //Form vector with this point and separate by scale
+        Vector3 result = new Vector3(
+            (float)xCount * scale.x,
+            (float)yCount * scale.y,
+            (float)zCount * scale.z);
+
+        //Add offset back
+        Vector3 pos = result + transform.position;
+        float closest = 10000000;
+        Vector2Int index = Vector2Int.zero;
+
+        for(int i = 0; i < dimensionsZ; i++)
+        {
+            for (int j = 0; j < dimensionsX; j++)
+            {
+                float newVal = Vector3.Distance(position, new Vector3(nodeGrid[i, j].gridX, position.y, nodeGrid[i, j].gridZ));
+
+                if (newVal < closest) 
+                {
+                    closest = newVal;
+
+                    index = new Vector2Int(j, i);
+                }
+            }
+        }
+
+        return nodeGrid[index.x,index.y];
     }
 
     //Draw the grid in Editor. 
@@ -137,9 +178,9 @@ public class Grid : MonoBehaviour
         if (node.gridZ + 1 > -1 &&
             node.gridZ + 1 < dimensionsZ)
         {
-            if (nodeGrid[node.gridZ, node.gridX + 1].validSpace)
+            if (nodeGrid[node.gridZ + 1, node.gridX].validSpace)
             {
-                nArray[1, 2] = nodeGrid[node.gridZ, node.gridX + 1];
+                nArray[1, 2] = nodeGrid[node.gridZ + 1, node.gridX];
             }
         }
 
@@ -147,9 +188,9 @@ public class Grid : MonoBehaviour
         if (node.gridX + 1 > -1 &&
             node.gridX + 1 < dimensionsX)
         {
-            if (nodeGrid[node.gridZ + 1, node.gridX].validSpace)
+            if (nodeGrid[node.gridZ, node.gridX + 1].validSpace)
             {
-                nArray[2, 1] = nodeGrid[node.gridZ + 1, node.gridX];
+                nArray[2, 1] = nodeGrid[node.gridZ, node.gridX + 1];
             }
         }
 
@@ -157,9 +198,9 @@ public class Grid : MonoBehaviour
         if (node.gridZ - 1 > -1 &&
             node.gridZ - 1 < dimensionsZ)
         {
-            if (nodeGrid[node.gridZ, node.gridX - 1].validSpace)
+            if (nodeGrid[node.gridZ - 1, node.gridX].validSpace)
             {
-                nArray[1, 0] = nodeGrid[node.gridZ, node.gridX - 1];
+                nArray[1, 0] = nodeGrid[node.gridZ - 1, node.gridX];
             }
         }
 
@@ -167,9 +208,9 @@ public class Grid : MonoBehaviour
         if (node.gridX - 1 > -1 &&
             node.gridX - 1 < dimensionsX)
         {
-            if (nodeGrid[node.gridZ - 1, node.gridX].validSpace)
+            if (nodeGrid[node.gridZ, node.gridX - 1].validSpace)
             {
-                nArray[0, 1] = nodeGrid[node.gridZ - 1, node.gridX];
+                nArray[0, 1] = nodeGrid[node.gridZ, node.gridX - 1];
             }
         }
 

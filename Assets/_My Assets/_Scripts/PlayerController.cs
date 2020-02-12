@@ -16,15 +16,11 @@ public class PlayerController: MonoBehaviour
 {
     private gameManager gameManager;
 
-    private CharacterPathfinding<PlayerController> pathfinder;
-
     private AStarNode combatPosition; // node representing the grid position of the player
 
-    private List<AStarNode> path; // The most efficient path
+    public CharacterPathfinding pathfinder;//pathfinding script
 
-    public List<AStarNode> possibleMoves; // all possible tiles that lead to the target
-
-    public Grid grid; // the grid we are currently navigating
+    public TileGrid grid; // the grid we are currently navigating
 
     public Animator anim; // animation controller for player
 
@@ -46,7 +42,8 @@ public class PlayerController: MonoBehaviour
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-        gameManager = gameManager.Instance; 
+        gameManager = gameManager.Instance;
+        pathfinder.SetObj(this.gameObject);
         //rb = GetComponent<Rigidbody>();
     }
 
@@ -156,7 +153,7 @@ public class PlayerController: MonoBehaviour
                         clickIndicator.transform.position = gridPoint + new Vector3(0, 2f, 0);
 
                         //Move player/agent to hit point
-                        agent.SetDestination(gridPoint);
+                        pathfinder.MoveCharacter(grid.NearestGridNode(transform.position), grid.NearestGridNode(hit.point), grid);
                     }
                 }
 

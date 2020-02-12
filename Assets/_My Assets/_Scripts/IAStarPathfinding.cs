@@ -12,14 +12,18 @@ using UnityEngine;
  */
 namespace AStarPathfinding
 {
-    interface IAStarPathfinding<Character>
+    interface IAStarPathfinding
     {
-        List<AStarNode> GetNeighborsCloserToTarget(AStarNode node, AStarNode target);
+        bool GetNeighborsCloserToTarget(ref List<AStarNode> neighbors, AStarNode node, TileGrid grid);
 
-        float CalculateDistanceMetric(AStarNode target);
+        AStarNode EliminateFarNodes(ref List<AStarNode> nodes, TileGrid grid, ref List<float> distsToTarget);
 
-        void ExpandTarversableRange(ref List<AStarNode> nodeList, ref int []distsToTarget);
+        //float CalculateDistanceMetric(AStarNode current, AStarNode target, TileGrid grid, ref List<float> distsToTarget);
 
-        void MoveCharacter(AStarNode target);
+        void MoveCharacter(AStarNode start, AStarNode goal, TileGrid grid);
+
+        float GetDistanceCoveredPct(AStarNode current, AStarNode next);
+
+        float GetDistance(AStarNode current, AStarNode nxt);
     }
 }

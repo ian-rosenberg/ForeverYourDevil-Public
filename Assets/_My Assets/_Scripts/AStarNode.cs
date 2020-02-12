@@ -14,8 +14,10 @@ public class AStarNode
 
     public Vector3 worldPosition;
 
-    public int distToTarget;
-    public int distToInitial;
+    public float distToTarget;
+    public float distToInitial;
+    public float hCost;
+    public float gCost;
     public float totalCost;
 
     //Can we use this neigbor?
