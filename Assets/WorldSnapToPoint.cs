@@ -32,7 +32,8 @@ public class WorldSnapToPoint : MonoBehaviour
             //If ray hit walkable area
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask)) //cast ray. if hit land, move
             {
-
+                
+                Debug.DrawLine(cam.ScreenToWorldPoint(Input.mousePosition), hit.point, Color.green);
                 //Get Grid Position
                 Vector3 gridPoint = grid.NearestGridPoint(hit.point);
 
