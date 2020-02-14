@@ -18,7 +18,13 @@ public class CharacterPathfinding : MonoBehaviour
     private List<AStarNode> closedPath;
 
     private float pctToNextTile;
-    
+    private bool startedTravel;
+
+    private void Start()
+    {
+        path = new List<AStarNode>();
+    }
+
     public void SetObj(GameObject o)
     {
         obj = o;
@@ -71,83 +77,118 @@ public class CharacterPathfinding : MonoBehaviour
             List<AStarNode> goal = new List<AStarNode>();
             goal.Add(target);
 
+            neighbors.Clear();
+            neighbors = goal;
+
             return true;
         }
 
-        return true;
+        return false;
     }
 
     //Determine the distance to travel to a specified target
-    /*public float CalculateDistanceMetric(AStarNode current, AStarNode target, TileGrid grid, ref List<float> distsToTarget)
+    /*public float CalculateDistanceMetric(AStarNode current, AStarNode target, TileGrid grid, ref Dictionary<uint, float> distsToTarget)
     {
         return 0;
     }*/
 
     //Actual implementation of algorithim
-    public void MoveCharacter(AStarNode s, AStarNode goal, TileGrid grid)
+    public List<AStarNode> MoveCharacter(AStarNode s, AStarNode goal, TileGrid grid)
     {
         List<AStarNode> neighbors = new List<AStarNode>();
-        bool loopStarted = false;
         start = s;
         current = start;
         pctToNextTile = 0f;
         target = goal;
-        
+        startedTravel = false;
+
+        Debug.Log("Beginning character movement, character is @ (" + start.gridX + "," + start.gridZ + ")");
+       
+        path.Add(start);
 
         do
         {
-            if(loopStarted || pctToNextTile > 0.10f)
-            {
-                pctToNextTile = GetDistanceCoveredPct(current, next);
-                continue;
-            }
 
-            loopStarted = true;
+            //this if hates me as well as Unity
+            // Basically we don't move and the loop never progresses
+            //must be an issue with the navmeshagent?
+            /*if(loopStarted || pctToNextTile > 10f)
+            {
+                if (!startedTravel)
+                {
+                    obj.GetComponent<NavMeshAgent>().SetDestination(next.worldPosition);
+
+                    startedTravel = true;
+                }
+
+
+                pctToNextTile = GetDistanceCoveredPct(current, next);
+                Debug.Log("Percentage of distance to next waypoint covered: (" + pctToNextTile + ")");
+                Debug.Log("Current tile position: (" + current.worldPosition + ")");
+
+                if(pctToNextTile < 10f)
+                {
+                    loopStarted = false;
+                }
+                continue;
+            }*/
+
+            Debug.Log("Looping");
             
-            List<float> dists = new List<float>();
+            Dictionary<uint, float> dists = new Dictionary<uint, float>();
             
             if(GetNeighborsCloserToTarget(ref neighbors, ref current, grid))
-            {   
-               break;
+            {
+
+                obj.GetComponent<PlayerController>().ToggleAutoMove();
+
+                foreach (AStarNode n in path)
+                {
+                    obj.GetComponent<PlayerController>().xzPath.Add(new Vector2Int(n.gridX, n.gridZ));
+                }
+                break;
             }
             next = EliminateFarNodes(ref neighbors, grid, ref dists);
+            path.Add(next);
 
-            obj.GetComponent<NavMeshAgent>().SetDestination(new Vector3(next.gridX + grid.gridThing.GetComponent<Renderer>().bounds.extents.x/2, obj.transform.position.y, next.gridZ + grid.gridThing.GetComponent<Renderer>().bounds.extents.z / 2));
         } while (current != target);
 
+        Debug.Log("<color=cyan>"+path[(path.Count - 1)]+"</color>" );
+
+        return path;
     }
 
-    public AStarNode EliminateFarNodes(ref List<AStarNode> nodes, TileGrid grid, ref List<float> distsToTarget)
+    public AStarNode EliminateFarNodes(ref List<AStarNode> nodes, TileGrid grid, ref Dictionary<uint, float> distsToTarget)
     {
-        float cur = 1000000000;
         List<AStarNode> potentialKeepers = new List<AStarNode>();
-        List<AStarNode> toReturn = new List<AStarNode>();
         AStarNode closest;
+        float cur = 0f;
+        int index = 0;
 
-        for(int i = 0; i < nodes.Count; i++)
+        cur = GetDistance(start, nodes[0]);
+
+        for (int i = 0; i < nodes.Count; i++)
         {
             if(GetDistance(start, nodes[i]) <= cur)
             {
                 potentialKeepers.Add(nodes[i]);
 
-                cur = GetDistance(start, nodes[i]);
+                distsToTarget.Add((uint)i,GetDistance(start, nodes[i]));
             }
         }
 
         closest = potentialKeepers[0];
 
-        for (int i = 0; i < potentialKeepers.Count; i++)
+        foreach(KeyValuePair<uint, float> nodeDist in distsToTarget)
         {
-            if(i+1 < potentialKeepers.Count)
+            if(nodeDist.Value <= cur)
             {
-                if(closest.distToTarget < potentialKeepers[i].distToTarget)
-                {
-                    closest = potentialKeepers[i];
-                }
+                cur = nodeDist.Value;
+                index = (int)nodeDist.Key;
             }
         }
 
-        return closest;
+        return nodes[index];
     }
 
     public float GetDistanceCoveredPct(AStarNode current, AStarNode nxt)

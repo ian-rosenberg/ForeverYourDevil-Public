@@ -13,10 +13,16 @@ public class TileGrid : MonoBehaviour
     public uint dimensionsX = 8;
     public uint dimensionsZ = 8;
 
+    public Vector3 defaultSpawn; 
+
     public Dictionary<AStarNode, AStarNode[,]> nodeDict;//key is the node, value is its neighbors
 
     public Vector3 scale = Vector2.one;
     public GameObject gridThing;
+
+    public  HighlightSpace hManager;
+
+    private int idCounter;
 
     //Get nearest grid point to whichever position is specified (ideally mouse position)
     public Vector3 NearestGridPoint(Vector3 position)
@@ -40,43 +46,49 @@ public class TileGrid : MonoBehaviour
     }
 
     public AStarNode NearestGridNode(Vector3 position)
-    {
+    {      
         float closest = 10000000;
-        Vector2Int index = Vector2Int.zero;
+        int x = 0, y = 0;
 
         for(int i = 0; i < dimensionsZ; i++)
         {
             for (int j = 0; j < dimensionsX; j++)
             {
-                float newVal = Vector3.Distance(position, new Vector3(nodeGrid[i, j].worldPosition.x, position.y, nodeGrid[i, j].worldPosition.z));
+                float newVal = Vector3.Distance(position, nodeGrid[i, j].worldPosition);
 
                 if (newVal < closest) 
                 {
                     closest = newVal;
-
-                    index = new Vector2Int(j, i);
+                    x = j;
+                    y = i;
                 }
             }
         }
 
-        return nodeGrid[index.x,index.y];
+        Debug.Log("Distance from ray hit to nearest node: " + closest);
+
+        Debug.Log("<color=blue>" + nodeGrid[y, x].id+"</color>");
+
+        return nodeGrid[y, x];
     }
 
     //Draw the grid in Editor. 
-    /*private void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
-        Gizmos.color = Color.green;
-        for (float z = 0; z < nodeGrid.dimensionsZ; z++ )
+        Vector3 s = gridThing.gameObject.transform.localScale;
+
+        Gizmos.color = Color.red;
+        for (float z = 0; z < dimensionsZ; z++ )
         {
-            for (float x = 0; x < nodeGrid.dimensionsX; x++)
+            for (float x = 0; x < dimensionsX; x++)
             {
                 // var point = NearestGridPoint(new Vector3(transform.position.x + x, 0f, transform.position.z + z));
-                var point = new Vector3(transform.position.x * x, transform.position.y, transform.position.z * z);
-                //Gizmos.DrawSphere(point, scale * 0.1f);
+                var point = new Vector3(transform.position.x + x * s.x, transform.position.y, transform.position.z + z * s.z);
+                Gizmos.DrawSphere(point, 0.5f);
                 //Gizmos.DrawWireCube(point, new Vector3(scale.x, scale.y, scale.z));
             }
         }
-    }*/
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -85,13 +97,36 @@ public class TileGrid : MonoBehaviour
 
         nodeGrid = new AStarNode[dimensionsZ, dimensionsX];
 
+        defaultSpawn = this.transform.position;
+
         makeGrid();
+
+    }
+
+    public void HighlightPath(List<AStarNode> path)
+    {
+        int i = 0;
+        int j = 0;
+
+        foreach(AStarNode item in path)
+        {
+            GameObject spot = hManager.GetUnusedSpot();
+            
+            spot.transform.position = item.worldPosition;
+
+            hManager.hSpots.Add(hManager.GetUnusedSpot(), 1);
+        }
+    }
+    public void RemoveHighlightedPath(List<AStarNode> prevPath)
+    {
+        hManager.ClearHighlightedSpots();
     }
 
     // Update is called once per frame
     public void makeGrid()
     {
-        Vector3 s = gridThing.gameObject.transform.lossyScale;
+        Vector3 s = gridThing.gameObject.transform.localScale;
+        Gizmos.color = Color.red;
 
         for (int z = 0; z < dimensionsZ; z++)
         {
@@ -143,6 +178,8 @@ public class TileGrid : MonoBehaviour
         node.validSpace = walkableSpace;
         node.inCalc = false;
         node.worldPosition = p;
+
+        node.id = idCounter++;
 
         nodeGrid[z, x] = node;
     }

@@ -23,6 +23,17 @@ public class gameManager : MonoBehaviour
     public GameObject normalWorld; //Represents overworld
     public GameObject battleWorld; //Represents battlefield
 
+    public Vector3 nodeBattlePos; // node position of player on battlefield
+
+    public LayerMask combatTravelLayerMask; // Only check for floor clicks, walls are no longer valid for combat
+
+    public List<AStarNode> prevPath;//The last path to un-highlight
+    public List<AStarNode> pathToTake;//The path that is returned by the pathfinding script
+
+    private AStarNode selected;
+    private CharacterPathfinding pathfinder;
+    private TileGrid g;
+
     private static gameManager instance;
     public static gameManager Instance
     {
@@ -45,6 +56,9 @@ public class gameManager : MonoBehaviour
     {
         isPaused = false;
         prevState = STATE.START; //Start out of combat
+        selected = null;
+        pathfinder = player.GetComponent<CharacterPathfinding>();
+        g = player.GetComponent<PlayerController>().grid;
     }
 
     // Update is called once per frame
@@ -65,7 +79,31 @@ public class gameManager : MonoBehaviour
                 PauseGame();
             }
         }
+        else if (gameState == STATE.COMBAT)
+        {
+            Ray r = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
 
+            //If ray hit walkable area
+            if (Physics.Raycast(r, out hit, Mathf.Infinity, combatTravelLayerMask)) //cast ray. if hit land, move
+            {
+                
+                
+                if (selected == null || selected != g.NearestGridNode(hit.point))
+                { 
+                    pathToTake = pathfinder.MoveCharacter(g.NearestGridNode(player.transform.position), g.NearestGridNode(hit.point), g);
+
+                    g.HighlightPath(pathToTake);
+
+                    if (pathToTake != prevPath)
+                    {
+                        g.RemoveHighlightedPath(prevPath);
+                    }
+
+                    selected = g.NearestGridNode(hit.point);
+                }
+            }           
+        }
     }
 
     public void PauseGame()
@@ -125,11 +163,13 @@ public class gameManager : MonoBehaviour
         battleWorld.SetActive(true);
 
         NavMeshAgent playerAgent = player.GetComponent<NavMeshAgent>();
+        //playerAgent.enabled = true;
         playerAgent.ResetPath();
         playerAgent.enabled = false;
 
         player.transform.position = playerSpawn[0].position;
         playerAgent.enabled = true;
+        //playerAgent.ResetPath();
         enemyCombatTriggerer.transform.position = enemySpawn[0].position;
         enemyCombatTriggerer = null;
         mainCamera.SetOffset(cameraSpawn.transform.position);

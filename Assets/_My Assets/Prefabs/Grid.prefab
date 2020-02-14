@@ -9,8 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5564548128705112789}
-  - component: {fileID: 5564548128705112788}
-  - component: {fileID: 5564548128705112791}
+  - component: {fileID: 1065933846}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -32,7 +31,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5564548128705112788
+--- !u!114 &1065933846
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,28 +40,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 5564548128705112794}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25a8cc30a467a5541901c7f201fcb537, type: 3}
+  m_Script: {fileID: 11500000, guid: 467c89b691a0991419e4bec5e22931e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 5
+  dimensionsX: 8
+  dimensionsZ: 8
+  scale: {x: 1, y: 1, z: 1}
   gridThing: {fileID: 2894692937171874163, guid: 7176d8b38d256d24e84cde7c48d6397b,
     type: 3}
---- !u!114 &5564548128705112791
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5564548128705112794}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19035611fd7e639459bbb889c098d5df, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 512
-  cam: {fileID: 0}
-  block: {fileID: 0}
-  grid: {fileID: 5564548128705112788}
-  gameManager: {fileID: 0}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using AStarPathfinding;
+using System;
 
 /**
  * PlayerController - Script for player movement out-ofcombat and within combat
@@ -35,7 +36,9 @@ public class PlayerController: MonoBehaviour
     public GameObject clickIndicator; //Has 2 particle effects, one for normal and one for turning off.
     public Animator clickIndicAnim;
 
+    public List<Vector2Int> xzPath;
 
+    private bool autoMove = false;
 
 
     // Awake is called before start
@@ -43,7 +46,7 @@ public class PlayerController: MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         gameManager = gameManager.Instance;
-        pathfinder.SetObj(this.gameObject);
+        //pathfinder.SetObj(this.gameObject);
         //rb = GetComponent<Rigidbody>();
     }
 
@@ -153,7 +156,7 @@ public class PlayerController: MonoBehaviour
                         clickIndicator.transform.position = gridPoint + new Vector3(0, 2f, 0);
 
                         //Move player/agent to hit point
-                        pathfinder.MoveCharacter(grid.NearestGridNode(transform.position), grid.NearestGridNode(gridPoint), grid);
+                        //pathfinder.MoveCharacter(grid.NearestGridNode(transform.position), grid.NearestGridNode(gridPoint), grid);
                     }
                 }
 
@@ -164,6 +167,12 @@ public class PlayerController: MonoBehaviour
             anim.SetFloat("Speed", (agent.velocity.magnitude / agent.speed));
         }
     }
+
+    public bool ToggleAutoMove()
+    {
+        return !autoMove;
+    }
+
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("ClickIndicator"))
@@ -180,5 +189,10 @@ public class PlayerController: MonoBehaviour
         yield return new WaitForSeconds(0.25f);
         //clickIndicator.SetActive(false);
 
+    }
+
+    public Vector3 GetDefaultGridSpawn()
+    {
+        return grid.defaultSpawn;
     }
 }
