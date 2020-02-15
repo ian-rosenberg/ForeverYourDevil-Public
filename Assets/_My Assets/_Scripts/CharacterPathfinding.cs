@@ -17,8 +17,8 @@ public class CharacterPathfinding : MonoBehaviour
     private List<AStarNode> openPath; // all possible tiles that lead to the target
     private List<AStarNode> closedPath;
 
-    private float pctToNextTile;
-    private bool startedTravel;
+    //private float pctToNextTile;
+    //private bool startedTravel;
 
     private void Start()
     {
@@ -31,54 +31,52 @@ public class CharacterPathfinding : MonoBehaviour
     }
 
     //Returns a list of adjacent nodes(N,S,E,W)
-    public bool GetNeighborsCloserToTarget(ref List<AStarNode> neighbors, ref AStarNode node, TileGrid grid)
+    public bool GetNeighborsCloserToTarget(List<AStarNode> neighbors, ref AStarNode node, TileGrid grid)
     {
 
-        Debug.Log(node.gridX + "," + node.gridZ);
-        
         //Check for northern neighbor
         if(node.neighbors[1,2] != null)
         {
-            if (node.neighbors[1, 2].validSpace)
+            if (node.neighbors[1, 2].validSpace && !node.neighbors[1, 2].inCalc)
             {
                 neighbors.Add(node.neighbors[1, 2]);
+                node.neighbors[1, 2].inCalc = true;
             }
         }
 
         //Check for eastern neighbor
         if (node.neighbors[2, 1] != null)
         {
-            if (node.neighbors[2, 1].validSpace)
+            if (node.neighbors[2, 1].validSpace && !node.neighbors[2, 1].inCalc)
             {
                 neighbors.Add(node.neighbors[2, 1]);
+                node.neighbors[2, 1].inCalc = true;
             }
         }
 
         //Check for southern neighbor
         if (node.neighbors[1, 0] != null)
         {
-            if (node.neighbors[1, 0].validSpace)
+            if (node.neighbors[1, 0].validSpace && !node.neighbors[1, 0].inCalc)
             {
                 neighbors.Add(node.neighbors[1, 0]);
+                node.neighbors[1, 0].inCalc = true;
             }
         }
 
         //Check for western neighbor
         if (node.neighbors[0, 1] != null)
         {
-            if (node.neighbors[0, 1].validSpace)
+            if (node.neighbors[0, 1].validSpace && !node.neighbors[0, 1].inCalc)
             {
                 neighbors.Add(node.neighbors[0, 1]);
+                node.neighbors[1, 0].inCalc = true;
             }
         }
 
         if(neighbors.Contains(target))
         {
-            List<AStarNode> goal = new List<AStarNode>();
-            goal.Add(target);
-
-            neighbors.Clear();
-            neighbors = goal;
+            path.Add(target);
 
             return true;
         }
@@ -93,22 +91,21 @@ public class CharacterPathfinding : MonoBehaviour
     }*/
 
     //Actual implementation of algorithim
-    public List<AStarNode> MoveCharacter(AStarNode s, AStarNode goal, TileGrid grid)
+    public List<AStarNode> GetCharacterPath(AStarNode s, AStarNode goal, TileGrid grid)
     {
-        List<AStarNode> neighbors = new List<AStarNode>();
         start = s;
         current = start;
-        pctToNextTile = 0f;
+        //pctToNextTile = 0f;
         target = goal;
-        startedTravel = false;
+        //startedTravel = false;
 
         Debug.Log("Beginning character movement, character is @ (" + start.gridX + "," + start.gridZ + ")");
-       
+
         path.Add(start);
 
         do
         {
-
+            List<AStarNode> neighbors = new List<AStarNode>();
             //this if hates me as well as Unity
             // Basically we don't move and the loop never progresses
             //must be an issue with the navmeshagent?
@@ -134,12 +131,11 @@ public class CharacterPathfinding : MonoBehaviour
             }*/
 
             Debug.Log("Looping");
-            
-            Dictionary<uint, float> dists = new Dictionary<uint, float>();
-            
-            if(GetNeighborsCloserToTarget(ref neighbors, ref current, grid))
-            {
 
+            Dictionary<uint, float> dists = new Dictionary<uint, float>();
+
+            if (GetNeighborsCloserToTarget(neighbors, ref current, grid))
+            {
                 obj.GetComponent<PlayerController>().ToggleAutoMove();
 
                 foreach (AStarNode n in path)
@@ -148,43 +144,75 @@ public class CharacterPathfinding : MonoBehaviour
                 }
                 break;
             }
-            next = EliminateFarNodes(ref neighbors, grid, ref dists);
+            next = EliminateFarNodes(neighbors, grid, ref dists);
+
+            if (next == null)
+            {
+                return path;
+            }
+
             path.Add(next);
 
         } while (current != target);
 
-        Debug.Log("<color=cyan>"+path[(path.Count - 1)]+"</color>" );
+        foreach (AStarNode n in path)
+        {
+            Debug.Log("<color=cyan>" + n.gridX+","+n.gridZ + "</color>");
+        }
+
+        for(int z = 0; z < grid.dimensionsZ; z++)
+        { 
+            for (int x = 0; x < grid.dimensionsX; x++)
+            {
+                grid.nodeGrid[z, x].inCalc = false;
+            }
+        }
 
         return path;
     }
 
-    public AStarNode EliminateFarNodes(ref List<AStarNode> nodes, TileGrid grid, ref Dictionary<uint, float> distsToTarget)
+    public AStarNode EliminateFarNodes(List<AStarNode> nodes, TileGrid grid, ref Dictionary<uint, float> distsToTarget)
     {
         List<AStarNode> potentialKeepers = new List<AStarNode>();
         AStarNode closest;
-        float cur = 0f;
+        float curVal = 0f;
         int index = 0;
-
-        cur = GetDistance(start, nodes[0]);
 
         for (int i = 0; i < nodes.Count; i++)
         {
-            if(GetDistance(start, nodes[i]) <= cur)
-            {
+            float dist = GetDistance(start, nodes[i]);
+
+
+            if (GetDistance(start, nodes[i]) <= curVal)
+            { 
+                curVal = nodes[i].distToTarget;
+
                 potentialKeepers.Add(nodes[i]);
 
-                distsToTarget.Add((uint)i,GetDistance(start, nodes[i]));
+                distsToTarget.Add((uint)i,dist);
             }
+        }
+
+        if(potentialKeepers.Count == 0)
+        {
+            return null;
         }
 
         closest = potentialKeepers[0];
 
         foreach(KeyValuePair<uint, float> nodeDist in distsToTarget)
         {
-            if(nodeDist.Value <= cur)
+            if(nodeDist.Value <= closest.distToTarget)
             {
-                cur = nodeDist.Value;
                 index = (int)nodeDist.Key;
+            }
+        }
+
+        foreach(AStarNode node in nodes)
+        {
+            if(node != closest)
+            {
+                node.inCalc = false;
             }
         }
 

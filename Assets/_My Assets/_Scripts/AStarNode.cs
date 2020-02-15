@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,6 +25,8 @@ public class AStarNode
     public bool validSpace;
     //Are we being used in pathfinding at this moment?
     public bool inCalc;
+
+    private GameObject highlightClone;
 
     public void ToggleSpaceValid()
     {
@@ -58,9 +61,30 @@ public class AStarNode
         this.id = i;
     }
 
-    public void SetCoords(int x, int z)
+    public void SetCoords(int x, int z, GameObject clone)
     {
         this.gridX = x;
         this.gridZ = z;
+        this.validSpace = true;
+        this.inCalc = false;
+        this.distToTarget = 0;
+        this.highlightClone = clone;
+    }
+
+    public void Highlight(bool ans)
+    {
+        if(ans)
+        {
+            this.highlightClone.transform.position = this.worldPosition;
+        }
+        else
+        {
+            this.highlightClone.transform.position = new Vector3(-100, -100, -100);
+        }
+    }
+
+    public void SetGlowSpot(GameObject clone)
+    {
+        this.highlightClone = clone;
     }
 }

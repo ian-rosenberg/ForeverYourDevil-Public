@@ -17,7 +17,7 @@ public class PlayerController: MonoBehaviour
 {
     private gameManager gameManager;
 
-    private AStarNode combatPosition; // node representing the grid position of the player
+    public AStarNode combatPosition; // node representing the grid position of the player
 
     public CharacterPathfinding pathfinder;//pathfinding script
 
@@ -38,6 +38,15 @@ public class PlayerController: MonoBehaviour
 
     public List<Vector2Int> xzPath;
 
+    public List<AStarNode> prevPath;//The last path to un-highlight
+    public List<AStarNode> pathToTake;//The path that is returned by the pathfinding script
+
+    public Vector3 nodeBattlePos; // node position of player on battlefield
+
+    public LayerMask combatTravelLayerMask; // Only check for floor clicks, walls are no longer valid for combat
+
+    private AStarNode selected;
+
     private bool autoMove = false;
 
 
@@ -46,8 +55,13 @@ public class PlayerController: MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         gameManager = gameManager.Instance;
-        //pathfinder.SetObj(this.gameObject);
-        //rb = GetComponent<Rigidbody>();
+        pathfinder.SetObj(this.gameObject);
+
+        selected = null;
+
+        pathToTake = null;
+        
+        prevPath = pathToTake;
     }
 
     // Start is called before the first frame update
@@ -155,8 +169,24 @@ public class PlayerController: MonoBehaviour
 
                         clickIndicator.transform.position = gridPoint + new Vector3(0, 2f, 0);
 
-                        //Move player/agent to hit point
-                        //pathfinder.MoveCharacter(grid.NearestGridNode(transform.position), grid.NearestGridNode(gridPoint), grid);
+                        if (selected == null || selected != grid.NearestGridNode(hit.point))
+                        {
+                            prevPath = pathToTake;
+
+                            pathToTake = pathfinder.GetCharacterPath(combatPosition, grid.NearestGridNode(hit.point), grid);
+
+                            if (pathToTake != prevPath)
+                            {
+                                grid.HighlightPath(pathToTake);
+
+                                if (prevPath != null)
+                                {
+                                    grid.RemoveHighlightedPath(prevPath);
+                                }
+
+                                selected = grid.NearestGridNode(hit.point);
+                            }
+                        }
                     }
                 }
 

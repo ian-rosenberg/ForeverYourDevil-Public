@@ -19,10 +19,11 @@ public class TileGrid : MonoBehaviour
 
     public Vector3 scale = Vector2.one;
     public GameObject gridThing;
+    public GameObject highlighter;
 
-    public  HighlightSpace hManager;
 
     private int idCounter;
+
 
     //Get nearest grid point to whichever position is specified (ideally mouse position)
     public Vector3 NearestGridPoint(Vector3 position)
@@ -65,10 +66,6 @@ public class TileGrid : MonoBehaviour
             }
         }
 
-        Debug.Log("Distance from ray hit to nearest node: " + closest);
-
-        Debug.Log("<color=blue>" + nodeGrid[y, x].id+"</color>");
-
         return nodeGrid[y, x];
     }
 
@@ -90,8 +87,7 @@ public class TileGrid : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         nodeDict = new Dictionary<AStarNode, AStarNode[,]>();
 
@@ -100,26 +96,21 @@ public class TileGrid : MonoBehaviour
         defaultSpawn = this.transform.position;
 
         makeGrid();
-
     }
 
     public void HighlightPath(List<AStarNode> path)
     {
-        int i = 0;
-        int j = 0;
-
-        foreach(AStarNode item in path)
+        foreach(AStarNode node in path)
         {
-            GameObject spot = hManager.GetUnusedSpot();
-            
-            spot.transform.position = item.worldPosition;
-
-            hManager.hSpots.Add(hManager.GetUnusedSpot(), 1);
+            node.Highlight(true);
         }
     }
     public void RemoveHighlightedPath(List<AStarNode> prevPath)
     {
-        hManager.ClearHighlightedSpots();
+        foreach (AStarNode node in prevPath)
+        {
+            node.Highlight(false);
+        }
     }
 
     // Update is called once per frame
@@ -127,6 +118,7 @@ public class TileGrid : MonoBehaviour
     {
         Vector3 s = gridThing.gameObject.transform.localScale;
         Gizmos.color = Color.red;
+        Vector3 spot = new Vector3(-100, -100, -100);
 
         for (int z = 0; z < dimensionsZ; z++)
         {
@@ -137,9 +129,9 @@ public class TileGrid : MonoBehaviour
                 var point = new Vector3(transform.position.x + x*s.x, transform.position.y, transform.position.z + z*s.z);
 
                 //Gizmos.DrawSphere(point, scale * 0.1f);
-                var clone = Instantiate(gridThing, point, gridThing.transform.rotation);
+                var clone = Instantiate(gridThing, spot, gridThing.transform.rotation);
 
-                SetGridNodePosition(x, z, true, point);
+                SetGridNodePosition(x, z, true, point, clone);
             }
         }
 
@@ -169,17 +161,19 @@ public class TileGrid : MonoBehaviour
     }
 
     //Self explanatory
-    public void SetGridNodePosition(int x, int z, bool walkableSpace, Vector3 p)
+    public void SetGridNodePosition(int x, int z, bool walkableSpace, Vector3 p, GameObject clone)
     {
         AStarNode node = new AStarNode();
 
-        node.SetCoords(x, z);
+        node.SetCoords(x, z, Instantiate(highlighter, p, highlighter.transform.rotation));
 
         node.validSpace = walkableSpace;
         node.inCalc = false;
         node.worldPosition = p;
 
         node.id = idCounter++;
+
+        node.SetGlowSpot(clone);
 
         nodeGrid[z, x] = node;
     }

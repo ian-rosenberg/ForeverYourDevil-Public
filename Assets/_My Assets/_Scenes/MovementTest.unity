@@ -2976,10 +2976,6 @@ MonoBehaviour:
   cameraSpawn: {fileID: 253835725}
   normalWorld: {fileID: 81750403}
   battleWorld: {fileID: 1624661013}
-  nodeBattlePos: {x: 0, y: 0, z: 0}
-  combatTravelLayerMask:
-    serializedVersion: 2
-    m_Bits: 512
   gameState: 1
 --- !u!1 &1061123594
 GameObject:
@@ -3259,6 +3255,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1624661014}
     m_Modifications:
+    - target: {fileID: 1065933846, guid: 1077b9c134daf4d4fafa024392b5fc9e, type: 3}
+      propertyPath: highlighter
+      value: 
+      objectReference: {fileID: 1649031128}
     - target: {fileID: 5564548128705112789, guid: 1077b9c134daf4d4fafa024392b5fc9e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4414,7 +4414,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1624661014
 Transform:
   m_ObjectHideFlags: 0
@@ -5458,6 +5458,11 @@ PrefabInstance:
       propertyPath: pathfinder
       value: 
       objectReference: {fileID: 591512267}
+    - target: {fileID: 4934818583679702467, guid: 456ea23be283ff443a9d3cda45f13747,
+        type: 3}
+      propertyPath: combatTravelLayerMask.m_Bits
+      value: 512
+      objectReference: {fileID: 0}
     - target: {fileID: 4934818583679702470, guid: 456ea23be283ff443a9d3cda45f13747,
         type: 3}
       propertyPath: m_LocalPosition.x
