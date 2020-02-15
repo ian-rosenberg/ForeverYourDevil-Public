@@ -169,8 +169,8 @@ public class PlayerController: MonoBehaviour
 
                         clickIndicator.transform.position = gridPoint + new Vector3(0, 2f, 0);
 
-                        if (selected == null || selected != grid.NearestGridNode(hit.point))
-                        {
+                        //if (selected == null || selected != grid.NearestGridNode(hit.point))
+                        //{
                             prevPath = pathToTake;
 
                             pathToTake = pathfinder.GetCharacterPath(combatPosition, grid.NearestGridNode(hit.point), grid);
@@ -186,7 +186,7 @@ public class PlayerController: MonoBehaviour
 
                                 selected = grid.NearestGridNode(hit.point);
                             }
-                        }
+                       // }
                     }
                 }
 

@@ -31,7 +31,7 @@ public class CharacterPathfinding : MonoBehaviour
     }
 
     //Returns a list of adjacent nodes(N,S,E,W)
-    public bool GetNeighborsCloserToTarget(List<AStarNode> neighbors, ref AStarNode node, TileGrid grid)
+    public bool CheckTargetNeighbors(ref List<AStarNode> neighbors, ref AStarNode node, TileGrid grid)
     {
 
         //Check for northern neighbor
@@ -101,6 +101,11 @@ public class CharacterPathfinding : MonoBehaviour
 
         Debug.Log("Beginning character movement, character is @ (" + start.gridX + "," + start.gridZ + ")");
 
+        if (start == goal)
+        {
+            return null;
+        }
+
         path.Add(start);
 
         do
@@ -133,8 +138,10 @@ public class CharacterPathfinding : MonoBehaviour
             Debug.Log("Looping");
 
             Dictionary<uint, float> dists = new Dictionary<uint, float>();
+            
 
-            if (GetNeighborsCloserToTarget(neighbors, ref current, grid))
+            //returns true on target found, false if only neighbors or no neighbors
+            if (CheckTargetNeighbors(ref neighbors, ref current, grid))
             {
                 obj.GetComponent<PlayerController>().ToggleAutoMove();
 
@@ -144,7 +151,7 @@ public class CharacterPathfinding : MonoBehaviour
                 }
                 break;
             }
-            next = EliminateFarNodes(neighbors, grid, ref dists);
+            next = EliminateFarNodes(ref neighbors, grid, ref dists);
 
             if (next == null)
             {
@@ -171,11 +178,11 @@ public class CharacterPathfinding : MonoBehaviour
         return path;
     }
 
-    public AStarNode EliminateFarNodes(List<AStarNode> nodes, TileGrid grid, ref Dictionary<uint, float> distsToTarget)
+    public AStarNode EliminateFarNodes(ref List<AStarNode> nodes, TileGrid grid, ref Dictionary<uint, float> distsToTarget)
     {
         List<AStarNode> potentialKeepers = new List<AStarNode>();
         AStarNode closest;
-        float curVal = 0f;
+        float curVal = 100000f;
         int index = 0;
 
         for (int i = 0; i < nodes.Count; i++)
