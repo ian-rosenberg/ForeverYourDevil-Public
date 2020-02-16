@@ -15,9 +15,9 @@ public class AStarNode
 
     public Vector3 worldPosition;
 
-    public float hCost; // cost to move from start to square, following generated path
-    public float gCost; //cost to get from current node to target
-    public float fCost; //final cost, f + h
+    public double hCost; // cost to move from start to square, following generated path
+    public double gCost; //cost to get from current node to target
+    public double fCost; //final cost, f + h
 
     //Can we use this neigbor?
     public bool validSpace;
@@ -41,9 +41,9 @@ public class AStarNode
         this.gridZ = z;
         this.validSpace = true;
         this.highlightClone = clone;
-        this.fCost = float.MaxValue; 
-        this.gCost = float.MaxValue;
-        this.hCost = float.MaxValue;
+        this.fCost = 0; 
+        this.gCost = 0;
+        this.hCost = 0;
         this.worldPosition = Vector3.zero;
     }
 
