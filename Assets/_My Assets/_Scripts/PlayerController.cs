@@ -170,7 +170,7 @@ public class PlayerController: MonoBehaviour
                         //{
                             prevPath = path;
 
-                            path = pathfinder.AStarSearch(combatPosition, grid.NearestGridNode(hit.point));
+                            path = pathfinder.AStarSearch(grid.NearestGridNode(transform.position), grid.NearestGridNode(hit.point));
 
                             if (path != prevPath)
                             {

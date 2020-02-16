@@ -46,7 +46,7 @@ public class TileGrid : MonoBehaviour
 
     public AStarNode NearestGridNode(Vector3 position)
     {      
-        float closest = 10000000;
+        float closest = Mathf.Infinity;
         int x = 0, y = 0;
 
         for(int i = 0; i < dimensionsZ; i++)
@@ -125,6 +125,8 @@ public class TileGrid : MonoBehaviour
                 var point = new Vector3(transform.position.x + x*s.x, transform.position.y, transform.position.z + z*s.z);
 
                 //Gizmos.DrawSphere(point, scale * 0.1f);
+
+                //remove player glowing quad
                 var clone = Instantiate(gridThing, spot, gridThing.transform.rotation);
 
                 SetGridNodePosition(x, z, true, point, clone);
@@ -158,8 +160,6 @@ public class TileGrid : MonoBehaviour
         node.worldPosition = p;
 
         node.id = idCounter++;
-
-        node.SetGlowSpot(clone);
 
         nodeGrid[z, x] = node;
     }

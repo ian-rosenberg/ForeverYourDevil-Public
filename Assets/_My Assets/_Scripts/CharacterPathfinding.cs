@@ -22,20 +22,35 @@ public class CharacterPathfinding : MonoBehaviour
     }
     public List<Vector2> TracePath()
     {
-        List<Vector2> pathXZ = new List<Vector2>();
+        List<Vector2> pathXZ = new List<Vector2>();//points for nodes for character to follow
         int curRow = target.gridZ;
         int curCol = target.gridX;
         Stack<AStarNode> path = new Stack<AStarNode>();
+        AStarNode cur = target;
+        AStarNode prev = null;
+        List<Vector2> l = new List<Vector2>();//list of the paths to take, which will be reversed
 
         Debug.Log("<color=red>Path found: </color>");
 
-        while (!(grid.nodeGrid[curRow, curCol].parent.gridZ == curRow &&
+        /*while (!(grid.nodeGrid[curRow, curCol].parent.gridZ == curRow &&
             grid.nodeGrid[curRow, curCol].parent.gridX == curCol))
         {
             path.Push(grid.nodeGrid[curRow, curCol]);
-            curCol = grid.nodeGrid[curRow, curCol].gridX;
-            curRow = grid.nodeGrid[curRow, curCol].gridZ;
-        }
+            curCol = grid.nodeGrid[curRow, curCol].parent.gridX;
+            curRow = grid.nodeGrid[curRow, curCol].parent.gridZ;
+        }*/
+
+        l.Add(new Vector2(cur.gridX, cur.gridZ));
+
+        do
+        {
+            prev = cur.parent;
+
+            cur = prev.parent;
+
+            l.Add(new Vector2(cur.gridX, cur.gridZ));
+
+        }while(prev != null)
 
         path.Push(grid.nodeGrid[curRow, curCol]);
 
@@ -60,6 +75,9 @@ public class CharacterPathfinding : MonoBehaviour
 
         start = s;
         target = goal;
+
+        Debug.Log("<color=blue>Start:(" + s.gridX + "," + s.gridZ + ")</color>");
+        Debug.Log("<color=green>Goal:(" + goal.gridX + "," + goal.gridZ + ")</color>");
 
         if (IsGoal(start))
         {
@@ -95,7 +113,20 @@ public class CharacterPathfinding : MonoBehaviour
 
         while (openPath.Count != 0)
         {
+            //Reset node costs
+            for (int ii = 0; ii < grid.dimensionsZ; ii++)
+            {
+                for (int jj = 0; jj < grid.dimensionsX; jj++)
+                {
+                    grid.nodeGrid[ii, jj].fCost = float.MaxValue;
+                    grid.nodeGrid[ii, jj].gCost = float.MaxValue;
+                    grid.nodeGrid[ii, jj].hCost = float.MaxValue;
+                }
+            }
+
             AStarNode node = openPath[0];
+            i = node.gridZ;
+            j = node.gridX;
 
             openPath.RemoveAt(0);
             closedList[node.gridZ, node.gridX] = true;
@@ -105,256 +136,280 @@ public class CharacterPathfinding : MonoBehaviour
             ///////////////////////////////////////////////////////////
             ///North
             ///////////////////////////////////////////////////////////
-            if (InGrid(i-1, j) && grid.nodeGrid[i - 1, j].validSpace)
+            if (InGrid(i - 1, j))
             {
-                if (IsGoal(grid.nodeGrid[i - 1, j]))
+                if (grid.nodeGrid[i - 1, j].validSpace)
                 {
-                    grid.nodeGrid[i - 1, j].parent = grid.nodeGrid[i, j];
-                    Debug.Log("<color=green>Destination found! </color>" + j + "," + (i-1));
-                    return TracePath();
+                    if (IsGoal(grid.nodeGrid[i - 1, j]))
+                    {
+                        grid.nodeGrid[i - 1, j].parent = grid.nodeGrid[i, j];
+                        Debug.Log("<color=green>Destination found! </color>" + j + "," + (i - 1));
+                        return TracePath();
+                    }
                 }
-            }
-            else if (InGrid(i - 1, j) && closedList[i - 1, j] == false &&
-                grid.nodeGrid[i - 1, j].validSpace)
-            {
-                gNew = grid.nodeGrid[i, j].gCost + 1.0f;
-                hNew = Mathf.Max(Mathf.Abs(grid.nodeGrid[i, j].gridX - target.gridX), Mathf.Abs(grid.nodeGrid[i, j].gridZ - target.gridZ));
-                fNew = gNew + hNew;
-
-                if (grid.nodeGrid[i - 1, j].fCost == float.MaxValue ||
-                    grid.nodeGrid[i - 1, j].fCost > fNew)
+                else if (InGrid(i - 1, j) && closedList[i - 1, j] == false &&
+                    grid.nodeGrid[i - 1, j].validSpace)
                 {
-                    openPath.Add(grid.nodeGrid[i - 1, j]);
-                    
-                    grid.nodeGrid[i - 1, j].fCost = fNew;
-                    grid.nodeGrid[i - 1, j].gCost = gNew;
-                    grid.nodeGrid[i - 1, j].hCost = hNew;
+                    gNew = grid.nodeGrid[i, j].gCost + 1.0f;
+                    hNew = Mathf.Max(Mathf.Abs(grid.nodeGrid[i, j].gridX - target.gridX), Mathf.Abs(grid.nodeGrid[i, j].gridZ - target.gridZ));
+                    fNew = gNew + hNew;
 
-                    grid.nodeGrid[i - 1, j].parent = grid.nodeGrid[i, j];
+                    if (grid.nodeGrid[i - 1, j].fCost == float.MaxValue ||
+                        grid.nodeGrid[i - 1, j].fCost > fNew)
+                    {
+                        openPath.Add(grid.nodeGrid[i - 1, j]);
+
+                        grid.nodeGrid[i - 1, j].fCost = fNew;
+                        grid.nodeGrid[i - 1, j].gCost = gNew;
+                        grid.nodeGrid[i - 1, j].hCost = hNew;
+
+                        grid.nodeGrid[i - 1, j].parent = grid.nodeGrid[i, j];
+                    }
                 }
             }
 
             ///////////////////////////////////////////////////////////
             //South
             ///////////////////////////////////////////////////////////
-            if (InGrid(i + 1, j) && grid.nodeGrid[i + 1, j].validSpace)
+            if (InGrid(i + 1, j))
             {
-                if (IsGoal(grid.nodeGrid[i + 1, j]))
+                if (grid.nodeGrid[i + 1, j].validSpace)
                 {
-                    grid.nodeGrid[i + 1, j].parent = grid.nodeGrid[i, j];
-                    Debug.Log("<color=green>Destination found! </color>" + j + "," + (i+1));
-                    return TracePath();
+                    if (IsGoal(grid.nodeGrid[i + 1, j]))
+                    {
+                        grid.nodeGrid[i + 1, j].parent = grid.nodeGrid[i, j];
+                        Debug.Log("<color=green>Destination found! </color>" + j + "," + (i + 1));
+                        return TracePath();
+                    }
                 }
-            }
-            else if (InGrid(i + 1, j) && closedList[i + 1, j] == false &&
-                grid.nodeGrid[i + 1, j].validSpace)
-            {
-                gNew = grid.nodeGrid[i, j].gCost + 1.0f;
-                hNew = Mathf.Max(Mathf.Abs(grid.nodeGrid[i, j].gridX - target.gridX), Mathf.Abs(grid.nodeGrid[i, j].gridZ - target.gridZ));
-                fNew = gNew + hNew;
-
-                if (grid.nodeGrid[i + 1, j].fCost == float.MaxValue ||
-                    grid.nodeGrid[i + 1, j].fCost > fNew)
+                else if (closedList[i + 1, j] == false &&
+                    grid.nodeGrid[i + 1, j].validSpace)
                 {
-                    openPath.Add(grid.nodeGrid[i + 1, j]);
+                    gNew = grid.nodeGrid[i, j].gCost + 1.0f;
+                    hNew = Mathf.Max(Mathf.Abs(grid.nodeGrid[i, j].gridX - target.gridX), Mathf.Abs(grid.nodeGrid[i, j].gridZ - target.gridZ));
+                    fNew = gNew + hNew;
 
-                    grid.nodeGrid[i + 1, j].fCost = fNew;
-                    grid.nodeGrid[i + 1, j].gCost = gNew;
-                    grid.nodeGrid[i + 1, j].hCost = hNew;
+                    if (grid.nodeGrid[i + 1, j].fCost == float.MaxValue ||
+                        grid.nodeGrid[i + 1, j].fCost > fNew)
+                    {
+                        openPath.Add(grid.nodeGrid[i + 1, j]);
 
-                    grid.nodeGrid[i + 1, j].parent = grid.nodeGrid[i, j];
+                        grid.nodeGrid[i + 1, j].fCost = fNew;
+                        grid.nodeGrid[i + 1, j].gCost = gNew;
+                        grid.nodeGrid[i + 1, j].hCost = hNew;
+
+                        grid.nodeGrid[i + 1, j].parent = grid.nodeGrid[i, j];
+                    }
                 }
             }
 
             ///////////////////////////////////////////////////////////
             ///East
             ///////////////////////////////////////////////////////////
-            if (InGrid(i, j + 1) && grid.nodeGrid[i, j + 1].validSpace)
+            if (InGrid(i, j + 1))
             {
-                if (IsGoal(grid.nodeGrid[i, j + 1]))
+                if (grid.nodeGrid[i, j + 1].validSpace)
                 {
-                    grid.nodeGrid[i, j + 1].parent = grid.nodeGrid[i, j];
-                    Debug.Log("<color=green>Destination found! </color>" + (j+1) + "," + i);
-                    return TracePath();
+                    if (IsGoal(grid.nodeGrid[i, j + 1]))
+                    {
+                        grid.nodeGrid[i, j + 1].parent = grid.nodeGrid[i, j];
+                        Debug.Log("<color=green>Destination found! </color>" + (j + 1) + "," + i);
+                        return TracePath();
+                    }
                 }
-            }
-            else if (InGrid(i, j + 1) && closedList[i, j + 1] == false &&
-                grid.nodeGrid[i, j + 1].validSpace)
-            {
-                gNew = grid.nodeGrid[i, j].gCost + 1.0f;
-                hNew = Mathf.Max(Mathf.Abs(grid.nodeGrid[i, j].gridX - target.gridX), Mathf.Abs(grid.nodeGrid[i, j].gridZ - target.gridZ));
-                fNew = gNew + hNew;
-
-                if (grid.nodeGrid[i, j + 1].fCost == float.MaxValue ||
-                    grid.nodeGrid[i, j + 1].fCost > fNew)
+                else if (closedList[i, j + 1] == false &&
+                    grid.nodeGrid[i, j + 1].validSpace)
                 {
-                    openPath.Add(grid.nodeGrid[i, j+1]);
+                    gNew = grid.nodeGrid[i, j].gCost + 1.0f;
+                    hNew = Mathf.Max(Mathf.Abs(grid.nodeGrid[i, j].gridX - target.gridX), Mathf.Abs(grid.nodeGrid[i, j].gridZ - target.gridZ));
+                    fNew = gNew + hNew;
 
-                    grid.nodeGrid[i, j + 1].fCost = fNew;
-                    grid.nodeGrid[i, j + 1].gCost = gNew;
-                    grid.nodeGrid[i, j + 1].hCost = hNew;
+                    if (grid.nodeGrid[i, j + 1].fCost == float.MaxValue ||
+                        grid.nodeGrid[i, j + 1].fCost > fNew)
+                    {
+                        openPath.Add(grid.nodeGrid[i, j + 1]);
 
-                    grid.nodeGrid[i, j + 1].parent = grid.nodeGrid[i, j];
+                        grid.nodeGrid[i, j + 1].fCost = fNew;
+                        grid.nodeGrid[i, j + 1].gCost = gNew;
+                        grid.nodeGrid[i, j + 1].hCost = hNew;
+
+                        grid.nodeGrid[i, j + 1].parent = grid.nodeGrid[i, j];
+                    }
                 }
             }
 
             ///////////////////////////////////////////////////////////
             ///West
             ///////////////////////////////////////////////////////////
-            if (InGrid(i, j - 1) && grid.nodeGrid[i, j - 1].validSpace)
+            if (InGrid(i, j - 1))
             {
-                if (IsGoal(grid.nodeGrid[i, j - 1]))
+                if (grid.nodeGrid[i, j - 1].validSpace)
                 {
-                    grid.nodeGrid[i, j - 1].parent = grid.nodeGrid[i, j];
-                    Debug.Log("<color=green>Destination found! </color>" + (j-1) + "," + i);
-                    return TracePath();
+                    if (IsGoal(grid.nodeGrid[i, j - 1]))
+                    {
+                        grid.nodeGrid[i, j - 1].parent = grid.nodeGrid[i, j];
+                        Debug.Log("<color=green>Destination found! </color>" + (j - 1) + "," + i);
+                        return TracePath();
+                    }
                 }
-            }
-            else if (InGrid(i, j - 1) && closedList[i, j - 1] == false &&
-                grid.nodeGrid[i, j - 1].validSpace)
-            {
-                gNew = grid.nodeGrid[i, j].gCost + 1.0f;
-                hNew = Mathf.Max(Mathf.Abs(grid.nodeGrid[i, j].gridX - target.gridX), Mathf.Abs(grid.nodeGrid[i, j].gridZ - target.gridZ));
-                fNew = gNew + hNew;
-
-                if (grid.nodeGrid[i, j - 1].fCost == float.MaxValue ||
-                    grid.nodeGrid[i, j - 1].fCost > fNew)
+                else if (closedList[i, j - 1] == false &&
+                    grid.nodeGrid[i, j - 1].validSpace)
                 {
-                    openPath.Add(grid.nodeGrid[i, j - 1]);
+                    gNew = grid.nodeGrid[i, j].gCost + 1.0f;
+                    hNew = Mathf.Max(Mathf.Abs(grid.nodeGrid[i, j].gridX - target.gridX), Mathf.Abs(grid.nodeGrid[i, j].gridZ - target.gridZ));
+                    fNew = gNew + hNew;
 
-                    grid.nodeGrid[i, j - 1].fCost = fNew;
-                    grid.nodeGrid[i, j - 1].gCost = gNew;
-                    grid.nodeGrid[i, j - 1].hCost = hNew;
+                    if (grid.nodeGrid[i, j - 1].fCost == float.MaxValue ||
+                        grid.nodeGrid[i, j - 1].fCost > fNew)
+                    {
+                        openPath.Add(grid.nodeGrid[i, j - 1]);
 
-                    grid.nodeGrid[i, j - 1].parent = grid.nodeGrid[i, j];
+                        grid.nodeGrid[i, j - 1].fCost = fNew;
+                        grid.nodeGrid[i, j - 1].gCost = gNew;
+                        grid.nodeGrid[i, j - 1].hCost = hNew;
+
+                        grid.nodeGrid[i, j - 1].parent = grid.nodeGrid[i, j];
+                    }
                 }
             }
 
             ///////////////////////////////////////////////////////////
             ///North-East
             ///////////////////////////////////////////////////////////
-            if (InGrid(i - 1, j + 1) && grid.nodeGrid[i - 1, j + 1].validSpace)
+            if (InGrid(i - 1, j + 1))
             {
-                if (IsGoal(grid.nodeGrid[i - 1, j+1]))
+                if (grid.nodeGrid[i - 1, j + 1].validSpace)
                 {
-                    grid.nodeGrid[i - 1, j+1].parent = grid.nodeGrid[i, j];
-                    Debug.Log("<color=green>Destination found! </color>" + (j -1)+ "," + (i+1));
-                    return TracePath();
+                    if (IsGoal(grid.nodeGrid[i - 1, j + 1]))
+                    {
+                        grid.nodeGrid[i - 1, j + 1].parent = grid.nodeGrid[i, j];
+                        Debug.Log("<color=green>Destination found! </color>" + (j - 1) + "," + (i + 1));
+                        return TracePath();
+                    }
                 }
-            }
-            else if (InGrid(i - 1, j + 1) && closedList[i - 1, j+1] == false &&
-                grid.nodeGrid[i - 1, j+1].validSpace)
-            {
-                gNew = grid.nodeGrid[i, j].gCost + 1.0f;
-                hNew = Mathf.Max(Mathf.Abs(grid.nodeGrid[i, j].gridX - target.gridX), Mathf.Abs(grid.nodeGrid[i, j].gridZ - target.gridZ));
-                fNew = gNew + hNew;
-
-                if (grid.nodeGrid[i - 1, j+1].fCost == float.MaxValue ||
-                    grid.nodeGrid[i - 1, j+1].fCost > fNew)
+                else if (closedList[i - 1, j + 1] == false &&
+                    grid.nodeGrid[i - 1, j + 1].validSpace)
                 {
-                    openPath.Add(grid.nodeGrid[i - 1, j+1]);
+                    gNew = grid.nodeGrid[i, j].gCost + 1.0f;
+                    hNew = Mathf.Max(Mathf.Abs(grid.nodeGrid[i, j].gridX - target.gridX), Mathf.Abs(grid.nodeGrid[i, j].gridZ - target.gridZ));
+                    fNew = gNew + hNew;
 
-                    grid.nodeGrid[i - 1, j+1].fCost = fNew;
-                    grid.nodeGrid[i - 1, j+1].gCost = gNew;
-                    grid.nodeGrid[i - 1, j+1].hCost = hNew;
+                    if (grid.nodeGrid[i - 1, j + 1].fCost == float.MaxValue ||
+                        grid.nodeGrid[i - 1, j + 1].fCost > fNew)
+                    {
+                        openPath.Add(grid.nodeGrid[i - 1, j + 1]);
 
-                    grid.nodeGrid[i - 1, j+1].parent = grid.nodeGrid[i, j];
+                        grid.nodeGrid[i - 1, j + 1].fCost = fNew;
+                        grid.nodeGrid[i - 1, j + 1].gCost = gNew;
+                        grid.nodeGrid[i - 1, j + 1].hCost = hNew;
+
+                        grid.nodeGrid[i - 1, j + 1].parent = grid.nodeGrid[i, j];
+                    }
                 }
             }
 
             ///////////////////////////////////////////////////////////
             ///North-West
             ///////////////////////////////////////////////////////////
-            if (InGrid(i - 1, j - 1) && grid.nodeGrid[i - 1, j-1].validSpace)
+            if (InGrid(i - 1, j - 1))
             {
-                if (IsGoal(grid.nodeGrid[i - 1, j-1]))
+                if (grid.nodeGrid[i - 1, j - 1].validSpace)
                 {
-                    grid.nodeGrid[i - 1, j-1].parent = grid.nodeGrid[i, j];
-                    Debug.Log("<color=green>Destination found! </color>" + j + "," + i);
-                    return TracePath();
+                    if (IsGoal(grid.nodeGrid[i - 1, j - 1]))
+                    {
+                        grid.nodeGrid[i - 1, j - 1].parent = grid.nodeGrid[i, j];
+                        Debug.Log("<color=green>Destination found! </color>" + j + "," + i);
+                        return TracePath();
+                    }
                 }
-            }
-            else if (InGrid(i - 1, j - 1) && closedList[i - 1, j-1] == false &&
-                grid.nodeGrid[i - 1, j-1].validSpace)
-            {
-                gNew = grid.nodeGrid[i, j].gCost + 1.0f;
-                hNew = Mathf.Max(Mathf.Abs(grid.nodeGrid[i, j].gridX - target.gridX), Mathf.Abs(grid.nodeGrid[i, j].gridZ - target.gridZ));
-                fNew = gNew + hNew;
-
-                if (grid.nodeGrid[i - 1, j-1].fCost == float.MaxValue ||
-                    grid.nodeGrid[i - 1, j-1].fCost > fNew)
+                else if (closedList[i - 1, j - 1] == false &&
+                    grid.nodeGrid[i - 1, j - 1].validSpace)
                 {
-                    openPath.Add(grid.nodeGrid[i - 1, j-1]);
+                    gNew = grid.nodeGrid[i, j].gCost + 1.0f;
+                    hNew = Mathf.Max(Mathf.Abs(grid.nodeGrid[i, j].gridX - target.gridX), Mathf.Abs(grid.nodeGrid[i, j].gridZ - target.gridZ));
+                    fNew = gNew + hNew;
 
-                    grid.nodeGrid[i - 1, j-1].fCost = fNew;
-                    grid.nodeGrid[i - 1, j-1].gCost = gNew;
-                    grid.nodeGrid[i - 1, j-1].hCost = hNew;
+                    if (grid.nodeGrid[i - 1, j - 1].fCost == float.MaxValue ||
+                        grid.nodeGrid[i - 1, j - 1].fCost > fNew)
+                    {
+                        openPath.Add(grid.nodeGrid[i - 1, j - 1]);
 
-                    grid.nodeGrid[i - 1, j-1].parent = grid.nodeGrid[i, j];
+                        grid.nodeGrid[i - 1, j - 1].fCost = fNew;
+                        grid.nodeGrid[i - 1, j - 1].gCost = gNew;
+                        grid.nodeGrid[i - 1, j - 1].hCost = hNew;
+
+                        grid.nodeGrid[i - 1, j - 1].parent = grid.nodeGrid[i, j];
+                    }
                 }
             }
 
             ///////////////////////////////////////////////////////////
             ///South-East
             ///////////////////////////////////////////////////////////
-            if (InGrid(i+1, j + 1) && grid.nodeGrid[i + 1, j + 1].validSpace)
+            if (InGrid(i + 1, j + 1))
             {
-                if (IsGoal(grid.nodeGrid[i + 1, j + 1]))
+                if (grid.nodeGrid[i + 1, j + 1].validSpace)
                 {
-                    grid.nodeGrid[i + 1, j + 1].parent = grid.nodeGrid[i, j];
-                    Debug.Log("<color=green>Destination found! </color>" + (j+1) + "," + (i+1));
-                    return TracePath();
+                    if (IsGoal(grid.nodeGrid[i + 1, j + 1]))
+                    {
+                        grid.nodeGrid[i + 1, j + 1].parent = grid.nodeGrid[i, j];
+                        Debug.Log("<color=green>Destination found! </color>" + (j + 1) + "," + (i + 1));
+                        return TracePath();
+                    }
                 }
-            }
-            else if (InGrid(i + 1, j + 1) && closedList[i + 1, j + 1] == false &&
-                grid.nodeGrid[i + 1, j + 1].validSpace)
-            {
-                gNew = grid.nodeGrid[i, j].gCost + 1.0f;
-                hNew = Mathf.Max(Mathf.Abs(grid.nodeGrid[i, j].gridX - target.gridX), Mathf.Abs(grid.nodeGrid[i, j].gridZ - target.gridZ));
-                fNew = gNew + hNew;
-
-                if (grid.nodeGrid[i + 1, j + 1].fCost == float.MaxValue ||
-                    grid.nodeGrid[i + 1, j + 1].fCost > fNew)
+                else if (closedList[i + 1, j + 1] == false &&
+                    grid.nodeGrid[i + 1, j + 1].validSpace)
                 {
-                    openPath.Add(grid.nodeGrid[i + 1, j+1]);
+                    gNew = grid.nodeGrid[i, j].gCost + 1.0f;
+                    hNew = Mathf.Max(Mathf.Abs(grid.nodeGrid[i, j].gridX - target.gridX), Mathf.Abs(grid.nodeGrid[i, j].gridZ - target.gridZ));
+                    fNew = gNew + hNew;
 
-                    grid.nodeGrid[i + 1, j + 1].fCost = fNew;
-                    grid.nodeGrid[i + 1, j + 1].gCost = gNew;
-                    grid.nodeGrid[i + 1, j + 1].hCost = hNew;
+                    if (grid.nodeGrid[i + 1, j + 1].fCost == float.MaxValue ||
+                        grid.nodeGrid[i + 1, j + 1].fCost > fNew)
+                    {
+                        openPath.Add(grid.nodeGrid[i + 1, j + 1]);
 
-                    grid.nodeGrid[i + 1, j + 1].parent = grid.nodeGrid[i, j];
+                        grid.nodeGrid[i + 1, j + 1].fCost = fNew;
+                        grid.nodeGrid[i + 1, j + 1].gCost = gNew;
+                        grid.nodeGrid[i + 1, j + 1].hCost = hNew;
+
+                        grid.nodeGrid[i + 1, j + 1].parent = grid.nodeGrid[i, j];
+                    }
                 }
             }
 
             ///////////////////////////////////////////////////////////
             ///South-West
             ///////////////////////////////////////////////////////////
-            if (InGrid(i+1, j - 1) && grid.nodeGrid[i + 1, j - 1].validSpace)
+            if (InGrid(i + 1, j - 1))
             {
-                if (IsGoal(grid.nodeGrid[i + 1, j - 1]))
+                if (grid.nodeGrid[i + 1, j - 1].validSpace)
                 {
-                    grid.nodeGrid[i + 1, j - 1].parent = grid.nodeGrid[i, j];
-                    Debug.Log("<color=green>Destination found! </color>" + j + "," + i);
-                    return TracePath();
+                    if (IsGoal(grid.nodeGrid[i + 1, j - 1]))
+                    {
+                        grid.nodeGrid[i + 1, j - 1].parent = grid.nodeGrid[i, j];
+                        Debug.Log("<color=green>Destination found! </color>" + j + "," + i);
+                        return TracePath();
+                    }
                 }
-            }
-            else if (InGrid(i + 1, j - 1) && closedList[i + 1, j - 1] == false &&
-                grid.nodeGrid[i + 1, j - 1].validSpace)
-            {
-                gNew = grid.nodeGrid[i, j].gCost + 1.0f;
-                hNew = Mathf.Max(Mathf.Abs(grid.nodeGrid[i, j].gridX - target.gridX), Mathf.Abs(grid.nodeGrid[i, j].gridZ - target.gridZ));
-                fNew = gNew + hNew;
-
-                if (grid.nodeGrid[i + 1, j - 1].fCost == float.MaxValue ||
-                    grid.nodeGrid[i + 1, j - 1].fCost > fNew)
+                else if (closedList[i + 1, j - 1] == false &&
+                    grid.nodeGrid[i + 1, j - 1].validSpace)
                 {
-                    openPath.Add(grid.nodeGrid[i + 1, j-1]);
+                    gNew = grid.nodeGrid[i, j].gCost + 1.0f;
+                    hNew = Mathf.Max(Mathf.Abs(grid.nodeGrid[i, j].gridX - target.gridX), Mathf.Abs(grid.nodeGrid[i, j].gridZ - target.gridZ));
+                    fNew = gNew + hNew;
 
-                    grid.nodeGrid[i + 1, j - 1].fCost = fNew;
-                    grid.nodeGrid[i + 1, j - 1].gCost = gNew;
-                    grid.nodeGrid[i + 1, j - 1].hCost = hNew;
+                    if (grid.nodeGrid[i + 1, j - 1].fCost == float.MaxValue ||
+                        grid.nodeGrid[i + 1, j - 1].fCost > fNew)
+                    {
+                        openPath.Add(grid.nodeGrid[i + 1, j - 1]);
 
-                    grid.nodeGrid[i + 1, j - 1].parent = grid.nodeGrid[i, j];
+                        grid.nodeGrid[i + 1, j - 1].fCost = fNew;
+                        grid.nodeGrid[i + 1, j - 1].gCost = gNew;
+                        grid.nodeGrid[i + 1, j - 1].hCost = hNew;
+
+                        grid.nodeGrid[i + 1, j - 1].parent = grid.nodeGrid[i, j];
+                    }
                 }
             }
         }
