@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class AStarNode
-{
-    public AStarNode [,]neighbors;
+{ 
+    public AStarNode parent;
 
     public int id;
 
@@ -15,45 +15,18 @@ public class AStarNode
 
     public Vector3 worldPosition;
 
-    public float distToTarget;
-    public float distToInitial;
-    public float hCost;
-    public float gCost;
-    public float totalCost;
+    public float hCost; // cost to move from start to square, following generated path
+    public float gCost; //cost to get from current node to target
+    public float fCost; //final cost, f + h
 
     //Can we use this neigbor?
     public bool validSpace;
-    //Are we being used in pathfinding at this moment?
-    public bool inCalc;
 
     private GameObject highlightClone;
 
     public void ToggleSpaceValid()
     {
         validSpace = !validSpace;
-    }
-
-    public void BubbleSortList(ref List<AStarNode> nodes)
-    {
-        bool done = false;
-        int i = 0;
-
-        while (!done)
-        {
-            for(;i< nodes.Count - 1; i++)
-            {
-                if(nodes[i].totalCost > nodes[i+1].totalCost)
-                {
-                    AStarNode temp = nodes[i];
-                    nodes[i] = nodes[i + 1];
-                    nodes[i + 1] = temp;
-
-                    continue;
-                }
-
-                done = true;
-            }
-        }
     }
 
     public void SetID(int i)
@@ -63,12 +36,15 @@ public class AStarNode
 
     public void SetCoords(int x, int z, GameObject clone)
     {
+        this.parent = null;
         this.gridX = x;
         this.gridZ = z;
         this.validSpace = true;
-        this.inCalc = false;
-        this.distToTarget = 0;
         this.highlightClone = clone;
+        this.fCost = float.MaxValue; 
+        this.gCost = float.MaxValue;
+        this.hCost = float.MaxValue;
+        this.worldPosition = Vector3.zero;
     }
 
     public void Highlight(bool ans)

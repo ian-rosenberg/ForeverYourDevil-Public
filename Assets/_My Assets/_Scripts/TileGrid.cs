@@ -15,8 +15,6 @@ public class TileGrid : MonoBehaviour
 
     public Vector3 defaultSpawn; 
 
-    public Dictionary<AStarNode, AStarNode[,]> nodeDict;//key is the node, value is its neighbors
-
     public Vector3 scale = Vector2.one;
     public GameObject gridThing;
     public GameObject highlighter;
@@ -89,8 +87,6 @@ public class TileGrid : MonoBehaviour
 
     void Awake()
     {
-        nodeDict = new Dictionary<AStarNode, AStarNode[,]>();
-
         nodeGrid = new AStarNode[dimensionsZ, dimensionsX];
 
         defaultSpawn = this.transform.position;
@@ -98,18 +94,18 @@ public class TileGrid : MonoBehaviour
         makeGrid();
     }
 
-    public void HighlightPath(List<AStarNode> path)
+    public void HighlightPath(List<Vector2> path)
     {
-        foreach(AStarNode node in path)
+        foreach(Vector2 p in path)
         {
-            node.Highlight(true);
+            NearestGridNode(p).Highlight(true);
         }
     }
-    public void RemoveHighlightedPath(List<AStarNode> prevPath)
+    public void RemoveHighlightedPath(List<Vector2> prevPath)
     {
-        foreach (AStarNode node in prevPath)
+        foreach (Vector2 p in prevPath)
         {
-            node.Highlight(false);
+            NearestGridNode(p).Highlight(false);
         }
     }
 
@@ -132,15 +128,6 @@ public class TileGrid : MonoBehaviour
                 var clone = Instantiate(gridThing, spot, gridThing.transform.rotation);
 
                 SetGridNodePosition(x, z, true, point, clone);
-            }
-        }
-
-        //populate nodes' neighbor lists with their neighbors
-        for (int z = 0; z < dimensionsZ; z++)
-        {
-            for (int x = 0; x < dimensionsX; x++)
-            {
-                PopulateNeighbors(x, z);
             }
         }
     }
@@ -168,7 +155,6 @@ public class TileGrid : MonoBehaviour
         node.SetCoords(x, z, Instantiate(highlighter, p, highlighter.transform.rotation));
 
         node.validSpace = walkableSpace;
-        node.inCalc = false;
         node.worldPosition = p;
 
         node.id = idCounter++;
@@ -176,62 +162,6 @@ public class TileGrid : MonoBehaviour
         node.SetGlowSpot(clone);
 
         nodeGrid[z, x] = node;
-    }
-
-    //Create a 2d array per node based on it's neighbors
-    public void PopulateNeighbors(int x, int z)
-    {
-        AStarNode node = nodeGrid[z, x];
-        node.neighbors = new AStarNode[3, 3];
-
-        AStarNode[,] nArray = new AStarNode[3, 3];
-
-
-        //North
-        if (node.gridZ + 1 > -1 &&
-            node.gridZ + 1 < dimensionsZ)
-        {
-            if (nodeGrid[node.gridZ + 1, node.gridX].validSpace)
-            {
-                nArray[1, 2] = nodeGrid[node.gridZ + 1, node.gridX];
-                node.neighbors[1,2] = nodeGrid[node.gridZ + 1, node.gridX];
-            }
-        }
-
-        //East
-        if (node.gridX + 1 > -1 &&
-            node.gridX + 1 < dimensionsX)
-        {
-            if (nodeGrid[node.gridZ, node.gridX + 1].validSpace)
-            {
-                nArray[2, 1] = nodeGrid[node.gridZ, node.gridX + 1];
-                node.neighbors[2, 1] = nodeGrid[node.gridZ, node.gridX + 1];
-            }
-        }
-
-        //South
-        if (node.gridZ - 1 > -1 &&
-            node.gridZ - 1 < dimensionsZ)
-        {
-            if (nodeGrid[node.gridZ - 1, node.gridX].validSpace)
-            {
-                nArray[1, 0] = nodeGrid[node.gridZ - 1, node.gridX];
-                node.neighbors[1,0] = nodeGrid[node.gridZ - 1, node.gridX];
-            }
-        }
-
-        //West
-        if (node.gridX - 1 > -1 &&
-            node.gridX - 1 < dimensionsX)
-        {
-            if (nodeGrid[node.gridZ, node.gridX - 1].validSpace)
-            {
-                nArray[0, 1] = nodeGrid[node.gridZ, node.gridX - 1];
-                node.neighbors[0,1] = nodeGrid[node.gridZ, node.gridX - 1];
-            }
-        }
-
-        nodeDict.Add(node, nArray);
     }
  
 }

@@ -36,10 +36,8 @@ public class PlayerController: MonoBehaviour
     public GameObject clickIndicator; //Has 2 particle effects, one for normal and one for turning off.
     public Animator clickIndicAnim;
 
-    public List<Vector2Int> xzPath;
-
-    public List<AStarNode> prevPath;//The last path to un-highlight
-    public List<AStarNode> pathToTake;//The path that is returned by the pathfinding script
+    public List<Vector2> path;
+    public List<Vector2> prevPath;//The last path to un-highlight
 
     public Vector3 nodeBattlePos; // node position of player on battlefield
 
@@ -55,13 +53,12 @@ public class PlayerController: MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         gameManager = gameManager.Instance;
-        pathfinder.SetObj(this.gameObject);
 
         selected = null;
 
-        pathToTake = null;
+        path = null;
         
-        prevPath = pathToTake;
+        prevPath = path;
     }
 
     // Start is called before the first frame update
@@ -171,13 +168,13 @@ public class PlayerController: MonoBehaviour
 
                         //if (selected == null || selected != grid.NearestGridNode(hit.point))
                         //{
-                            prevPath = pathToTake;
+                            prevPath = path;
 
-                            pathToTake = pathfinder.GetCharacterPath(combatPosition, grid.NearestGridNode(hit.point), grid);
+                            path = pathfinder.AStarSearch(combatPosition, grid.NearestGridNode(hit.point));
 
-                            if (pathToTake != prevPath)
+                            if (path != prevPath)
                             {
-                                grid.HighlightPath(pathToTake);
+                                grid.HighlightPath(path);
 
                                 if (prevPath != null)
                                 {
