@@ -140,27 +140,26 @@ public class CharacterPathfinding : MonoBehaviour
                     if (IsGoal(grid.nodeGrid[i - 1, j]))
                     {
                         grid.nodeGrid[i - 1, j].parent = node;
-                        Debug.Log("<color=green>Destination found! </color>" + (i-1) + "," + j);
+                        Debug.Log("<color=green>Destination found! </color>" + (i - 1) + "," + j);
                         return TracePath();
                     }
-                }
-                else if (InGrid(i - 1, j) && closedList[i - 1, j] == false &&
-                    grid.nodeGrid[i - 1, j].validSpace)
-                {
-                     gNew = node.gCost + 1.0f;
-                     hNew = Mathf.Sqrt((node.gridX - target.gridX-1) * 2 + (node.gridZ - target.gridZ) * 2);
-                     fNew = gNew + hNew;
-
-                    if (grid.nodeGrid[i - 1, j].fCost == double.MaxValue ||
-                        grid.nodeGrid[i - 1, j].fCost > fNew)
+                    else if (closedList[i - 1, j] == false)
                     {
-                        openPath.Add(grid.nodeGrid[i - 1, j]);
+                        gNew = node.gCost + 1.0f;
+                        hNew = Mathf.Sqrt((node.gridX - target.gridX - 1) * 2 + (node.gridZ - target.gridZ) * 2);
+                        fNew = gNew + hNew;
 
-                        grid.nodeGrid[i - 1, j].fCost = fNew;
-                        grid.nodeGrid[i - 1, j].gCost = gNew;
-                        grid.nodeGrid[i - 1, j].hCost = hNew;
+                        if (grid.nodeGrid[i - 1, j].fCost == double.MaxValue ||
+                            grid.nodeGrid[i - 1, j].fCost > fNew)
+                        {
+                            openPath.Add(grid.nodeGrid[i - 1, j]);
 
-                        grid.nodeGrid[i - 1, j].parent = node;
+                            grid.nodeGrid[i - 1, j].fCost = fNew;
+                            grid.nodeGrid[i - 1, j].gCost = gNew;
+                            grid.nodeGrid[i - 1, j].hCost = hNew;
+
+                            grid.nodeGrid[i - 1, j].parent = node;
+                        }
                     }
                 }
             }
@@ -175,27 +174,26 @@ public class CharacterPathfinding : MonoBehaviour
                     if (IsGoal(grid.nodeGrid[i + 1, j]))
                     {
                         grid.nodeGrid[i + 1, j].parent = node;
-                        Debug.Log("<color=green>Destination found! </color>" + i+1 + "," + j);
+                        Debug.Log("<color=green>Destination found! </color>" + i + 1 + "," + j);
                         return TracePath();
                     }
-                }
-                else if (closedList[i + 1, j] == false &&
-                    grid.nodeGrid[i + 1, j].validSpace)
-                {
-                    gNew = node.gCost + 1.0f;
-                    hNew = Mathf.Sqrt((node.gridX - target.gridX+1) * 2 + (node.gridZ - target.gridZ) * 2);
-                    fNew = gNew + hNew;
-
-                    if (grid.nodeGrid[i + 1, j].fCost == double.MaxValue ||
-                        grid.nodeGrid[i + 1, j].fCost > fNew)
+                    else if (closedList[i + 1, j] == false)
                     {
-                        openPath.Add(grid.nodeGrid[i + 1, j]);
+                        gNew = node.gCost + 1.0f;
+                        hNew = Mathf.Sqrt((node.gridX - target.gridX + 1) * 2 + (node.gridZ - target.gridZ) * 2);
+                        fNew = gNew + hNew;
 
-                        grid.nodeGrid[i + 1, j].fCost = fNew;
-                        grid.nodeGrid[i + 1, j].gCost = gNew;
-                        grid.nodeGrid[i + 1, j].hCost = hNew;
+                        if (grid.nodeGrid[i + 1, j].fCost == double.MaxValue ||
+                            grid.nodeGrid[i + 1, j].fCost > fNew)
+                        {
+                            openPath.Add(grid.nodeGrid[i + 1, j]);
 
-                        grid.nodeGrid[i + 1, j].parent = node;
+                            grid.nodeGrid[i + 1, j].fCost = fNew;
+                            grid.nodeGrid[i + 1, j].gCost = gNew;
+                            grid.nodeGrid[i + 1, j].hCost = hNew;
+
+                            grid.nodeGrid[i + 1, j].parent = node;
+                        }
                     }
                 }
             }
@@ -213,24 +211,23 @@ public class CharacterPathfinding : MonoBehaviour
                         Debug.Log("<color=green>Destination found! </color>" + (j + 1) + "," + i);
                         return TracePath();
                     }
-                }
-                else if (closedList[i, j + 1] == false &&
-                    grid.nodeGrid[i, j + 1].validSpace)
-                {
-                    gNew = node.gCost + 1.0f;
-                    hNew = Mathf.Sqrt((node.gridX - target.gridX) * 2 + (node.gridZ - target.gridZ+1) * 2);
-                    fNew = gNew + hNew;
-
-                    if (grid.nodeGrid[i, j + 1].fCost == double.MaxValue ||
-                        grid.nodeGrid[i, j + 1].fCost > fNew)
+                    else if (closedList[i, j + 1] == false)
                     {
-                        openPath.Add(grid.nodeGrid[i, j + 1]);
+                        gNew = node.gCost + 1.0f;
+                        hNew = Mathf.Sqrt((node.gridX - target.gridX) * 2 + (node.gridZ - target.gridZ + 1) * 2);
+                        fNew = gNew + hNew;
 
-                        grid.nodeGrid[i, j + 1].fCost = fNew;
-                        grid.nodeGrid[i, j + 1].gCost = gNew;
-                        grid.nodeGrid[i, j + 1].hCost = hNew;
+                        if (grid.nodeGrid[i, j + 1].fCost == double.MaxValue ||
+                            grid.nodeGrid[i, j + 1].fCost > fNew)
+                        {
+                            openPath.Add(grid.nodeGrid[i, j + 1]);
 
-                        grid.nodeGrid[i, j + 1].parent = node;
+                            grid.nodeGrid[i, j + 1].fCost = fNew;
+                            grid.nodeGrid[i, j + 1].gCost = gNew;
+                            grid.nodeGrid[i, j + 1].hCost = hNew;
+
+                            grid.nodeGrid[i, j + 1].parent = node;
+                        }
                     }
                 }
             }
@@ -248,24 +245,23 @@ public class CharacterPathfinding : MonoBehaviour
                         Debug.Log("<color=green>Destination found! </color>" + i + "," + (j - 1));
                         return TracePath();
                     }
-                }
-                else if (closedList[i, j - 1] == false &&
-                    grid.nodeGrid[i, j - 1].validSpace)
-                {
-                    gNew = node.gCost + 1.0f;
-                    hNew = Mathf.Sqrt((node.gridX - target.gridX) * 2 + (node.gridZ - target.gridZ-1) * 2);
-                    fNew = gNew + hNew;
-
-                    if (grid.nodeGrid[i, j - 1].fCost == double.MaxValue ||
-                        grid.nodeGrid[i, j - 1].fCost > fNew)
+                    else if (closedList[i, j - 1] == false)
                     {
-                        openPath.Add(grid.nodeGrid[i, j - 1]);
+                        gNew = node.gCost + 1.0f;
+                        hNew = Mathf.Sqrt((node.gridX - target.gridX) * 2 + (node.gridZ - target.gridZ - 1) * 2);
+                        fNew = gNew + hNew;
 
-                        grid.nodeGrid[i, j - 1].fCost = fNew;
-                        grid.nodeGrid[i, j - 1].gCost = gNew;
-                        grid.nodeGrid[i, j - 1].hCost = hNew;
+                        if (grid.nodeGrid[i, j - 1].fCost == double.MaxValue ||
+                            grid.nodeGrid[i, j - 1].fCost > fNew)
+                        {
+                            openPath.Add(grid.nodeGrid[i, j - 1]);
 
-                        grid.nodeGrid[i, j - 1].parent = node;
+                            grid.nodeGrid[i, j - 1].fCost = fNew;
+                            grid.nodeGrid[i, j - 1].gCost = gNew;
+                            grid.nodeGrid[i, j - 1].hCost = hNew;
+
+                            grid.nodeGrid[i, j - 1].parent = node;
+                        }
                     }
                 }
             }
@@ -280,27 +276,27 @@ public class CharacterPathfinding : MonoBehaviour
                     if (IsGoal(grid.nodeGrid[i - 1, j + 1]))
                     {
                         grid.nodeGrid[i - 1, j + 1].parent = node;
-                        Debug.Log("<color=green>Destination found! </color>" + (i-1) + "," + (j + 1));
+                        Debug.Log("<color=green>Destination found! </color>" + (i - 1) + "," + (j + 1));
                         return TracePath();
+
                     }
-                }
-                else if (closedList[i - 1, j + 1] == false &&
-                    grid.nodeGrid[i - 1, j + 1].validSpace)
-                {
-                    gNew = node.gCost + 1.0f;
-                    hNew = Mathf.Sqrt((node.gridX - target.gridX-1) * 2 + (node.gridZ - target.gridZ+1) * 2);
-                    fNew = gNew + hNew;
-
-                    if (grid.nodeGrid[i - 1, j + 1].fCost == double.MaxValue ||
-                        grid.nodeGrid[i - 1, j + 1].fCost > fNew)
+                    else if (closedList[i - 1, j + 1] == false)
                     {
-                        openPath.Add(grid.nodeGrid[i - 1, j + 1]);
+                        gNew = node.gCost + 1.0f;
+                        hNew = Mathf.Sqrt((node.gridX - target.gridX - 1) * 2 + (node.gridZ - target.gridZ + 1) * 2);
+                        fNew = gNew + hNew;
 
-                        grid.nodeGrid[i - 1, j + 1].fCost = fNew;
-                        grid.nodeGrid[i - 1, j + 1].gCost = gNew;
-                        grid.nodeGrid[i - 1, j + 1].hCost = hNew;
+                        if (grid.nodeGrid[i - 1, j + 1].fCost == double.MaxValue ||
+                            grid.nodeGrid[i - 1, j + 1].fCost > fNew)
+                        {
+                            openPath.Add(grid.nodeGrid[i - 1, j + 1]);
 
-                        grid.nodeGrid[i - 1, j + 1].parent = node;
+                            grid.nodeGrid[i - 1, j + 1].fCost = fNew;
+                            grid.nodeGrid[i - 1, j + 1].gCost = gNew;
+                            grid.nodeGrid[i - 1, j + 1].hCost = hNew;
+
+                            grid.nodeGrid[i - 1, j + 1].parent = node;
+                        }
                     }
                 }
             }
@@ -315,27 +311,26 @@ public class CharacterPathfinding : MonoBehaviour
                     if (IsGoal(grid.nodeGrid[i - 1, j - 1]))
                     {
                         grid.nodeGrid[i - 1, j - 1].parent = node;
-                        Debug.Log("<color=green>Destination found! </color>" + (j-1) + "," + (i-1));
+                        Debug.Log("<color=green>Destination found! </color>" + (j - 1) + "," + (i - 1));
                         return TracePath();
                     }
-                }
-                else if (closedList[i - 1, j - 1] == false &&
-                    grid.nodeGrid[i - 1, j - 1].validSpace)
-                {
-                    gNew = node.gCost + 1.0f;
-                    hNew = Mathf.Sqrt((node.gridX - target.gridX-1) * 2 + (node.gridZ - target.gridZ-1) * 2);
-                    fNew = gNew + hNew;
-
-                    if (grid.nodeGrid[i - 1, j - 1].fCost == double.MaxValue ||
-                        grid.nodeGrid[i - 1, j - 1].fCost > fNew)
+                    else if (closedList[i - 1, j - 1] == false)
                     {
-                        openPath.Add(grid.nodeGrid[i - 1, j - 1]);
+                        gNew = node.gCost + 1.0f;
+                        hNew = Mathf.Sqrt((node.gridX - target.gridX - 1) * 2 + (node.gridZ - target.gridZ - 1) * 2);
+                        fNew = gNew + hNew;
 
-                        grid.nodeGrid[i - 1, j - 1].fCost = fNew;
-                        grid.nodeGrid[i - 1, j - 1].gCost = gNew;
-                        grid.nodeGrid[i - 1, j - 1].hCost = hNew;
+                        if (grid.nodeGrid[i - 1, j - 1].fCost == double.MaxValue ||
+                            grid.nodeGrid[i - 1, j - 1].fCost > fNew)
+                        {
+                            openPath.Add(grid.nodeGrid[i - 1, j - 1]);
 
-                        grid.nodeGrid[i - 1, j - 1].parent = node;
+                            grid.nodeGrid[i - 1, j - 1].fCost = fNew;
+                            grid.nodeGrid[i - 1, j - 1].gCost = gNew;
+                            grid.nodeGrid[i - 1, j - 1].hCost = hNew;
+
+                            grid.nodeGrid[i - 1, j - 1].parent = node;
+                        }
                     }
                 }
             }
@@ -353,24 +348,23 @@ public class CharacterPathfinding : MonoBehaviour
                         Debug.Log("<color=green>Destination found! </color>" + (i + 1) + "," + (j + 1));
                         return TracePath();
                     }
-                }
-                else if (closedList[i + 1, j + 1] == false &&
-                    grid.nodeGrid[i + 1, j + 1].validSpace)
-                {
-                    gNew = node.gCost + 1.0f;
-                    hNew = Mathf.Sqrt((node.gridX - target.gridX+1) * 2 + (node.gridZ - target.gridZ+1) * 2);
-                    fNew = gNew + hNew;
-
-                    if (grid.nodeGrid[i + 1, j + 1].fCost == double.MaxValue ||
-                        grid.nodeGrid[i + 1, j + 1].fCost > fNew)
+                    else if (closedList[i + 1, j + 1] == false)
                     {
-                        openPath.Add(grid.nodeGrid[i + 1, j + 1]);
+                        gNew = node.gCost + 1.0f;
+                        hNew = Mathf.Sqrt((node.gridX - target.gridX + 1) * 2 + (node.gridZ - target.gridZ + 1) * 2);
+                        fNew = gNew + hNew;
 
-                        grid.nodeGrid[i + 1, j + 1].fCost = fNew;
-                        grid.nodeGrid[i + 1, j + 1].gCost = gNew;
-                        grid.nodeGrid[i + 1, j + 1].hCost = hNew;
+                        if (grid.nodeGrid[i + 1, j + 1].fCost == double.MaxValue ||
+                            grid.nodeGrid[i + 1, j + 1].fCost > fNew)
+                        {
+                            openPath.Add(grid.nodeGrid[i + 1, j + 1]);
 
-                        grid.nodeGrid[i + 1, j + 1].parent = node;
+                            grid.nodeGrid[i + 1, j + 1].fCost = fNew;
+                            grid.nodeGrid[i + 1, j + 1].gCost = gNew;
+                            grid.nodeGrid[i + 1, j + 1].hCost = hNew;
+
+                            grid.nodeGrid[i + 1, j + 1].parent = node;
+                        }
                     }
                 }
             }
@@ -385,27 +379,26 @@ public class CharacterPathfinding : MonoBehaviour
                     if (IsGoal(grid.nodeGrid[i + 1, j - 1]))
                     {
                         grid.nodeGrid[i + 1, j - 1].parent = node;
-                        Debug.Log("<color=green>Destination found! </color>" + (i+1) + "," + (j-1));
+                        Debug.Log("<color=green>Destination found! </color>" + (i + 1) + "," + (j - 1));
                         return TracePath();
                     }
-                }
-                else if (closedList[i + 1, j - 1] == false &&
-                    grid.nodeGrid[i + 1, j - 1].validSpace)
-                {
-                    gNew = node.gCost + 1.0f;
-                    hNew = Mathf.Sqrt((node.gridX - target.gridX-1) * 2 + (node.gridZ - target.gridZ+1) * 2);
-                    fNew = gNew + hNew;
-
-                    if (grid.nodeGrid[i + 1, j - 1].fCost == double.MaxValue ||
-                        grid.nodeGrid[i + 1, j - 1].fCost > fNew)
+                    else if (closedList[i + 1, j - 1] == false)
                     {
-                        openPath.Add(grid.nodeGrid[i + 1, j - 1]);
+                        gNew = node.gCost + 1.0f;
+                        hNew = Mathf.Sqrt((node.gridX - target.gridX - 1) * 2 + (node.gridZ - target.gridZ + 1) * 2);
+                        fNew = gNew + hNew;
 
-                        grid.nodeGrid[i + 1, j - 1].fCost = fNew;
-                        grid.nodeGrid[i + 1, j - 1].gCost = gNew;
-                        grid.nodeGrid[i + 1, j - 1].hCost = hNew;
+                        if (grid.nodeGrid[i + 1, j - 1].fCost == double.MaxValue ||
+                            grid.nodeGrid[i + 1, j - 1].fCost > fNew)
+                        {
+                            openPath.Add(grid.nodeGrid[i + 1, j - 1]);
 
-                        grid.nodeGrid[i + 1, j - 1].parent = node;
+                            grid.nodeGrid[i + 1, j - 1].fCost = fNew;
+                            grid.nodeGrid[i + 1, j - 1].gCost = gNew;
+                            grid.nodeGrid[i + 1, j - 1].hCost = hNew;
+
+                            grid.nodeGrid[i + 1, j - 1].parent = node;
+                        }
                     }
                 }
             }
