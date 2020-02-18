@@ -78,8 +78,9 @@ public class TileGrid : MonoBehaviour
         for (float z = 0; z < dimensionsZ; z++ )
         {
             for (float x = 0; x < dimensionsX; x++)
-            {
-                var point = new Vector3(transform.position.x + x * s.x + extents.x, transform.position.y, transform.position.z + z * s.z + extents.z);
+            { 
+                var point = new Vector3(transform.position.x + x * s.x+x, transform.position.y, transform.position.z + z * s.z);//multiply by local scale
+
                 //var point = NearestGridPoint(new Vector3(transform.position.x + x * extents.x*s.x, transform.position.y, transform.position.z + z * extents.z*s.z));
                 //var point = new Vector3(transform.position.x * x + extents.x * scale.x, transform.position.y, transform.position.z * z + extents.z * scale.z);
                 Gizmos.DrawCube(point, scale);
@@ -106,11 +107,14 @@ public class TileGrid : MonoBehaviour
             NearestGridNode(new Vector3(p.x, transform.position.y, p.y)).Highlight(true);
         }
     }
-    public void RemoveHighlightedPath(List<Vector2> prevPath)
+    public void RemoveHighlights()
     {
-        foreach (Vector2 p in prevPath)
+        for (int z = 0; z < dimensionsZ; z++)
         {
-            NearestGridNode(new Vector3(p.x, transform.position.y, p.y)).Highlight(false);
+            for (int x = 0; x < dimensionsX; x++)
+            {
+                nodeGrid[z,x].Highlight(false);
+            }
         }
     }
 
@@ -127,13 +131,13 @@ public class TileGrid : MonoBehaviour
             {
                 // var point = NearestGridPoint(new Vector3(transform.position.x + x, 0f, transform.position.z + z));
                 // var point = NearestGridPoint(new Vector3(transform.position.x + x, transform.position.y, transform.position.z + z));
-                var point = new Vector3(transform.position.x + x*s.x, transform.position.y, transform.position.z + z*s.z);//multiply by local scale
+                var point = new Vector3(transform.position.x + x*s.x+x, transform.position.y, transform.position.z + z*s.z+z);//multiply by local scale
 
                 //Gizmos.DrawSphere(point, scale * 0.1f);
 
-                var clone = Instantiate(gridThing, point, gridThing.transform.rotation);
+                var clone = Instantiate(gridThing, point + new Vector3(3f, 0, 3f), gridThing.transform.rotation);
 
-                SetGridNodePosition(x, z, true, point + bounds.center, clone);
+                SetGridNodePosition(x, z, true, point + bounds.center, clone, bounds.center);
             }
         }
     }
@@ -154,14 +158,15 @@ public class TileGrid : MonoBehaviour
     }
 
     //Self explanatory
-    public void SetGridNodePosition(int x, int z, bool walkableSpace, Vector3 p, GameObject clone)
+    public void SetGridNodePosition(int x, int z, bool walkableSpace, Vector3 p, GameObject clone, Vector3 centerOffset)
     {
         AStarNode node = new AStarNode();
 
-        node.SetCoords(x, z, Instantiate(highlighter, p + new Vector3(0,300,0), highlighter.transform.rotation));
+        GameObject hClone = Instantiate(highlighter, p + new Vector3(3f, 300, 3f), highlighter.transform.rotation);        
+        node.SetCoords(x, z, hClone);
 
         node.validSpace = walkableSpace;
-        node.worldPosition = p;
+        node.worldPosition = p - new Vector3(centerOffset.x, centerOffset.y, centerOffset.z);
 
         node.id = idCounter++;
 

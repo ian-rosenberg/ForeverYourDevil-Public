@@ -22,7 +22,7 @@ public class AStarNode
     //Can we use this neigbor?
     public bool validSpace;
 
-    private GameObject highlightClone;
+    public GameObject highlightClone;
 
     public void ToggleSpaceValid()
     {
@@ -49,7 +49,7 @@ public class AStarNode
 
     public void Highlight(bool ans)
     {
-        if(ans)
+        if (ans)
         {
             this.highlightClone.transform.position = this.worldPosition;
         }
@@ -57,10 +57,5 @@ public class AStarNode
         {
             this.highlightClone.transform.position = new Vector3(-100, -100, -100);
         }
-    }
-
-    public void SetGlowSpot(GameObject clone)
-    {
-        this.highlightClone = clone;
     }
 }

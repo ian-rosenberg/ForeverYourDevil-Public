@@ -130,11 +130,11 @@ public class gameManager : MonoBehaviour
         playerAgent.ResetPath();
         playerAgent.enabled = false;
 
-        player.transform.position = playerSpawn[0].position;
+        player.transform.position = pc.grid.NearestGridNode(playerSpawn[0].position).worldPosition;
         pc.combatPosition = pc.grid.NearestGridNode(player.transform.position);
         playerAgent.enabled = true;
         //playerAgent.ResetPath();
-        enemyCombatTriggerer.transform.position = enemySpawn[0].position;
+        enemyCombatTriggerer.transform.position = pc.grid.NearestGridNode(enemySpawn[0].position).worldPosition;
         enemyCombatTriggerer = null;
         mainCamera.SetOffset(cameraSpawn.transform.position);
         

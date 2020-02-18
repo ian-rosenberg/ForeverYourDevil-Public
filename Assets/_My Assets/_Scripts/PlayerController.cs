@@ -36,8 +36,8 @@ public class PlayerController: MonoBehaviour
     public GameObject clickIndicator; //Has 2 particle effects, one for normal and one for turning off.
     public Animator clickIndicAnim;
 
-    public List<Vector2> path;
-    public List<Vector2> prevPath;//The last path to un-highlight
+    public List<Vector2> path; //current path - x == x, y == z
+    public List<Vector2> prevPath;//The last path to un-highlight - x == x, y == z
 
     public Vector3 nodeBattlePos; // node position of player on battlefield
 
@@ -176,9 +176,14 @@ public class PlayerController: MonoBehaviour
                             {
                                 grid.HighlightPath(path);
 
+                                for(int i = 0; i < path.Count; i++)
+                                {
+                                    path[i] = new Vector2(path[i].x + grid.bounds.center.x, path[i].x + grid.bounds.center.y);
+                                }
+
                                 if (prevPath != null)
                                 {
-                                    grid.RemoveHighlightedPath(prevPath);
+                                    grid.RemoveHighlights();
                                 }
 
                                 selected = grid.NearestGridNode(hit.point);
