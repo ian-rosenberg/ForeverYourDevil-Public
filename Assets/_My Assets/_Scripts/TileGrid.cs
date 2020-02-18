@@ -18,6 +18,7 @@ public class TileGrid : MonoBehaviour
     public Vector3 scale = Vector2.one;
     public GameObject gridThing;
     public GameObject highlighter;
+    public Bounds bounds;
 
 
     private int idCounter;
@@ -70,16 +71,18 @@ public class TileGrid : MonoBehaviour
     //Draw the grid in Editor. 
     private void OnDrawGizmos()
     {
-        Vector3 s = gridThing.gameObject.transform.localScale;
+        Vector3 s = gridThing.transform.localScale;
+        Vector3 extents = gridThing.GetComponentInChildren<MeshRenderer>().bounds.extents;
 
         Gizmos.color = Color.red;
         for (float z = 0; z < dimensionsZ; z++ )
         {
             for (float x = 0; x < dimensionsX; x++)
             {
-                // var point = NearestGridPoint(new Vector3(transform.position.x + x, 0f, transform.position.z + z));
-                var point = new Vector3(transform.position.x + x * s.x, transform.position.y, transform.position.z + z * s.z);
-                Gizmos.DrawSphere(point, 0.5f);
+                var point = new Vector3(transform.position.x + x * s.x + extents.x, transform.position.y, transform.position.z + z * s.z + extents.z);
+                //var point = NearestGridPoint(new Vector3(transform.position.x + x * extents.x*s.x, transform.position.y, transform.position.z + z * extents.z*s.z));
+                //var point = new Vector3(transform.position.x * x + extents.x * scale.x, transform.position.y, transform.position.z * z + extents.z * scale.z);
+                Gizmos.DrawCube(point, scale);
                 //Gizmos.DrawWireCube(point, new Vector3(scale.x, scale.y, scale.z));
             }
         }
@@ -91,6 +94,8 @@ public class TileGrid : MonoBehaviour
 
         defaultSpawn = this.transform.position;
 
+        bounds = gridThing.GetComponentInChildren<MeshRenderer>().bounds;
+
         makeGrid();
     }
 
@@ -98,23 +103,23 @@ public class TileGrid : MonoBehaviour
     {
         foreach(Vector2 p in path)
         {
-            NearestGridNode(p).Highlight(true);
+            NearestGridNode(new Vector3(p.x, transform.position.y, p.y)).Highlight(true);
         }
     }
     public void RemoveHighlightedPath(List<Vector2> prevPath)
     {
         foreach (Vector2 p in prevPath)
         {
-            NearestGridNode(p).Highlight(false);
+            NearestGridNode(new Vector3(p.x, transform.position.y, p.y)).Highlight(false);
         }
     }
 
     // Update is called once per frame
     public void makeGrid()
     {
-        Vector3 s = gridThing.gameObject.transform.localScale;
+        Vector3 s = gridThing.transform.localScale;
         Gizmos.color = Color.red;
-        Vector3 spot = new Vector3(-100, -100, -100);
+        Vector3 extents = bounds.extents;
 
         for (int z = 0; z < dimensionsZ; z++)
         {
@@ -122,14 +127,13 @@ public class TileGrid : MonoBehaviour
             {
                 // var point = NearestGridPoint(new Vector3(transform.position.x + x, 0f, transform.position.z + z));
                 // var point = NearestGridPoint(new Vector3(transform.position.x + x, transform.position.y, transform.position.z + z));
-                var point = new Vector3(transform.position.x + x*s.x, transform.position.y, transform.position.z + z*s.z);
+                var point = new Vector3(transform.position.x + x*s.x, transform.position.y, transform.position.z + z*s.z);//multiply by local scale
 
                 //Gizmos.DrawSphere(point, scale * 0.1f);
 
-                //remove player glowing quad
-                var clone = Instantiate(gridThing, spot, gridThing.transform.rotation);
+                var clone = Instantiate(gridThing, point, gridThing.transform.rotation);
 
-                SetGridNodePosition(x, z, true, point, clone);
+                SetGridNodePosition(x, z, true, point + bounds.center, clone);
             }
         }
     }
@@ -154,7 +158,7 @@ public class TileGrid : MonoBehaviour
     {
         AStarNode node = new AStarNode();
 
-        node.SetCoords(x, z, Instantiate(highlighter, p, highlighter.transform.rotation));
+        node.SetCoords(x, z, Instantiate(highlighter, p + new Vector3(0,300,0), highlighter.transform.rotation));
 
         node.validSpace = walkableSpace;
         node.worldPosition = p;

@@ -38,7 +38,7 @@ public class WorldSnapToPoint : MonoBehaviour
                 Vector3 gridPoint = grid.NearestGridPoint(hit.point);
 
                 //Place indicator
-                block.transform.position = Vector3.Lerp(block.transform.position, gridPoint + new Vector3(0, 0.5f, 0), 0.5f);
+                block.transform.position = Vector3.Lerp(block.transform.position, gridPoint + grid.bounds.center, 0.5f);
 
             }
         }
