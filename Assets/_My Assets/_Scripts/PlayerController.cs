@@ -159,7 +159,7 @@ public class PlayerController : MonoBehaviour
 
                     path = pathfinder.AStarSearch(grid.NearestGridNode(transform.position), grid.NearestGridNode(hit.point));
 
-                    if (path != prevPath)
+                    if (path != prevPath && !combatMoving)
                     {
                         grid.RemoveHighlights();
                         grid.HighlightPath(path, stamina);
