@@ -1847,6 +1847,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c3e5129141729f4d99126dc11677ec4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  printPath: 0
   grid: {fileID: 1539110194}
 --- !u!1 &653646469
 GameObject:
@@ -1932,7 +1933,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 82.8
+  m_fontSize: 83.4
   m_fontSizeBase: 65.9
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -5320,6 +5321,11 @@ PrefabInstance:
         type: 3}
       propertyPath: combatTravelLayerMask.m_Bits
       value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 4934818583679702467, guid: 456ea23be283ff443a9d3cda45f13747,
+        type: 3}
+      propertyPath: stamina
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4934818583679702470, guid: 456ea23be283ff443a9d3cda45f13747,
         type: 3}

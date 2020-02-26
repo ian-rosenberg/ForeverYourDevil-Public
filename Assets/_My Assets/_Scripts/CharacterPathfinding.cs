@@ -6,6 +6,11 @@ using AStarPathfinding;
 
 public class CharacterPathfinding : MonoBehaviour
 {
+
+    [Header("Debug")]
+    public bool printPath;
+
+    [Header("Pathfinding")]
     public TileGrid grid;
 
     private AStarNode start;
@@ -22,43 +27,43 @@ public class CharacterPathfinding : MonoBehaviour
     }
 
     //Ian's Original Tracepath (not in use in AStarPolish)
-/*    public List<Vector2> TracePath()
-    {
-        List<Vector2> pathXZ = new List<Vector2>();//points for nodes for character to follow
-        int curRow = target.gridZ;
-        int curCol = target.gridX;
-        Stack<AStarNode> path = new Stack<AStarNode>();
-        AStarNode cur = target;
-
-
-
-        path.Push(cur);
-
-        while (cur != start)
+    /*    public List<Vector2> TracePath()
         {
-            path.Push(cur.parent);
-            cur = cur.parent;
-        }
+            List<Vector2> pathXZ = new List<Vector2>();//points for nodes for character to follow
+            int curRow = target.gridZ;
+            int curCol = target.gridX;
+            Stack<AStarNode> path = new Stack<AStarNode>();
+            AStarNode cur = target;
 
-        Debug.Log("<color=red>Path found: </color>");
 
-        while (!(path.Count == 0))
-        {
-            AStarNode n = path.Pop();
 
-            if (path.Count > 0)
+            path.Push(cur);
+
+            while (cur != start)
             {
-                Debug.Log("<color=purple>" + n.gridX + "," + n.gridZ + " -> </color>");
+                path.Push(cur.parent);
+                cur = cur.parent;
             }
-            else
-            {
-                Debug.Log("<color=purple>" + n.gridX + "," + n.gridZ + "</color>");
-            }
-            pathXZ.Add(new Vector2(n.gridX, n.gridZ));
-        }
 
-        return pathXZ;
-    }*/
+            Debug.Log("<color=red>Path found: </color>");
+
+            while (!(path.Count == 0))
+            {
+                AStarNode n = path.Pop();
+
+                if (path.Count > 0)
+                {
+                    Debug.Log("<color=purple>" + n.gridX + "," + n.gridZ + " -> </color>");
+                }
+                else
+                {
+                    Debug.Log("<color=purple>" + n.gridX + "," + n.gridZ + "</color>");
+                }
+                pathXZ.Add(new Vector2(n.gridX, n.gridZ));
+            }
+
+            return pathXZ;
+        }*/
 
     //Omar's Edited TracePath
     public List<AStarNode> TracePath()
@@ -77,7 +82,7 @@ public class CharacterPathfinding : MonoBehaviour
             cur = cur.parent;
         }
 
-        Debug.Log("<color=red>Path found: </color>");
+        if (printPath) Debug.Log("<color=red>Path found: </color>");
 
         while (!(path.Count == 0))
         {
@@ -85,11 +90,11 @@ public class CharacterPathfinding : MonoBehaviour
 
             if (path.Count > 0)
             {
-                Debug.Log("<color=purple>" + n.gridX + "," + n.gridZ + " -> </color>");
+                if (printPath) Debug.Log("<color=purple>" + n.gridX + "," + n.gridZ + " -> </color>");
             }
             else
             {
-                Debug.Log("<color=purple>" + n.gridX + "," + n.gridZ + "</color>");
+                if (printPath) Debug.Log("<color=purple>" + n.gridX + "," + n.gridZ + "</color>");
             }
             pathXZ.Add(n);
         }
@@ -108,8 +113,8 @@ public class CharacterPathfinding : MonoBehaviour
         start = s;
         target = goal;
 
-        Debug.Log("<color=blue>Start:(" + s.gridX + "," + s.gridZ + ")</color>");
-        Debug.Log("<color=green>Goal:(" + goal.gridX + "," + goal.gridZ + ")</color>");
+        if (printPath) Debug.Log("<color=blue>Start:(" + s.gridX + "," + s.gridZ + ")</color>");
+        if (printPath) Debug.Log("<color=green>Goal:(" + goal.gridX + "," + goal.gridZ + ")</color>");
 
         if (IsGoal(start))
         {
@@ -118,7 +123,7 @@ public class CharacterPathfinding : MonoBehaviour
             return null;
         }
 
-        if (!InGrid(start.gridX, start.gridZ) || !InGrid(target.gridX,target.gridZ))
+        if (!InGrid(start.gridX, start.gridZ) || !InGrid(target.gridX, target.gridZ))
         {
             Debug.Log("Node not on grid");
 
@@ -132,7 +137,7 @@ public class CharacterPathfinding : MonoBehaviour
             return null;
         }
 
-        for(int inZ = 0; inZ < grid.dimensionsZ; inZ++)
+        for (int inZ = 0; inZ < grid.dimensionsZ; inZ++)
         {
             for (int inX = 0; inX < grid.dimensionsX; inX++)
             {
@@ -179,7 +184,7 @@ public class CharacterPathfinding : MonoBehaviour
                     if (IsGoal(grid.nodeGrid[i - 1, j]))
                     {
                         grid.nodeGrid[i - 1, j].parent = node;
-                        Debug.Log("<color=green>Destination found! </color>" + (i - 1) + "," + j);
+                        if (printPath) Debug.Log("<color=green>Destination found! </color>" + (i - 1) + "," + j);
                         return TracePath();
                     }
                     else if (closedList[i - 1, j] == false)
@@ -213,7 +218,7 @@ public class CharacterPathfinding : MonoBehaviour
                     if (IsGoal(grid.nodeGrid[i + 1, j]))
                     {
                         grid.nodeGrid[i + 1, j].parent = node;
-                        Debug.Log("<color=green>Destination found! </color>" + i + 1 + "," + j);
+                        if (printPath) Debug.Log("<color=green>Destination found! </color>" + i + 1 + "," + j);
                         return TracePath();
                     }
                     else if (closedList[i + 1, j] == false)
@@ -247,7 +252,7 @@ public class CharacterPathfinding : MonoBehaviour
                     if (IsGoal(grid.nodeGrid[i, j + 1]))
                     {
                         grid.nodeGrid[i, j + 1].parent = node;
-                        Debug.Log("<color=green>Destination found! </color>" + (j + 1) + "," + i);
+                        if (printPath) Debug.Log("<color=green>Destination found! </color>" + (j + 1) + "," + i);
                         return TracePath();
                     }
                     else if (closedList[i, j + 1] == false)
@@ -281,7 +286,7 @@ public class CharacterPathfinding : MonoBehaviour
                     if (IsGoal(grid.nodeGrid[i, j - 1]))
                     {
                         grid.nodeGrid[i, j - 1].parent = node;
-                        Debug.Log("<color=green>Destination found! </color>" + i + "," + (j - 1));
+                        if (printPath) Debug.Log("<color=green>Destination found! </color>" + i + "," + (j - 1));
                         return TracePath();
                     }
                     else if (closedList[i, j - 1] == false)
@@ -315,7 +320,7 @@ public class CharacterPathfinding : MonoBehaviour
                     if (IsGoal(grid.nodeGrid[i - 1, j + 1]))
                     {
                         grid.nodeGrid[i - 1, j + 1].parent = node;
-                        Debug.Log("<color=green>Destination found! </color>" + (i - 1) + "," + (j + 1));
+                        if (printPath) Debug.Log("<color=green>Destination found! </color>" + (i - 1) + "," + (j + 1));
                         return TracePath();
 
                     }
@@ -350,7 +355,7 @@ public class CharacterPathfinding : MonoBehaviour
                     if (IsGoal(grid.nodeGrid[i - 1, j - 1]))
                     {
                         grid.nodeGrid[i - 1, j - 1].parent = node;
-                        Debug.Log("<color=green>Destination found! </color>" + (j - 1) + "," + (i - 1));
+                        if (printPath) Debug.Log("<color=green>Destination found! </color>" + (j - 1) + "," + (i - 1));
                         return TracePath();
                     }
                     else if (closedList[i - 1, j - 1] == false)
@@ -384,7 +389,7 @@ public class CharacterPathfinding : MonoBehaviour
                     if (IsGoal(grid.nodeGrid[i + 1, j + 1]))
                     {
                         grid.nodeGrid[i + 1, j + 1].parent = node;
-                        Debug.Log("<color=green>Destination found! </color>" + (i + 1) + "," + (j + 1));
+                        if (printPath) Debug.Log("<color=green>Destination found! </color>" + (i + 1) + "," + (j + 1));
                         return TracePath();
                     }
                     else if (closedList[i + 1, j + 1] == false)
@@ -418,7 +423,7 @@ public class CharacterPathfinding : MonoBehaviour
                     if (IsGoal(grid.nodeGrid[i + 1, j - 1]))
                     {
                         grid.nodeGrid[i + 1, j - 1].parent = node;
-                        Debug.Log("<color=green>Destination found! </color>" + (i + 1) + "," + (j - 1));
+                        if (printPath) Debug.Log("<color=green>Destination found! </color>" + (i + 1) + "," + (j - 1));
                         return TracePath();
                     }
                     else if (closedList[i + 1, j - 1] == false)
@@ -443,7 +448,7 @@ public class CharacterPathfinding : MonoBehaviour
             }
         }
 
-        if(!done)
+        if (!done)
         {
             Debug.Log("<color=red>FAILURE TO FIND PATH</color>");
         }

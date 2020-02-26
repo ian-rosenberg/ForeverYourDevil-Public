@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class AStarNode
-{ 
+{
     public AStarNode parent;
 
     public int id;
@@ -23,6 +23,7 @@ public class AStarNode
     public bool validSpace;
 
     public GameObject highlightClone;
+    public MeshRenderer highlightColor;
 
     public void ToggleSpaceValid()
     {
@@ -41,13 +42,14 @@ public class AStarNode
         this.gridZ = z;
         this.validSpace = true;
         this.highlightClone = clone;
-        this.fCost = 0; 
+        this.highlightColor = clone.GetComponent<MeshRenderer>();
+        this.fCost = 0;
         this.gCost = 0;
         this.hCost = 0;
         this.worldPosition = Vector3.zero;
     }
 
-    public void Highlight(bool ans)
+    public void Highlight(bool ans, Color color)
     {
         if (ans)
         {
@@ -57,5 +59,6 @@ public class AStarNode
         {
             this.highlightClone.transform.position = new Vector3(-100, -100, -100);
         }
+        highlightColor.material.color = color;
     }
 }

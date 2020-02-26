@@ -17,9 +17,15 @@ public class PlayerController : MonoBehaviour
 {
     private gameManager gameManager;
 
+    //Pathfinding
     public AStarNode combatPosition; // node representing the grid position of the player
-
+    public Vector3 nodeBattlePos; // node position of player on battlefield
     public CharacterPathfinding pathfinder;//pathfinding script
+    private AStarNode selected;
+    public List<AStarNode> path; //current path - x == x, y == z
+    public List<AStarNode> prevPath;//The last path to un-highlight - x == x, y == z
+    public List<AStarNode> lockedPath;//The path to walk along on click t - x == x, y == z
+    private bool autoMove = false;
 
     public TileGrid grid; // the grid we are currently navigating
 
@@ -36,18 +42,10 @@ public class PlayerController : MonoBehaviour
     public GameObject clickIndicator; //Has 2 particle effects, one for normal and one for turning off.
     public Animator clickIndicAnim;
 
-    //public List<Vector2> path; //current path - x == x, y == z (IAN'S ORIGINAL)
-    public List<AStarNode> path; //current path - x == x, y == z
-    public List<AStarNode> prevPath;//The last path to un-highlight - x == x, y == z
-
-    public Vector3 nodeBattlePos; // node position of player on battlefield
-
-    public LayerMask combatTravelLayerMask; // Only check for floor clicks, walls are no longer valid for combat
-
-    private AStarNode selected;
-
-    private bool autoMove = false;
-
+    [Header("Combat")]
+    public int stamina = 6;
+    bool combatMoving; //Is the player moving during combat?
+    public TextAlignment Staminal
 
     // Awake is called before start
     void Awake()
@@ -165,7 +163,7 @@ public class PlayerController : MonoBehaviour
                     if (path != prevPath)
                     {
                         grid.RemoveHighlights();
-                        grid.HighlightPath(path);
+                        grid.HighlightPath(path, stamina);
 
                         selected = grid.NearestGridNode(hit.point);
                     }
@@ -173,11 +171,21 @@ public class PlayerController : MonoBehaviour
                     //If click, show indicator and move character (accounting for stamina)
                     if (Input.GetMouseButtonDown(0))
                     {
+                        //Show indicator
                         clickIndicator.SetActive(true);
                         clickIndicAnim.SetTrigger("On");
 
                         Vector3 gridPoint = grid.NearestGridNode(hit.point).worldPosition;
                         clickIndicator.transform.position = gridPoint + new Vector3(0, 2f, 0);
+
+                        //Move character along path
+                        if (!combatMoving)
+                        {
+                            lockedPath = path;
+                            combatMoving = true;
+                            StartCoroutine(CombatMove());
+                        }
+
                     }
                 }
             }
@@ -214,5 +222,48 @@ public class PlayerController : MonoBehaviour
     public Vector3 GetDefaultGridSpawn()
     {
         return grid.defaultSpawn;
+    }
+
+    //Move character along path determined through AStar
+    public IEnumerator CombatMove()
+    {
+        //If path is greater than stamina, do not move
+        if (lockedPath.Count > stamina + 1 || lockedPath.Count <= 0)
+        {
+            Debug.Log("<color=red>lockedPath.Count = " + lockedPath.Count + "</color>");
+            Debug.Log("<color=red>Cannot move here. Not enough Stamina!</color>");
+            combatMoving = false;
+            yield return null;
+        }
+        else
+        {
+            Debug.Log("CombatMoving");
+            int i = 1;
+            //Move along path with NavMesh
+            while (i < lockedPath.Count)
+            {
+
+
+                agent.SetDestination(lockedPath[i].worldPosition);
+                yield return null;
+                //If reached destination node (with some forgiveness)
+                if (Math.Abs(transform.position.x - lockedPath[i].worldPosition.x) < 2f && Math.Abs(transform.position.z - lockedPath[i].worldPosition.z) < 2f)
+                {
+                    Debug.Log("Player position: " + transform.position);
+                    Debug.Log("Node position: " + lockedPath[i].worldPosition);
+                    Debug.Log("Player to Node distance= " + Vector3.Distance(transform.position, lockedPath[i].worldPosition));
+
+                    Debug.Log("Arrived at node: " + i);
+                    i++; //Go to next node
+                    stamina--;
+                    //agent.ResetPath();
+                }
+            }
+
+            //When movement is done
+            Debug.Log("agent Reset. This shouldn't happen until the clicked node is reached");
+            agent.ResetPath();
+            combatMoving = false;
+        }
     }
 }

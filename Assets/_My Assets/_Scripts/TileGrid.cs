@@ -85,11 +85,14 @@ public class TileGrid : MonoBehaviour
     }
 
     //Omar's new Highlight path
-    public void HighlightPath(List<AStarNode> path)
+    public void HighlightPath(List<AStarNode> path, int stamina)
     {
-        foreach (AStarNode p in path)
+        for (int i = 1; i < path.Count; i++)
         {
-            p.Highlight(true);
+            if (i > stamina)
+                path[i].Highlight(true,Color.red);
+            else
+                path[i].Highlight(true, Color.green);
         }
     }
 
@@ -99,7 +102,7 @@ public class TileGrid : MonoBehaviour
         {
             for (int x = 0; x < dimensionsX; x++)
             {
-                nodeGrid[z, x].Highlight(false);
+                nodeGrid[z, x].Highlight(false,Color.green);
             }
         }
     }
