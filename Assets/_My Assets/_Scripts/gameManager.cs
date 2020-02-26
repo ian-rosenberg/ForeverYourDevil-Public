@@ -6,9 +6,12 @@ using UnityEngine.UI;
 
 public class gameManager : MonoBehaviour
 {
+    #region Main Variables
+
     bool canPause = true; //Allow pausing?
 
     //public GameObject CameraX, CameraY;
+    [Header("Common")]
     public FollowObject mainCamera; //Main parent object for camera
     public GameObject pauseMenu;
     public Animator battleAnim; //Canvas for battle transition
@@ -20,6 +23,7 @@ public class gameManager : MonoBehaviour
     public Transform cameraSpawn;
     GameObject enemyCombatTriggerer; //The enemy that triggered combat last (temporary value)
 
+    [Header("Level-Specific")]
     public GameObject normalWorld; //Represents overworld
     public GameObject battleWorld; //Represents battlefield
 
@@ -39,6 +43,7 @@ public class gameManager : MonoBehaviour
     public STATE gameState; //Current State of the game
     bool isPaused; //Is the game paused?
     STATE prevState; //Previous State of the game (before pausing)
+    #endregion
 
     // Start is called before the first frame update
     void Start()
@@ -67,6 +72,7 @@ public class gameManager : MonoBehaviour
         }
     }
 
+    #region Pausing
     public void PauseGame()
     {
         if (!isPaused)
@@ -96,7 +102,9 @@ public class gameManager : MonoBehaviour
     {
         canPause = pause;
     }
+    #endregion
 
+    #region Entering Combat
     public void TriggerCombat(GameObject enemy)
     {
         // StartCoroutine(ScreenCap());
@@ -137,7 +145,7 @@ public class gameManager : MonoBehaviour
         enemyCombatTriggerer.transform.position = pc.grid.NearestGridNode(enemySpawn[0].position).worldPosition;
         enemyCombatTriggerer = null;
         mainCamera.SetOffset(cameraSpawn.transform.position);
-        
+
 
         gameState = STATE.COMBAT;
         prevState = STATE.TRAVELING;
@@ -145,23 +153,5 @@ public class gameManager : MonoBehaviour
         battleAnim.SetTrigger("Loaded");
         SetCanPause(true);
     }
-
-    IEnumerator ScreenCap()
-    {
-        {
-            yield return new WaitForEndOfFrame();
-            var texture = ScreenCapture.CaptureScreenshotAsTexture();
-            Sprite sprite = Sprite.Create(texture,
-                new Rect(0, 0, Screen.currentResolution.width,
-                Screen.currentResolution.height),
-                new Vector2(0, 0)
-                );
-
-            // do something with texture
-            screenCapRegion.sprite = sprite;
-
-            // cleanup
-            Object.Destroy(texture);
-        }
-    }
+    #endregion
 }

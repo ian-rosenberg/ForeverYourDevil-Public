@@ -25,31 +25,9 @@ public class TileGrid : MonoBehaviour
     public GameObject highlighter;
     public Bounds bounds;
 
-
     private int idCounter;
 
-
     //Get nearest grid point to whichever position is specified (ideally mouse position)
-    public Vector3 NearestGridPoint(Vector3 position)
-    {
-        //Subtract offset from math, then add it back in
-        position -= transform.position;
-
-        //Get the point closest to where your mouse is via rounding
-        int xCount = Mathf.RoundToInt(position.x / scale.x);
-        int yCount = Mathf.RoundToInt(position.y / scale.y);
-        int zCount = Mathf.RoundToInt(position.z / scale.z);
-
-        //Form vector with this point and separate by scale
-        Vector3 result = new Vector3(
-            (float)xCount * scale.x,
-            (float)yCount * scale.y,
-            (float)zCount * scale.z);
-
-        //Add offset back
-        return result += transform.position;
-    }
-
     public AStarNode NearestGridNode(Vector3 position)
     {
         float closest = Mathf.Infinity;
@@ -106,15 +84,6 @@ public class TileGrid : MonoBehaviour
         makeGrid();
     }
 
-    //IAN'S ORIGINAL HIGHLIGHT PATH
-    /*public void HighlightPath(List<Vector2> path)
-    {
-        foreach (Vector2 p in path)
-        {
-            NearestGridNode(new Vector3(p.x, transform.position.y, p.y)).Highlight(true);
-        }
-    }*/
-
     //Omar's new Highlight path
     public void HighlightPath(List<AStarNode> path)
     {
@@ -146,12 +115,7 @@ public class TileGrid : MonoBehaviour
         {
             for (int x = 0; x < dimensionsX; x++)
             {
-                // var point = NearestGridPoint(new Vector3(transform.position.x + x, 0f, transform.position.z + z));
-                // var point = NearestGridPoint(new Vector3(transform.position.x + x, transform.position.y, transform.position.z + z));
                 var point = new Vector3(transform.position.x + x * s.x + x, transform.position.y, transform.position.z + z * s.z + z);//multiply by local scale
-
-                //Gizmos.DrawSphere(point, scale * 0.1f);
-
                 var clone = Instantiate(gridThing, point, gridThing.transform.rotation);
 
                 SetGridNodePosition(x, z, true, point + bounds.center, clone, bounds.center);
