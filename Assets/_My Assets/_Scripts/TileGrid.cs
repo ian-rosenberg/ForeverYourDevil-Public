@@ -6,14 +6,19 @@ using UnityEngine;
 //Tutorial Used: https://www.youtube.com/watch?v=VBZFYGWvm4A
 public class TileGrid : MonoBehaviour
 {
+    [Header("Debug")]
+    public bool showPoints;
+    public bool showWireframe;
+
     public const int homeFromNeighborValue = 1;
 
-    public AStarNode [,]nodeGrid;
+    public AStarNode[,] nodeGrid;
 
+    [Header("Properties")]
     public uint dimensionsX = 8;
     public uint dimensionsZ = 8;
 
-    public Vector3 defaultSpawn; 
+    public Vector3 defaultSpawn;
 
     public Vector3 scale = Vector2.one;
     public GameObject gridThing;
@@ -46,17 +51,17 @@ public class TileGrid : MonoBehaviour
     }
 
     public AStarNode NearestGridNode(Vector3 position)
-    {      
+    {
         float closest = Mathf.Infinity;
         int x = 0, y = 0;
 
-        for(int i = 0; i < dimensionsZ; i++)
+        for (int i = 0; i < dimensionsZ; i++)
         {
             for (int j = 0; j < dimensionsX; j++)
             {
                 float newVal = Vector3.Distance(position, nodeGrid[i, j].worldPosition);
 
-                if (newVal < closest) 
+                if (newVal < closest)
                 {
                     closest = newVal;
                     x = j;
@@ -75,16 +80,17 @@ public class TileGrid : MonoBehaviour
         Vector3 extents = gridThing.GetComponentInChildren<MeshRenderer>().bounds.extents;
 
         Gizmos.color = Color.red;
-        for (float z = 0; z < dimensionsZ; z++ )
+        for (float z = 0; z < dimensionsZ; z++)
         {
             for (float x = 0; x < dimensionsX; x++)
-            { 
-                var point = new Vector3(transform.position.x + x * s.x+x, transform.position.y, transform.position.z + z * s.z);//multiply by local scale
+            {
+                var point = new Vector3(transform.position.x + x * s.x + x, transform.position.y, transform.position.z + z * s.z);//multiply by local scale
 
                 //var point = NearestGridPoint(new Vector3(transform.position.x + x * extents.x*s.x, transform.position.y, transform.position.z + z * extents.z*s.z));
                 //var point = new Vector3(transform.position.x * x + extents.x * scale.x, transform.position.y, transform.position.z * z + extents.z * scale.z);
-                Gizmos.DrawCube(point, scale);
-                //Gizmos.DrawWireCube(point, new Vector3(scale.x, scale.y, scale.z));
+                //Gizmos.DrawCube(point, scale);
+                if (showPoints) Gizmos.DrawSphere(point, .5f);
+                if (showWireframe) Gizmos.DrawWireCube(point, new Vector3(scale.x, scale.y, scale.z));
             }
         }
     }
@@ -102,7 +108,7 @@ public class TileGrid : MonoBehaviour
 
     public void HighlightPath(List<Vector2> path)
     {
-        foreach(Vector2 p in path)
+        foreach (Vector2 p in path)
         {
             NearestGridNode(new Vector3(p.x, transform.position.y, p.y)).Highlight(true);
         }
@@ -113,7 +119,7 @@ public class TileGrid : MonoBehaviour
         {
             for (int x = 0; x < dimensionsX; x++)
             {
-                nodeGrid[z,x].Highlight(false);
+                nodeGrid[z, x].Highlight(false);
             }
         }
     }
@@ -131,11 +137,11 @@ public class TileGrid : MonoBehaviour
             {
                 // var point = NearestGridPoint(new Vector3(transform.position.x + x, 0f, transform.position.z + z));
                 // var point = NearestGridPoint(new Vector3(transform.position.x + x, transform.position.y, transform.position.z + z));
-                var point = new Vector3(transform.position.x + x*s.x+x, transform.position.y, transform.position.z + z*s.z+z);//multiply by local scale
+                var point = new Vector3(transform.position.x + x * s.x + x, transform.position.y, transform.position.z + z * s.z + z);//multiply by local scale
 
                 //Gizmos.DrawSphere(point, scale * 0.1f);
 
-                var clone = Instantiate(gridThing, point + new Vector3(3f, 0, 3f), gridThing.transform.rotation);
+                var clone = Instantiate(gridThing, point, gridThing.transform.rotation);
 
                 SetGridNodePosition(x, z, true, point + bounds.center, clone, bounds.center);
             }
@@ -162,7 +168,7 @@ public class TileGrid : MonoBehaviour
     {
         AStarNode node = new AStarNode();
 
-        GameObject hClone = Instantiate(highlighter, p + new Vector3(3f, 300, 3f), highlighter.transform.rotation);        
+        GameObject hClone = Instantiate(highlighter, p + new Vector3(3f, 300, 3f), highlighter.transform.rotation);
         node.SetCoords(x, z, hClone);
 
         node.validSpace = walkableSpace;
@@ -172,5 +178,5 @@ public class TileGrid : MonoBehaviour
 
         nodeGrid[z, x] = node;
     }
- 
+
 }
