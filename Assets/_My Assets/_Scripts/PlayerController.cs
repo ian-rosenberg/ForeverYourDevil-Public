@@ -45,7 +45,6 @@ public class PlayerController : MonoBehaviour
     [Header("Combat")]
     public int stamina = 6;
     bool combatMoving; //Is the player moving during combat?
-    public TextAlignment Staminal
 
     // Awake is called before start
     void Awake()
