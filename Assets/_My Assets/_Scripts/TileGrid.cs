@@ -99,20 +99,31 @@ public class TileGrid : MonoBehaviour
     {
         nodeGrid = new AStarNode[dimensionsZ, dimensionsX];
 
-        defaultSpawn = this.transform.position;
+        defaultSpawn = transform.position;
 
         bounds = gridThing.GetComponentInChildren<MeshRenderer>().bounds;
 
         makeGrid();
     }
 
-    public void HighlightPath(List<Vector2> path)
+    //IAN'S ORIGINAL HIGHLIGHT PATH
+    /*public void HighlightPath(List<Vector2> path)
     {
         foreach (Vector2 p in path)
         {
             NearestGridNode(new Vector3(p.x, transform.position.y, p.y)).Highlight(true);
         }
+    }*/
+
+    //Omar's new Highlight path
+    public void HighlightPath(List<AStarNode> path)
+    {
+        foreach (AStarNode p in path)
+        {
+            p.Highlight(true);
+        }
     }
+
     public void RemoveHighlights()
     {
         for (int z = 0; z < dimensionsZ; z++)

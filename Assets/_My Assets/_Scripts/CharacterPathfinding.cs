@@ -20,7 +20,9 @@ public class CharacterPathfinding : MonoBehaviour
     {
         return coord.gridX == target.gridX && coord.gridZ == target.gridZ;
     }
-    public List<Vector2> TracePath()
+
+    //Ian's Original Tracepath (not in use in AStarPolish)
+/*    public List<Vector2> TracePath()
     {
         List<Vector2> pathXZ = new List<Vector2>();//points for nodes for character to follow
         int curRow = target.gridZ;
@@ -56,9 +58,46 @@ public class CharacterPathfinding : MonoBehaviour
         }
 
         return pathXZ;
+    }*/
+
+    //Omar's Edited TracePath
+    public List<AStarNode> TracePath()
+    {
+        List<AStarNode> pathXZ = new List<AStarNode>();//points for nodes for character to follow
+        int curRow = target.gridZ;
+        int curCol = target.gridX;
+        Stack<AStarNode> path = new Stack<AStarNode>();
+        AStarNode cur = target;
+
+        path.Push(cur);
+
+        while (cur != start)
+        {
+            path.Push(cur.parent);
+            cur = cur.parent;
+        }
+
+        Debug.Log("<color=red>Path found: </color>");
+
+        while (!(path.Count == 0))
+        {
+            AStarNode n = path.Pop();
+
+            if (path.Count > 0)
+            {
+                Debug.Log("<color=purple>" + n.gridX + "," + n.gridZ + " -> </color>");
+            }
+            else
+            {
+                Debug.Log("<color=purple>" + n.gridX + "," + n.gridZ + "</color>");
+            }
+            pathXZ.Add(n);
+        }
+
+        return pathXZ;
     }
 
-    public List<Vector2> AStarSearch(AStarNode s, AStarNode goal)
+    public List<AStarNode> AStarSearch(AStarNode s, AStarNode goal)
     {
         List<AStarNode> openPath = new List<AStarNode>(); // all possible tiles that lead to the target
         bool[,] closedList = new bool[grid.dimensionsZ, grid.dimensionsX];

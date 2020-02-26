@@ -13,7 +13,7 @@ using System;
  * Tutorials used: Brackys - Navmesh Tutorials - https://www.youtube.com/watch?v=CHV1ymlw-P8&t=11s
  */
 
-public class PlayerController: MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     private gameManager gameManager;
 
@@ -36,8 +36,9 @@ public class PlayerController: MonoBehaviour
     public GameObject clickIndicator; //Has 2 particle effects, one for normal and one for turning off.
     public Animator clickIndicAnim;
 
-    public List<Vector2> path; //current path - x == x, y == z
-    public List<Vector2> prevPath;//The last path to un-highlight - x == x, y == z
+    //public List<Vector2> path; //current path - x == x, y == z (IAN'S ORIGINAL)
+    public List<AStarNode> path; //current path - x == x, y == z
+    public List<AStarNode> prevPath;//The last path to un-highlight - x == x, y == z
 
     public Vector3 nodeBattlePos; // node position of player on battlefield
 
@@ -57,7 +58,7 @@ public class PlayerController: MonoBehaviour
         selected = null;
 
         path = null;
-        
+
         prevPath = path;
     }
 
@@ -65,7 +66,6 @@ public class PlayerController: MonoBehaviour
     void Start()
     {
         clickIndicator.SetActive(false);
-        //agent = GetComponent<NavMeshAgent>();
     }
 
     // Update is called once per frame
@@ -144,54 +144,42 @@ public class PlayerController: MonoBehaviour
                 anim.SetTrigger("CombatTrigger");
                 anim.SetBool("Combat", true);
             }
-
             //Click to move (w/pathfinding)
-            if (Input.GetMouseButtonDown(0)) //If left click (not hold)
-            {
-                //Determine if walkable
-                Ray ray = cam.ScreenPointToRay(Input.mousePosition); //create ray obj from camera to click point
-                RaycastHit hit;
 
-                //If ray hit walkable area
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask)) //cast ray. if hit land, move
+            //Determine if walkable
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition); //create ray obj from camera to click point
+            RaycastHit hit;
+
+            //If ray hit walkable area
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask)) //cast ray. if hit land, move
+            {
+                //Check hit layer
+                if (hit.transform.gameObject.layer == 9) //If click ground
                 {
-                    //Check hit layer
-                    if (hit.transform.gameObject.layer == 9) //If click ground
+                    //if (selected == null || selected != grid.NearestGridNode(hit.point))
+                    //{
+                    prevPath = path;
+
+                    path = pathfinder.AStarSearch(grid.NearestGridNode(transform.position), grid.NearestGridNode(hit.point));
+
+                    if (path != prevPath)
                     {
-                        //Set indicator where clicked
+                        grid.RemoveHighlights();
+                        grid.HighlightPath(path);
+
+                        selected = grid.NearestGridNode(hit.point);
+                    }
+
+                    //If click, show indicator and move character (accounting for stamina)
+                    if (Input.GetMouseButtonDown(0))
+                    {
                         clickIndicator.SetActive(true);
                         clickIndicAnim.SetTrigger("On");
 
-                        Vector3 gridPoint = grid.NearestGridPoint(hit.point);
-
+                        Vector3 gridPoint = grid.NearestGridNode(hit.point).worldPosition;
                         clickIndicator.transform.position = gridPoint + new Vector3(0, 2f, 0);
-
-                        //if (selected == null || selected != grid.NearestGridNode(hit.point))
-                        //{
-                            prevPath = path;
-
-                            path = pathfinder.AStarSearch(grid.NearestGridNode(transform.position), grid.NearestGridNode(hit.point));
-
-                            if (path != prevPath)
-                            {
-                                grid.HighlightPath(path);
-
-                                for(int i = 0; i < path.Count; i++)
-                                {
-                                    path[i] = new Vector2(path[i].x + grid.bounds.center.x, path[i].x + grid.bounds.center.y);
-                                }
-
-                                if (prevPath != null)
-                                {
-                                    grid.RemoveHighlights();
-                                }
-
-                                selected = grid.NearestGridNode(hit.point);
-                            }
-                       // }
                     }
                 }
-
             }
 
             agent.speed = normalSpeed;
