@@ -17,6 +17,7 @@ public class gameManager : MonoBehaviour
     public Animator battleAnim; //Canvas for battle transition
     public Image screenCapRegion; //Place to display image on
     public GameObject player; //Reference to player character
+    public PlayerController playerController; //Reference to player script
 
     [Header("Combat")]
     public Transform[] playerSpawn, enemySpawn;
@@ -50,6 +51,7 @@ public class gameManager : MonoBehaviour
     {
         isPaused = false;
         prevState = STATE.START; //Start out of combat
+        playerController = player.GetComponent<PlayerController>();
     }
 
     // Update is called once per frame

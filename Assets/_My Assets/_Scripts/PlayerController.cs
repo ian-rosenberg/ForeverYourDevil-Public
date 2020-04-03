@@ -1,9 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using AStarPathfinding;
-using System;
+using TMPro;
 
 /**
  * PlayerController - Script for player movement out-ofcombat and within combat
@@ -43,7 +43,16 @@ public class PlayerController : MonoBehaviour
     public Animator clickIndicAnim;
 
     [Header("Combat")]
-    public int stamina = 6;
+    public int health = 100; //Current Health of the player; 0 kills player
+    public int maxHealth = 100; //Max Health the player is allowed to heal to
+    public int tolerance = 0; //Current Tolerance. Max will kill the player
+    public int maxTolerance = 100; //Max Tolerance before player is killed
+    public int stamina = 6; // Current Stamina, allows player to do actions
+    public int maxStamina = 6; //Max stamina player is allowed to have
+
+    public TextMeshProUGUI healthText; //Text showing health
+    public TextMeshProUGUI staminaText; //Text showing stamina
+    public TextMeshProUGUI toleranceText; //Text showing stamina
     bool combatMoving; //Is the player moving during combat?
 
     // Awake is called before start
@@ -62,6 +71,9 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        healthText.text = health + "/" + maxHealth;
+        staminaText.text = stamina+"";
+        toleranceText.text = tolerance + "/" + maxTolerance;
         clickIndicator.SetActive(false);
     }
 
@@ -192,6 +204,8 @@ public class PlayerController : MonoBehaviour
             agent.speed = normalSpeed;
             //Set if anim is in run or idle (set by number in blend tree)
             anim.SetFloat("Speed", (agent.velocity.magnitude / agent.speed));
+
+
         }
     }
 
@@ -254,7 +268,8 @@ public class PlayerController : MonoBehaviour
 
                     Debug.Log("Arrived at node: " + i);
                     i++; //Go to next node
-                    stamina--;
+                    stamina--; //Subtract stamina and text update
+                    staminaText.text = stamina + "";
                     //agent.ResetPath();
                 }
             }
