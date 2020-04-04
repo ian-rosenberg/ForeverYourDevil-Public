@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.AI;
 using TMPro;
 
@@ -45,7 +46,7 @@ public class PlayerController : MonoBehaviour
     [Header("Combat")]
     public int health = 100; //Current Health of the player; 0 kills player
     public int maxHealth = 100; //Max Health the player is allowed to heal to
-    public int tolerance = 0; //Current Tolerance. Max will kill the player
+    public int tolerance = 25; //Current Tolerance. Max will kill the player
     public int maxTolerance = 100; //Max Tolerance before player is killed
     public int stamina = 6; // Current Stamina, allows player to do actions
     public int maxStamina = 6; //Max stamina player is allowed to have
@@ -53,6 +54,7 @@ public class PlayerController : MonoBehaviour
     public TextMeshProUGUI healthText; //Text showing health
     public TextMeshProUGUI staminaText; //Text showing stamina
     public TextMeshProUGUI toleranceText; //Text showing stamina
+    public Image toleranceBar; //Text showing stamina
     bool combatMoving; //Is the player moving during combat?
 
     // Awake is called before start
@@ -73,7 +75,7 @@ public class PlayerController : MonoBehaviour
     {
         healthText.text = health + "/" + maxHealth;
         staminaText.text = stamina+"";
-        toleranceText.text = tolerance + "/" + maxTolerance;
+        SetTolerance(tolerance);
         clickIndicator.SetActive(false);
     }
 
@@ -279,5 +281,13 @@ public class PlayerController : MonoBehaviour
             agent.ResetPath();
             combatMoving = false;
         }
+    }
+
+    void SetTolerance(int currentTolerance) {
+        tolerance = currentTolerance;
+        //if tolerance = 100, kill player
+        toleranceText.text = tolerance + "/" + maxTolerance;
+        Debug.Log(tolerance / maxTolerance);
+        toleranceBar.fillAmount = (float)tolerance / maxTolerance;
     }
 }
