@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -13,11 +14,10 @@ public class gameManager : MonoBehaviour
     //public GameObject CameraX, CameraY;
     [Header("Common")]
     public FollowObject mainCamera; //Main parent object for camera
-    public GameObject pauseMenu;
     public Animator battleAnim; //Canvas for battle transition
     public Image screenCapRegion; //Place to display image on
-    public GameObject player; //Reference to player character
-    public PlayerController playerController; //Reference to player script
+
+    public PlayerController player; //Reference to player script
 
     [Header("Combat")]
     public Transform[] playerSpawn, enemySpawn;
@@ -27,6 +27,10 @@ public class gameManager : MonoBehaviour
     [Header("Level-Specific")]
     public GameObject normalWorld; //Represents overworld
     public GameObject battleWorld; //Represents battlefield
+
+    [Header("Menus")]
+    public GameObject pauseMenu;
+
 
     private static gameManager instance;
     public static gameManager Instance
@@ -50,8 +54,8 @@ public class gameManager : MonoBehaviour
     void Start()
     {
         isPaused = false;
+        ChangeState(STATE.TRAVELING);
         prevState = STATE.START; //Start out of combat
-        playerController = player.GetComponent<PlayerController>();
     }
 
     // Update is called once per frame
@@ -148,12 +152,42 @@ public class gameManager : MonoBehaviour
         enemyCombatTriggerer = null;
         mainCamera.SetOffset(cameraSpawn.transform.position);
 
-
-        gameState = STATE.COMBAT;
-        prevState = STATE.TRAVELING;
+        ChangeState(STATE.COMBAT);
 
         battleAnim.SetTrigger("Loaded");
         SetCanPause(true);
     }
     #endregion
+
+    //Change the state of the game and update all dependant classes's game states
+    public void ChangeState(STATE state)
+    {
+        if (!isPaused || gameState != STATE.PAUSED)
+        {
+            switch (state)
+            {
+                case STATE.TALKING:
+                    player.currentBehavior = player.Player_Talking;
+                    break;
+                case STATE.TRAVELING:
+                    player.currentBehavior = player.Player_Travelling;
+                    break;
+                case STATE.COMBAT:
+                    player.currentBehavior = player.Player_Combat;
+                    break;
+                case STATE.PAUSED:
+                    Debug.LogError("Cannot pause game this way (may change later)");
+                    return;
+                case STATE.START:
+                    Debug.LogError("Cannot go back to Start. Don't collect $200.");
+                    return;
+                default:
+                    Debug.LogError("Invalid State Change.");
+                    return;
+            }
+            //If state is valid, change it.
+            prevState = gameState;
+            gameState = state;
+        }
+    }
 }

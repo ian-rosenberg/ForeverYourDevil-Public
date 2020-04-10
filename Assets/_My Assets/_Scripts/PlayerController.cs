@@ -19,23 +19,26 @@ public class PlayerController : MonoBehaviour
     private gameManager gameManager;
 
     //Pathfinding
+    [Header("AStar Pathfinding")]
     public AStarNode combatPosition; // node representing the grid position of the player
     public Vector3 nodeBattlePos; // node position of player on battlefield
     public CharacterPathfinding pathfinder;//pathfinding script
+
     private AStarNode selected;
     public List<AStarNode> path; //current path - x == x, y == z
-    public List<AStarNode> prevPath;//The last path to un-highlight - x == x, y == z
-    public List<AStarNode> lockedPath;//The path to walk along on click t - x == x, y == z
+    public List<AStarNode> prevPath; //The last path to un-highlight - x == x, y == z
+    public List<AStarNode> lockedPath; //The path to walk along on click t - x == x, y == z
     private bool autoMove = false;
 
     public TileGrid grid; // the grid we are currently navigating
 
+    [Header("Player")]
     public Animator anim; // animation controller for player
+    public Action currentBehavior; //Function pointer for player behavior (changed by gameManager)
 
     [Tooltip("Specify what layer(s) to use in raycast")]
     public LayerMask layerMask;
 
-    public Camera cam; /**Main camera to raycast to floor to determine if hit is possible*/
     NavMeshAgent agent; /**Player Agent Component for pathfinding movement*/
     public float normalSpeed, sprintSpeed;
     //public Rigidbody rb;
@@ -74,7 +77,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         healthText.text = health + "/" + maxHealth;
-        staminaText.text = stamina+"";
+        staminaText.text = stamina + "";
         SetTolerance(tolerance);
         clickIndicator.SetActive(false);
     }
@@ -82,83 +85,26 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Traveling Movement
-        if (gameManager.gameState == gameManager.STATE.TRAVELING)
+        //Apply current behavior
+        currentBehavior();
+    }
+
+    #region Behavior Functions
+    public void Player_Travelling()
+    {
+        //Set animator (need to change)
+        if (!anim.GetBool("Traveling"))
         {
-            if (!anim.GetBool("Traveling"))
-            {
-                anim.SetBool("Traveling", true);
-                anim.SetTrigger("TravelingTrigger");
-                anim.SetBool("Combat", false);
-            }
-
-            //Click to move (w/pathfinding)
-            if (Input.GetMouseButtonDown(0)) //If left click (not hold)
-            {
-                //Determine if walkable
-                Ray ray = cam.ScreenPointToRay(Input.mousePosition); //create ray obj from camera to click point
-                RaycastHit hit;
-
-                //If ray hit walkable area
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask)) //cast ray. if hit land, move
-                {
-                    //Check hit layer
-                    if (hit.transform.gameObject.layer == 9) //If click ground
-                    {
-                        //Set indicator where clicked
-                        clickIndicator.SetActive(true);
-                        clickIndicAnim.SetTrigger("On");
-                        clickIndicator.transform.position = hit.point + new Vector3(0, 2f, 0);
-
-                        //Move player/agent to hit point
-                        agent.SetDestination(hit.point);
-                    }
-                }
-
-            }
-
-            //Right click to sprint
-            if (Input.GetButton("Sprint"))
-            {
-                agent.speed = sprintSpeed;
-                //Set if anim is in run or idle (set by number in blend tree)
-                anim.SetFloat("Speed", agent.velocity.magnitude / agent.speed);
-            }
-            else
-            {
-                agent.speed = normalSpeed;
-                //Set if anim is in run or idle (set by number in blend tree)
-                anim.SetFloat("Speed", (agent.velocity.magnitude / agent.speed) * .5f);
-            }
-
-            //Keyboard movement
-            float vertical = Input.GetAxis("Vertical");
-            float horizontal = Input.GetAxis("Horizontal");
-            if (Mathf.Abs(vertical) > 0 || Mathf.Abs(horizontal) > 0)
-            {
-                agent.ResetPath();
-                agent.velocity = new Vector3(horizontal, 0, vertical) * agent.speed;
-                clickIndicator.SetActive(false);
-            }
+            anim.SetBool("Traveling", true);
+            anim.SetTrigger("TravelingTrigger");
+            anim.SetBool("Combat", false);
         }
 
-        else if (gameManager.gameState == gameManager.STATE.TALKING)
+        //Click to move (w/pathfinding)
+        if (Input.GetMouseButtonDown(0)) //If left click (not hold)
         {
-            agent.ResetPath(); //Resets directions to agent to stop it
-        }
-
-        else if (gameManager.gameState == gameManager.STATE.COMBAT)
-        {
-            if (!anim.GetBool("Combat"))
-            {
-                anim.SetBool("Traveling", false);
-                anim.SetTrigger("CombatTrigger");
-                anim.SetBool("Combat", true);
-            }
-            //Click to move (w/pathfinding)
-
             //Determine if walkable
-            Ray ray = cam.ScreenPointToRay(Input.mousePosition); //create ray obj from camera to click point
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); //create ray obj from camera to click point
             RaycastHit hit;
 
             //If ray hit walkable area
@@ -167,50 +113,107 @@ public class PlayerController : MonoBehaviour
                 //Check hit layer
                 if (hit.transform.gameObject.layer == 9) //If click ground
                 {
-                    //if (selected == null || selected != grid.NearestGridNode(hit.point))
-                    //{
-                    prevPath = path;
+                    //Set indicator where clicked
+                    clickIndicator.SetActive(true);
+                    clickIndicAnim.SetTrigger("On");
+                    clickIndicator.transform.position = hit.point + new Vector3(0, 2f, 0);
 
-                    path = pathfinder.AStarSearch(grid.NearestGridNode(transform.position), grid.NearestGridNode(hit.point));
-
-                    if (path != prevPath && !combatMoving)
-                    {
-                        grid.RemoveHighlights();
-                        grid.HighlightPath(path, stamina);
-
-                        selected = grid.NearestGridNode(hit.point);
-                    }
-
-                    //If click, show indicator and move character (accounting for stamina)
-                    if (Input.GetMouseButtonDown(0))
-                    {
-                        //Show indicator
-                        clickIndicator.SetActive(true);
-                        clickIndicAnim.SetTrigger("On");
-
-                        Vector3 gridPoint = grid.NearestGridNode(hit.point).worldPosition;
-                        clickIndicator.transform.position = gridPoint + new Vector3(0, 2f, 0);
-
-                        //Move character along path
-                        if (!combatMoving)
-                        {
-                            lockedPath = path;
-                            combatMoving = true;
-                            StartCoroutine(CombatMove());
-                        }
-
-                    }
+                    //Move player/agent to hit point
+                    agent.SetDestination(hit.point);
                 }
             }
 
+        }
+        //Right click to sprint
+        if (Input.GetButton("Sprint"))
+        {
+            agent.speed = sprintSpeed;
+            //Set if anim is in run or idle (set by number in blend tree)
+            anim.SetFloat("Speed", agent.velocity.magnitude / agent.speed);
+        }
+        else
+        {
             agent.speed = normalSpeed;
             //Set if anim is in run or idle (set by number in blend tree)
-            anim.SetFloat("Speed", (agent.velocity.magnitude / agent.speed));
+            anim.SetFloat("Speed", (agent.velocity.magnitude / agent.speed) * .5f);
+        }
 
-
+        //Keyboard movement
+        float vertical = Input.GetAxis("Vertical");
+        float horizontal = Input.GetAxis("Horizontal");
+        if (Mathf.Abs(vertical) > 0 || Mathf.Abs(horizontal) > 0)
+        {
+            agent.ResetPath();
+            agent.velocity = new Vector3(horizontal, 0, vertical) * agent.speed;
+            clickIndicator.SetActive(false);
         }
     }
+    public void Player_Talking()
+    {
+        agent.ResetPath(); //Resets directions to agent to stop it
+    }
+    public void Player_Combat()
+    {
+        if (!anim.GetBool("Combat"))
+        {
+            anim.SetBool("Traveling", false);
+            anim.SetTrigger("CombatTrigger");
+            anim.SetBool("Combat", true);
+        }
+        //Click to move (w/pathfinding)
 
+        //Determine if walkable
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); //create ray obj from camera to click point
+        RaycastHit hit;
+
+        //If ray hit walkable area
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask)) //cast ray. if hit land, move
+        {
+            //Check hit layer
+            if (hit.transform.gameObject.layer == 9) //If click ground
+            {
+                //if (selected == null || selected != grid.NearestGridNode(hit.point))
+                //{
+                prevPath = path;
+
+                path = pathfinder.AStarSearch(grid.NearestGridNode(transform.position), grid.NearestGridNode(hit.point));
+
+                if (path != prevPath && !combatMoving)
+                {
+                    grid.RemoveHighlights();
+                    grid.HighlightPath(path, stamina);
+
+                    selected = grid.NearestGridNode(hit.point);
+                }
+
+                //If click, show indicator and move character (accounting for stamina)
+                if (Input.GetMouseButtonDown(0))
+                {
+                    //Show indicator
+                    clickIndicator.SetActive(true);
+                    clickIndicAnim.SetTrigger("On");
+
+                    Vector3 gridPoint = grid.NearestGridNode(hit.point).worldPosition;
+                    clickIndicator.transform.position = gridPoint + new Vector3(0, 2f, 0);
+
+                    //Move character along path
+                    if (!combatMoving)
+                    {
+                        lockedPath = path;
+                        combatMoving = true;
+                        StartCoroutine(CombatMove());
+                    }
+
+                }
+            }
+        }
+
+        agent.speed = normalSpeed;
+        //Set if anim is in run or idle (set by number in blend tree)
+        anim.SetFloat("Speed", (agent.velocity.magnitude / agent.speed));
+
+    }
+    #endregion
     public bool ToggleAutoMove()
     {
         return !autoMove;
@@ -283,11 +286,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void SetTolerance(int currentTolerance) {
+    void SetTolerance(int currentTolerance)
+    {
         tolerance = currentTolerance;
         //if tolerance = 100, kill player
         toleranceText.text = tolerance + "/" + maxTolerance;
         Debug.Log(tolerance / maxTolerance);
         toleranceBar.fillAmount = (float)tolerance / maxTolerance;
     }
+
+
 }

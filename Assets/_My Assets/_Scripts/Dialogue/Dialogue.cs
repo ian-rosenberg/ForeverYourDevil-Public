@@ -16,7 +16,7 @@ using System.Linq;
 public class Dialogue : MonoBehaviour
 {
     ParseXML parser;                        /**Parser index containing all sentences in List*/
-    gameManager gameManager;                /**Master manager controlling game state*/
+    gameManager gm;                /**Master manager controlling game state*/
 
     private static Dialogue instance;       /**Create singleton instance*/
 
@@ -74,7 +74,7 @@ public class Dialogue : MonoBehaviour
         sentenceIndex = 0;
 
         parser = ParseXML.Instance;
-        gameManager = gameManager.Instance;
+        gm = gameManager.Instance;
         source = /*spectrumManager.source =*/ GetComponent<AudioSource>();
         InitializeDialogue();
     }
@@ -85,7 +85,7 @@ public class Dialogue : MonoBehaviour
     void FixedUpdate()
     {
         //Advance/Skip Dialogue no KeyPress
-        if (Input.GetButtonDown("Interact") && gameManager.gameState == gameManager.STATE.TALKING) //Return = enter key
+        if (Input.GetButtonDown("Interact") && gm.gameState == gameManager.STATE.TALKING) //Return = enter key
         {
             if (canPress)
             {
@@ -137,7 +137,7 @@ public class Dialogue : MonoBehaviour
         //Set gamestate
         if (start)
         {
-            gameManager.gameState = gameManager.STATE.TALKING;
+            gm.ChangeState(gameManager.STATE.TALKING);
 
             //Turn on Canvas
             Canvas.SetActive(true);
@@ -196,7 +196,7 @@ public class Dialogue : MonoBehaviour
         canvasAnim.SetTrigger("Exit");
         yield return new WaitForSeconds(0.633f);
         Canvas.SetActive(false);
-        gameManager.gameState = gameManager.STATE.TRAVELING;
+        gm.ChangeState(gameManager.STATE.TRAVELING);
     }
 
     /**
