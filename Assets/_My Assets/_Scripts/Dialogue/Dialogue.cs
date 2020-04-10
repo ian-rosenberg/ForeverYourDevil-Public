@@ -84,7 +84,7 @@ public class Dialogue : MonoBehaviour
      */
     void FixedUpdate()
     {
-        //Advance/Skip Dialogue no KeyPress
+        //Advance/Skip Dialogue on KeyPress
         if (Input.GetButtonDown("Interact") && gm.gameState == gameManager.STATE.TALKING) //Return = enter key
         {
             if (canPress)

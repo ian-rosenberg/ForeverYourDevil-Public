@@ -53,11 +53,7 @@ public class PlayerController : MonoBehaviour
     public int maxTolerance = 100; //Max Tolerance before player is killed
     public int stamina = 6; // Current Stamina, allows player to do actions
     public int maxStamina = 6; //Max stamina player is allowed to have
-
-    public TextMeshProUGUI healthText; //Text showing health
-    public TextMeshProUGUI staminaText; //Text showing stamina
-    public TextMeshProUGUI toleranceText; //Text showing stamina
-    public Image toleranceBar; //Text showing stamina
+    public PlayerGUI playerGUI; //Gui menu of the player
     bool combatMoving; //Is the player moving during combat?
 
     // Awake is called before start
@@ -76,14 +72,14 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        healthText.text = health + "/" + maxHealth;
-        staminaText.text = stamina + "";
-        SetTolerance(tolerance);
+        ChangeHealth(health, maxHealth);
+        ChangeStamina(stamina, maxStamina);
+        ChangeTolerance(tolerance, maxTolerance);
         clickIndicator.SetActive(false);
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         //Apply current behavior
         currentBehavior();
@@ -214,6 +210,25 @@ public class PlayerController : MonoBehaviour
 
     }
     #endregion
+
+    #region Player Stats
+    public void ChangeHealth(int newHealth, int newMaxHealth) {
+        health = newHealth;
+        maxHealth = newMaxHealth;
+        playerGUI.ChangeHealth(newHealth, newMaxHealth);
+    }
+    public void ChangeTolerance(int newTolerance, int newMaxTolerance) {
+        tolerance = newTolerance;
+        maxTolerance = newMaxTolerance;
+        playerGUI.ChangeTolerance(newTolerance, newMaxTolerance);
+    }
+    public void ChangeStamina(int newStamina, int newMaxStamina) {
+        stamina = newStamina;
+        maxStamina = newMaxStamina;
+        playerGUI.ChangeStamina(newStamina, newMaxStamina);
+    }
+    #endregion
+
     public bool ToggleAutoMove()
     {
         return !autoMove;
@@ -274,7 +289,7 @@ public class PlayerController : MonoBehaviour
                     Debug.Log("Arrived at node: " + i);
                     i++; //Go to next node
                     stamina--; //Subtract stamina and text update
-                    staminaText.text = stamina + "";
+                    
                     //agent.ResetPath();
                 }
             }
@@ -285,15 +300,4 @@ public class PlayerController : MonoBehaviour
             combatMoving = false;
         }
     }
-
-    void SetTolerance(int currentTolerance)
-    {
-        tolerance = currentTolerance;
-        //if tolerance = 100, kill player
-        toleranceText.text = tolerance + "/" + maxTolerance;
-        Debug.Log(tolerance / maxTolerance);
-        toleranceBar.fillAmount = (float)tolerance / maxTolerance;
-    }
-
-
 }

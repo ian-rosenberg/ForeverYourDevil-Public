@@ -46,14 +46,12 @@ public class gameManager : MonoBehaviour
     public enum STATE { START, TRAVELING, COMBAT, PAUSED, TALKING }
 
     public STATE gameState; //Current State of the game
-    bool isPaused; //Is the game paused?
     STATE prevState; //Previous State of the game (before pausing)
     #endregion
 
     // Start is called before the first frame update
     void Start()
     {
-        isPaused = false;
         ChangeState(STATE.TRAVELING);
         prevState = STATE.START; //Start out of combat
     }
@@ -64,8 +62,7 @@ public class gameManager : MonoBehaviour
         //Pause Game
         if (Input.GetButtonDown("Pause") && canPause)
         {
-            Debug.Log("Pressed Enter/Escape");
-            if (isPaused)
+            if (gameState == STATE.PAUSED)
             {
                 pauseMenu.SetActive(false);
                 UnPauseGame();
@@ -78,32 +75,55 @@ public class gameManager : MonoBehaviour
         }
     }
 
+    //Change the state of the game and update all dependant classes's game states
+    public void ChangeState(STATE state)
+    {
+        if (gameState != STATE.PAUSED)
+        {
+            switch (state)
+            {
+                case STATE.TALKING:
+                    player.currentBehavior = player.Player_Talking;
+                    break;
+                case STATE.TRAVELING:
+                    player.currentBehavior = player.Player_Travelling;
+                    break;
+                case STATE.COMBAT:
+                    player.currentBehavior = player.Player_Combat;
+                    break;
+                case STATE.PAUSED:
+                    Debug.LogError("Cannot pause game this way (may change later)");
+                    return;
+                case STATE.START:
+                    Debug.LogError("Cannot go back to Start. Don't collect $200.");
+                    return;
+                default:
+                    Debug.LogError("Invalid State Change.");
+                    return;
+            }
+            //If state is valid, change it.
+            prevState = gameState;
+            gameState = state;
+        }
+    }
+
     #region Pausing
     public void PauseGame()
     {
-        if (!isPaused)
+        if (gameState != STATE.PAUSED)
         {
-            prevState = gameState;
-            gameState = STATE.PAUSED;
-            isPaused = true;
-            Debug.Log("gameState = " + gameState);
-            Debug.Log("prevState = " + prevState);
+            ChangeState(STATE.PAUSED);
             Time.timeScale = 0;
         }
     }
     public void UnPauseGame()
     {
-        if (isPaused)
+        if (gameState == STATE.PAUSED)
         {
-            gameState = prevState;
-            prevState = STATE.PAUSED;
-            isPaused = false;
-            Debug.Log("gameState = " + gameState);
-            Debug.Log("prevState = " + prevState);
+            ChangeState(prevState);
             Time.timeScale = 1;
         }
     }
-
     public void SetCanPause(bool pause)
     {
         canPause = pause;
@@ -159,35 +179,5 @@ public class gameManager : MonoBehaviour
     }
     #endregion
 
-    //Change the state of the game and update all dependant classes's game states
-    public void ChangeState(STATE state)
-    {
-        if (!isPaused || gameState != STATE.PAUSED)
-        {
-            switch (state)
-            {
-                case STATE.TALKING:
-                    player.currentBehavior = player.Player_Talking;
-                    break;
-                case STATE.TRAVELING:
-                    player.currentBehavior = player.Player_Travelling;
-                    break;
-                case STATE.COMBAT:
-                    player.currentBehavior = player.Player_Combat;
-                    break;
-                case STATE.PAUSED:
-                    Debug.LogError("Cannot pause game this way (may change later)");
-                    return;
-                case STATE.START:
-                    Debug.LogError("Cannot go back to Start. Don't collect $200.");
-                    return;
-                default:
-                    Debug.LogError("Invalid State Change.");
-                    return;
-            }
-            //If state is valid, change it.
-            prevState = gameState;
-            gameState = state;
-        }
-    }
+
 }
