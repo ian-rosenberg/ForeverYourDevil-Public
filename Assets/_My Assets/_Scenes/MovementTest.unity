@@ -2661,7 +2661,7 @@ MonoBehaviour:
   normalWorld: {fileID: 81750403}
   battleWorld: {fileID: 1624661013}
   pauseMenu: {fileID: 1291242769}
-  gameState: 1
+  gameState: 0
 --- !u!1 &1061123594
 GameObject:
   m_ObjectHideFlags: 0
