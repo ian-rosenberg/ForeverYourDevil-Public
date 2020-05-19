@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Text.RegularExpressions;
 using System.Linq;
-
+using FMODUnity;
 
 /**
  * @brief Manager for displaying images, text, etc from parsed dialogue from ParseXML
@@ -35,7 +35,7 @@ public class Dialogue : MonoBehaviour
     [Header("Audio")]
     //public AudioSpectrum spectrumManager;
     //public VoiceLineSyncer voiceManager;
-    public AudioSource source;              /**Voice line audio source*/
+    public StudioEventEmitter source;              /**Voice line audio source*/
 
     [Header("Display")]
     public GameObject Canvas;               /**Canvas holding dialogue box, etc*/
@@ -75,7 +75,7 @@ public class Dialogue : MonoBehaviour
 
         parser = ParseXML.Instance;
         gm = gameManager.Instance;
-        source = /*spectrumManager.source =*/ GetComponent<AudioSource>();
+        //source = /*spectrumManager.source =*/ GetComponent<AudioSource>();
         InitializeDialogue();
     }
 
@@ -173,10 +173,10 @@ public class Dialogue : MonoBehaviour
         if (start) yield return new WaitForSeconds(1.717f);
 
         if (parser.conversationList[currentId].VoiceLine)
-            source.clip = parser.conversationList[currentId].VoiceLine; //Set voiceline
+            source = parser.conversationList[currentId].VoiceLine; //Set voiceline
 
         //Play voice
-        if (source.clip)
+        if (source)
             source.Play();
 
         Debug.Log(LeftmostChar.sprite.name);
