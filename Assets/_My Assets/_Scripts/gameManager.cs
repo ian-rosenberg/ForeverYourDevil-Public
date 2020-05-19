@@ -53,6 +53,7 @@ public class gameManager : MonoBehaviour
     void Start()
     {
         ChangeState(STATE.TRAVELING);
+        //player.currentBehavior = player.Player_Travelling;
         prevState = STATE.START; //Start out of combat
     }
 
