@@ -5,6 +5,8 @@ using UnityEngine;
 using System.IO;
 using System.Xml;
 using UnityEngine.SceneManagement;
+using FMOD;
+using FMODUnity;
 
 /**
  * @brief A collection of lines to load when a conversation is triggered or an option is chosen
@@ -13,7 +15,7 @@ using UnityEngine.SceneManagement;
 public class Conversation
 {
     public string Id { get; set; }                            /**Conversation name identifier. Cannot be blank*/
-    public AudioClip VoiceLine { get; set; }                  /**Optional Wav file containing voice line to play with conversation.*/
+    public StudioEventEmitter VoiceLine { get; set; }                  /**Optional Wav file containing voice line to play with conversation.*/
     public List<DialogueLine> DialogueLines { get; set; }     /**A list of dialogue lines to display*/
 
     public Conversation()
@@ -133,7 +135,7 @@ public class ParseXML : MonoBehaviour
      */
     void Awake()
     {
-        Debug.Log("Started");
+        UnityEngine.Debug.Log("Started");
         //Initialize Conversation List
         conversationList = new Dictionary<string, Conversation>();
 
@@ -141,33 +143,33 @@ public class ParseXML : MonoBehaviour
         var file = Resources.Load<TextAsset>(SceneManager.GetActiveScene().name);
         XmlDocument xml = new XmlDocument();
         xml.LoadXml(file.text);
-        Debug.Log("LoadXml");
+        UnityEngine.Debug.Log("LoadXml");
 
         //Get a list of all conversations
         XmlNodeList nodelist = xml.SelectSingleNode("/game").SelectNodes("conversation"); // get all <conversation> nodes
-        Debug.Log("/conversations: " + nodelist.Count);
+        UnityEngine.Debug.Log("/conversations: " + nodelist.Count);
         foreach (XmlNode conv in nodelist) // for each <conversation> node
         {
             //Create conversation Obj
             Conversation conversation = new Conversation();
             List<DialogueLine> dialogueList = new List<DialogueLine>();
-            Debug.Log("Lists created");
+            UnityEngine.Debug.Log("Lists created");
 
             //Set conversationID
             if (HasAttributes(conv, "id"))
             {
                 conversation.Id = conv.Attributes["id"].Value;
-                Debug.Log(conv.Attributes["id"].Value);
+                UnityEngine.Debug.Log(conv.Attributes["id"].Value);
             }
             //Set voice line (if present)
             if (HasAttributes(conv, "voice"))
             {
-                conversation.VoiceLine = Resources.Load<AudioClip>("Audio/" + conv.Attributes["voice"].Value);
-                Debug.Log(conv.Attributes["voice"].Value);
+                conversation.VoiceLine = Resources.Load<StudioEventEmitter>("Audio/" + conv.Attributes["voice"].Value);
+                UnityEngine.Debug.Log(conv.Attributes["voice"].Value);
             }
             //Get characters
             XmlNodeList characterList = conv.SelectNodes("character");
-            Debug.Log("characters: " + characterList.Count);
+            UnityEngine.Debug.Log("characters: " + characterList.Count);
             foreach (XmlNode character in characterList)
             {
                 //Store text from before in case options are specified
@@ -177,11 +179,11 @@ public class ParseXML : MonoBehaviour
                 string characterName = "";
                 if (HasAttributes(character, "name"))
                     characterName = character.Attributes["name"].Value;
-                //Debug.Log(character.Attributes["name"].Value);
+                //UnityEngine.Debug.Log(character.Attributes["name"].Value);
 
                 //Get their lines (could be options or lines)
                 XmlNodeList lineList = character.ChildNodes;
-                Debug.Log("Dialog line nodes created: " + lineList.Count);
+                UnityEngine.Debug.Log("Dialog line nodes created: " + lineList.Count);
                 foreach (XmlNode line in lineList)
                 {
                     //Create New SpriteList
@@ -197,11 +199,11 @@ public class ParseXML : MonoBehaviour
 
                         //Create a new dialogue line
                         DialogueLine d = new DialogueLine(characterName, line.InnerText, spriteList);
-                        Debug.Log("Dialog line created");
+                        UnityEngine.Debug.Log("Dialog line created");
 
                         //Add line to dialogue list
                         dialogueList.Add(d);
-                        Debug.Log("Dialog line stored");
+                        UnityEngine.Debug.Log("Dialog line stored");
                     }
 
                     //Parse options and choices
@@ -212,7 +214,7 @@ public class ParseXML : MonoBehaviour
 
                         //Get all choices within option tag
                         XmlNodeList choiceList = line.ChildNodes;
-                        Debug.Log("Option nodes created: " + choiceList.Count);
+                        UnityEngine.Debug.Log("Option nodes created: " + choiceList.Count);
                         foreach (XmlNode choice in choiceList)
                         {
                             //Parse options into list
@@ -224,11 +226,11 @@ public class ParseXML : MonoBehaviour
 
                         //Create a new dialogue line
                         DialogueLine d = new DialogueLine(characterName, previousLine, optionList);
-                        Debug.Log("Option list created");
+                        UnityEngine.Debug.Log("Option list created");
 
                         //Add line to dialogue list
                         dialogueList.Add(d);
-                        Debug.Log("Option list stored");
+                        UnityEngine.Debug.Log("Option list stored");
                     }
 
                 } //end get lines
@@ -285,7 +287,7 @@ public class ParseXML : MonoBehaviour
                 if (HasAttributes(line, "sprite1"))
                 {
                     Sprite sprite = Resources.Load<Sprite>("Sprites/" + line.Attributes["sprite1"].Value);
-                    Debug.Log(sprite.name);
+                    UnityEngine.Debug.Log(sprite.name);
                     spriteList.Add(sprite);
                 }
                 //Get sprites from line (if they exist)
