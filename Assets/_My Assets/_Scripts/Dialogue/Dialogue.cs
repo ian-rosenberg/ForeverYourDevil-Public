@@ -249,6 +249,11 @@ public class Dialogue : MonoBehaviour
 
         else //If there are more lines
         {
+            //Play voice line (stop and start for workaround)
+            RuntimeManager.StudioSystem.setParameterByName("LineNumber", sentenceIndex); //Advance Line Number In FMOD
+            dialogueAudio.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+            dialogueAudio.start(); // <---DUMB
+
             //Set sprites
             if (dialog[sentenceIndex].Sprites.Any())
             {
@@ -283,7 +288,6 @@ public class Dialogue : MonoBehaviour
 
             //Display line to read from conversationlist
             StartCoroutine(TypeText(dialog[sentenceIndex].Content));
-            RuntimeManager.StudioSystem.setParameterByName("LineNumber", sentenceIndex); //Advance Line Number In FMOD
             sentenceIndex++;          
             Debug.Log("Sentence Index: " + sentenceIndex);
         }
