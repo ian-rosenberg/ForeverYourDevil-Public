@@ -35,7 +35,7 @@ public class Dialogue : MonoBehaviour
     [Header("Audio")]
     //public AudioSpectrum spectrumManager;
     //public VoiceLineSyncer voiceManager;
-    public StudioEventEmitter source;              /**Voice line audio source*/
+    public FMOD.Studio.EventInstance dialogueAudio;              /**Voice line audio source*/
 
     [Header("Display")]
     public GameObject Canvas;               /**Canvas holding dialogue box, etc*/
@@ -172,16 +172,21 @@ public class Dialogue : MonoBehaviour
         //Wait for animation to end before starting line and voice
         if (start) yield return new WaitForSeconds(1.717f);
 
-        if (parser.conversationList[currentId].VoiceLine)
-            source = parser.conversationList[currentId].VoiceLine; //Set voiceline
+        if (parser.conversationList[currentId].VoiceLine != null)
+        {
+            dialogueAudio = RuntimeManager.CreateInstance(parser.conversationList[currentId].VoiceLine); //Set voiceline
 
-        //Play voice
-        if (source)
-            source.Play();
+            //Initialise FMOD Parameters
+            RuntimeManager.StudioSystem.setParameterByName("LineNumber", 0);
+            RuntimeManager.StudioSystem.setParameterByName("SectionNumber", 0);
+            RuntimeManager.StudioSystem.setParameterByName("DialogueEnd", 0);
 
-        Debug.Log(LeftmostChar.sprite.name);
-        Debug.Log(RightmostChar.sprite.name);
+            //Play Audio
+            dialogueAudio.start();
 
+            Debug.Log(LeftmostChar.sprite.name);
+            Debug.Log(RightmostChar.sprite.name);
+        }
         //Go to next line
         AdvanceLine();
     }
@@ -196,6 +201,7 @@ public class Dialogue : MonoBehaviour
         canvasAnim.SetTrigger("Exit");
         yield return new WaitForSeconds(0.633f);
         Canvas.SetActive(false);
+        RuntimeManager.StudioSystem.setParameterByName("DialogueEnd", 1);
         gm.ChangeState(gameManager.STATE.TRAVELING);
     }
 
@@ -277,7 +283,9 @@ public class Dialogue : MonoBehaviour
 
             //Display line to read from conversationlist
             StartCoroutine(TypeText(dialog[sentenceIndex].Content));
-            sentenceIndex++;
+            RuntimeManager.StudioSystem.setParameterByName("LineNumber", sentenceIndex); //Advance Line Number In FMOD
+            sentenceIndex++;          
+            Debug.Log("Sentence Index: " + sentenceIndex);
         }
     }
 

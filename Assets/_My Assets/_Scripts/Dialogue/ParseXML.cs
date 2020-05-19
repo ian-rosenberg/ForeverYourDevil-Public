@@ -15,7 +15,7 @@ using FMODUnity;
 public class Conversation
 {
     public string Id { get; set; }                            /**Conversation name identifier. Cannot be blank*/
-    public StudioEventEmitter VoiceLine { get; set; }                  /**Optional Wav file containing voice line to play with conversation.*/
+    public string VoiceLine { get; set; }                  /**Optional Wav file containing voice line to play with conversation.*/
     public List<DialogueLine> DialogueLines { get; set; }     /**A list of dialogue lines to display*/
 
     public Conversation()
@@ -164,7 +164,8 @@ public class ParseXML : MonoBehaviour
             //Set voice line (if present)
             if (HasAttributes(conv, "voice"))
             {
-                conversation.VoiceLine = Resources.Load<StudioEventEmitter>("Audio/" + conv.Attributes["voice"].Value);
+                //conversation.VoiceLine = Resources.Load<StudioEventEmitter>("Audio/" + conv.Attributes["voice"].Value);
+                conversation.VoiceLine = conv.Attributes["voice"].Value;               
                 UnityEngine.Debug.Log(conv.Attributes["voice"].Value);
             }
             //Get characters
