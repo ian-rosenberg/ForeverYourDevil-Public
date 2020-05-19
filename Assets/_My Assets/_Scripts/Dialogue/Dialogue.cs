@@ -288,7 +288,7 @@ public class Dialogue : MonoBehaviour
 
             //Display line to read from conversationlist
             StartCoroutine(TypeText(dialog[sentenceIndex].Content));
-            sentenceIndex++;          
+            sentenceIndex++;
             Debug.Log("Sentence Index: " + sentenceIndex);
         }
     }
@@ -305,6 +305,9 @@ public class Dialogue : MonoBehaviour
         sentenceIndex = 0;
 
         //Start new dialogue
+        dialogueAudio.release();
+        dialogueAudio.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        RuntimeManager.StudioSystem.setParameterByName("DialogueEnd", 1);
         StartCoroutine(StartDialogue(convID, false));
     }
 

@@ -104,6 +104,16 @@ xsi:schemaLocation="https://www.w3schools.com/xml VN_Schema.xsd">
       <line>After the way you just pissed me off by rummaging through my things...</line>
       <line>I think I'd rather enjoy seeing someone clean what's left of you out of my carpet.</line>
       <line>Shall we begin?</line>
+      <options>
+        <choice id="No">No</choice>
+        <choice id="Genovese_Threat">Restart?</choice>
+      </options>
+    </character>
+  </conversation>
+
+  <conversation id="No">
+    <character name="Penny">
+      <line sprite1="Penny_Sweat" sprite2="Player">No, u.</line>
     </character>
   </conversation>
 
