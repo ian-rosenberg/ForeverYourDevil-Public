@@ -78,7 +78,7 @@ public class gameManager : MonoBehaviour
     //Change the state of the game and update all dependant classes's game states
     public void ChangeState(STATE state)
     {
-        if (gameState != STATE.PAUSED)
+        if (state != gameState) //Make sure state is not a duplicate
         {
             switch (state)
             {
@@ -91,14 +91,8 @@ public class gameManager : MonoBehaviour
                 case STATE.COMBAT:
                     player.currentBehavior = player.Player_Combat;
                     break;
-                case STATE.PAUSED:
-                    Debug.LogError("Cannot pause game this way (may change later)");
-                    return;
                 case STATE.START:
                     Debug.LogError("Cannot go back to Start. Don't collect $200.");
-                    return;
-                default:
-                    Debug.LogError("Invalid State Change.");
                     return;
             }
             //If state is valid, change it.
