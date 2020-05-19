@@ -431,7 +431,7 @@
 	</object>
 	<object class="NamedMarker" id="{f8da1865-bc81-4e0d-825d-349bde479784}">
 		<property name="position">
-			<value>27</value>
+			<value>26.5</value>
 		</property>
 		<property name="name">
 			<value>Dialogue End</value>
