@@ -82,7 +82,7 @@ public class Dialogue : MonoBehaviour
     /**
      * @brief Main game loop. Advance line of text or skip it depending on input.
      */
-    void FixedUpdate()
+    void Update()
     {
         //Advance/Skip Dialogue on KeyPress
         if (Input.GetButtonDown("Interact") && gm.gameState == gameManager.STATE.TALKING) //Return = enter key
