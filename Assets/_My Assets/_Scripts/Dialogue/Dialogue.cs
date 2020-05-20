@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Text.RegularExpressions;
 using System.Linq;
-
+using FMODUnity;
 
 /**
  * @brief Manager for displaying images, text, etc from parsed dialogue from ParseXML
@@ -35,7 +35,7 @@ public class Dialogue : MonoBehaviour
     [Header("Audio")]
     //public AudioSpectrum spectrumManager;
     //public VoiceLineSyncer voiceManager;
-    public AudioSource source;              /**Voice line audio source*/
+    public FMOD.Studio.EventInstance dialogueAudio;              /**Voice line audio source*/
 
     [Header("Display")]
     public GameObject Canvas;               /**Canvas holding dialogue box, etc*/
@@ -75,7 +75,7 @@ public class Dialogue : MonoBehaviour
 
         parser = ParseXML.Instance;
         gm = gameManager.Instance;
-        source = /*spectrumManager.source =*/ GetComponent<AudioSource>();
+        //source = /*spectrumManager.source =*/ GetComponent<AudioSource>();
         InitializeDialogue();
     }
 
@@ -172,16 +172,21 @@ public class Dialogue : MonoBehaviour
         //Wait for animation to end before starting line and voice
         if (start) yield return new WaitForSeconds(1.717f);
 
-        if (parser.conversationList[currentId].VoiceLine)
-            source.clip = parser.conversationList[currentId].VoiceLine; //Set voiceline
+        if (parser.conversationList[currentId].VoiceLine != null)
+        {
+            dialogueAudio = RuntimeManager.CreateInstance(parser.conversationList[currentId].VoiceLine); //Set voiceline
 
-        //Play voice
-        if (source.clip)
-            source.Play();
+            //Initialise FMOD Parameters
+            RuntimeManager.StudioSystem.setParameterByName("LineNumber", 0);
+            RuntimeManager.StudioSystem.setParameterByName("SectionNumber", 0);
+            RuntimeManager.StudioSystem.setParameterByName("DialogueEnd", 0);
 
-        Debug.Log(LeftmostChar.sprite.name);
-        Debug.Log(RightmostChar.sprite.name);
+            //Play Audio
+            dialogueAudio.start();
 
+            Debug.Log(LeftmostChar.sprite.name);
+            Debug.Log(RightmostChar.sprite.name);
+        }
         //Go to next line
         AdvanceLine();
     }
@@ -196,6 +201,7 @@ public class Dialogue : MonoBehaviour
         canvasAnim.SetTrigger("Exit");
         yield return new WaitForSeconds(0.633f);
         Canvas.SetActive(false);
+        RuntimeManager.StudioSystem.setParameterByName("DialogueEnd", 1);
         gm.ChangeState(gameManager.STATE.TRAVELING);
     }
 
@@ -243,6 +249,11 @@ public class Dialogue : MonoBehaviour
 
         else //If there are more lines
         {
+            //Play voice line (stop and start for workaround)
+            RuntimeManager.StudioSystem.setParameterByName("LineNumber", sentenceIndex); //Advance Line Number In FMOD
+            dialogueAudio.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+            dialogueAudio.start(); // <---DUMB
+
             //Set sprites
             if (dialog[sentenceIndex].Sprites.Any())
             {
@@ -278,6 +289,7 @@ public class Dialogue : MonoBehaviour
             //Display line to read from conversationlist
             StartCoroutine(TypeText(dialog[sentenceIndex].Content));
             sentenceIndex++;
+            Debug.Log("Sentence Index: " + sentenceIndex);
         }
     }
 
@@ -293,6 +305,9 @@ public class Dialogue : MonoBehaviour
         sentenceIndex = 0;
 
         //Start new dialogue
+        dialogueAudio.release();
+        dialogueAudio.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        RuntimeManager.StudioSystem.setParameterByName("DialogueEnd", 1);
         StartCoroutine(StartDialogue(convID, false));
     }
 
