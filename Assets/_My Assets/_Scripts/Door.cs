@@ -38,7 +38,8 @@ public class Door : MonoBehaviour
         gm.PauseGame();
         gm.SetCanPause(false);
         //Play canvas animation
-        yield return new WaitForSecondsRealtime(2f);
+        gm.CanvasAnimator.SetTrigger("Door");
+        yield return new WaitForSecondsRealtime(1f);
         //Teleport player
         gm.playerAgent.ResetPath();
         gm.playerAgent.enabled = false;
@@ -46,9 +47,8 @@ public class Door : MonoBehaviour
         gm.player.transform.position = spawnPoint.transform.position;
         gm.player.transform.rotation = spawnPoint.transform.rotation;
         gm.playerAgent.enabled = true;
-
         //Play unfade animation
-        yield return new WaitForSecondsRealtime(1.5f);
+        yield return new WaitForSecondsRealtime(0.5f);
         //Unpause Player
         gm.UnPauseGame();
         gm.SetCanPause(true);

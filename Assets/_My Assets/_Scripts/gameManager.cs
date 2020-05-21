@@ -32,6 +32,7 @@ public class gameManager : MonoBehaviour
 
     [Header("Menus")]
     public GameObject pauseMenu;
+    public Animator CanvasAnimator;
 
 
     private static gameManager instance;
