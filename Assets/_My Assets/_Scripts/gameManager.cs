@@ -18,6 +18,8 @@ public class gameManager : MonoBehaviour
     public Image screenCapRegion; //Place to display image on
 
     public PlayerController player; //Reference to player script
+    public NavMeshAgent playerAgent;
+    public PlayerController pc;
 
     [Header("Combat")]
     public Transform[] playerSpawn, enemySpawn;
@@ -55,6 +57,11 @@ public class gameManager : MonoBehaviour
         ChangeState(STATE.TRAVELING);
         //player.currentBehavior = player.Player_Travelling;
         prevState = STATE.START; //Start out of combat
+
+        playerAgent = player.GetComponent<NavMeshAgent>();
+        pc = player.GetComponent<PlayerController>();
+        //playerAgent.enabled = true;
+
     }
 
     // Update is called once per frame
@@ -146,15 +153,12 @@ public class gameManager : MonoBehaviour
 
     public void LoadCombatants()
     {
-        PlayerController pc = player.GetComponent<PlayerController>();
-
         Debug.Log("Loading Combatants");
         UnPauseGame();
 
         normalWorld.SetActive(false);
         battleWorld.SetActive(true);
 
-        NavMeshAgent playerAgent = player.GetComponent<NavMeshAgent>();
         //playerAgent.enabled = true;
         playerAgent.ResetPath();
         playerAgent.enabled = false;

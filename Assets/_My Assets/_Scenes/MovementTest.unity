@@ -5432,7 +5432,7 @@ PrefabInstance:
     - target: {fileID: 4934818583679702467, guid: 456ea23be283ff443a9d3cda45f13747,
         type: 3}
       propertyPath: tolerance
-      value: 25
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 4934818583679702467, guid: 456ea23be283ff443a9d3cda45f13747,
         type: 3}
