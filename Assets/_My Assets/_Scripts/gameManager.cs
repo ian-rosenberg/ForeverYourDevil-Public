@@ -19,7 +19,8 @@ public class gameManager : MonoBehaviour
 
     public PlayerController player; //Reference to player script
     public NavMeshAgent playerAgent;
-    public PlayerController pc;
+    public Animator playerAnim;
+    public Rigidbody playerRB;
 
     [Header("Combat")]
     public Transform[] playerSpawn, enemySpawn;
@@ -60,7 +61,6 @@ public class gameManager : MonoBehaviour
         prevState = STATE.START; //Start out of combat
 
         playerAgent = player.GetComponent<NavMeshAgent>();
-        pc = player.GetComponent<PlayerController>();
         //playerAgent.enabled = true;
 
     }
@@ -164,11 +164,11 @@ public class gameManager : MonoBehaviour
         playerAgent.ResetPath();
         playerAgent.enabled = false;
 
-        player.transform.position = pc.grid.NearestGridNode(playerSpawn[0].position).worldPosition;
-        pc.combatPosition = pc.grid.NearestGridNode(player.transform.position);
+        player.transform.position = player.grid.NearestGridNode(playerSpawn[0].position).worldPosition;
+        player.combatPosition = player.grid.NearestGridNode(player.transform.position);
         playerAgent.enabled = true;
         //playerAgent.ResetPath();
-        enemyCombatTriggerer.transform.position = pc.grid.NearestGridNode(enemySpawn[0].position).worldPosition;
+        enemyCombatTriggerer.transform.position = player.grid.NearestGridNode(enemySpawn[0].position).worldPosition;
         enemyCombatTriggerer = null;
         mainCamera.SetOffset(cameraSpawn.transform.position);
 

@@ -91,6 +91,7 @@ public class PlayerController : MonoBehaviour
         //Set animator (need to change)
         if (!anim.GetBool("Traveling"))
         {
+            anim.SetBool("StayIdle", false);
             anim.SetBool("Traveling", true);
             anim.SetTrigger("TravelingTrigger");
             anim.SetBool("Combat", false);
@@ -147,11 +148,13 @@ public class PlayerController : MonoBehaviour
     public void Player_Talking()
     {
         agent.ResetPath(); //Resets directions to agent to stop it
+        anim.SetBool("StayIdle", true);
     }
     public void Player_Combat()
     {
         if (!anim.GetBool("Combat"))
         {
+            anim.SetBool("StayIdle", false);
             anim.SetBool("Traveling", false);
             anim.SetTrigger("CombatTrigger");
             anim.SetBool("Combat", true);
@@ -212,17 +215,20 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region Player Stats
-    public void ChangeHealth(int newHealth, int newMaxHealth) {
+    public void ChangeHealth(int newHealth, int newMaxHealth)
+    {
         health = newHealth;
         maxHealth = newMaxHealth;
         playerGUI.ChangeHealth(newHealth, newMaxHealth);
     }
-    public void ChangeTolerance(int newTolerance, int newMaxTolerance) {
+    public void ChangeTolerance(int newTolerance, int newMaxTolerance)
+    {
         tolerance = newTolerance;
         maxTolerance = newMaxTolerance;
         playerGUI.ChangeTolerance(newTolerance, newMaxTolerance);
     }
-    public void ChangeStamina(int newStamina, int newMaxStamina) {
+    public void ChangeStamina(int newStamina, int newMaxStamina)
+    {
         stamina = newStamina;
         maxStamina = newMaxStamina;
         playerGUI.ChangeStamina(newStamina, newMaxStamina);
@@ -289,7 +295,7 @@ public class PlayerController : MonoBehaviour
                     Debug.Log("Arrived at node: " + i);
                     i++; //Go to next node
                     stamina--; //Subtract stamina and text update
-                    
+
                     //agent.ResetPath();
                 }
             }

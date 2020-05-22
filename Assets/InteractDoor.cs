@@ -34,6 +34,7 @@ public class InteractDoor : Door
         if (other.gameObject.layer == 10)
         {
             talkIndicator.SetActive(false);
+            canActivate = false;
         }
     }
 

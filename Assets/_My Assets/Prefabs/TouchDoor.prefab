@@ -18,7 +18,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!4 &4985944455226478768
 Transform:
@@ -93,8 +93,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.2660495, y: 2.986717, z: 0.2605416}
-  m_Center: {x: 0.6065865, y: 1.5005563, z: 0.00058979535}
+  m_Size: {x: 1.846038, y: 2.9867175, z: 1.2853895}
+  m_Center: {x: 0.60658664, y: 1.5005565, z: 0.00058979535}
 --- !u!114 &303601427907691864
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -108,7 +108,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   locked: 0
-  areaID: Level 2
+  areaID: Level 1
   spawnPoint: {fileID: 0}
 --- !u!1 &4985944455562653286
 GameObject:
@@ -124,7 +124,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!4 &4985944455562653287
 Transform:

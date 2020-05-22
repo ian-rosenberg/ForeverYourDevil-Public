@@ -34,22 +34,26 @@ public class Door : MonoBehaviour
     protected IEnumerator Teleport()
     {
         Debug.Log("Activated Door!");
+        //Teleport player
+        gm.playerAgent.ResetPath();
+        gm.playerAgent.enabled = false;
+        gm.playerAnim.SetBool("StayIdle", true);
         //Pause game
         gm.PauseGame();
         gm.SetCanPause(false);
         //Play canvas animation
         gm.CanvasAnimator.SetTrigger("Door");
         yield return new WaitForSecondsRealtime(1f);
-        //Teleport player
-        gm.playerAgent.ResetPath();
-        gm.playerAgent.enabled = false;
-        gm.playerAgent.velocity = Vector3.zero;
         gm.player.transform.position = spawnPoint.transform.position;
         gm.player.transform.rotation = spawnPoint.transform.rotation;
-        gm.playerAgent.enabled = true;
+        
         //Play unfade animation
         yield return new WaitForSecondsRealtime(0.5f);
         //Unpause Player
+        gm.playerAgent.enabled = true;
+        gm.playerAgent.velocity = Vector3.zero;
+        gm.playerRB.velocity = Vector3.zero;
+        gm.playerAnim.SetBool("StayIdle", false);
         gm.UnPauseGame();
         gm.SetCanPause(true);
     }
