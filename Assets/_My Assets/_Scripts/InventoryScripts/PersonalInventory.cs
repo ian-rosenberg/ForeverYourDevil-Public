@@ -10,7 +10,7 @@ using System.Threading;
  * Author - Ian Rosenberg
  */
 
-public class PersonalInventory : Inventory
+public class PersonalInventory : SharedInventory
 {
 	[Header("Personal Inventory")]
 	public uint numSlots;//how many slots do we start with?

@@ -23,7 +23,6 @@ public class InventoryManagement : MonoBehaviour
     public GameObject blurShader;
     public GameObject sharedInventoryPrefab;
     public GameObject personalInventoryPrefab;
-    public GameObject battleInventoryPrefab;
 
     public int numInventories;
 
@@ -32,17 +31,13 @@ public class InventoryManagement : MonoBehaviour
     void Start()
     {
         inventoryObjs = new List<GameObject>();
-
-        GameObject inventoryClone = Instantiate(sharedInventoryPrefab, this.transform);
-
-        inventoryObjs.Add(inventoryClone);
-
+        
         //for(int i = 0; i < numInventories; i++)
         //{
-        //AddInventory();
+            //AddInventory();
         //}
 
-        //CreateSharedInventory();
+        CreateSharedInventory();
 
         //SetInventoriesInactive();
     }
