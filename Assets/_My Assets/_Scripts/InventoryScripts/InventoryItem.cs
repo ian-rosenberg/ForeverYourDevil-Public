@@ -17,16 +17,19 @@ public class InventoryItem : MonoBehaviour
     private GameObject owner;//who owns this item?
     private GameObject ownerSlot;//the inventory slot that holds this item
 
+    public Sprite sprite;//icon for item
+
     public string itemName;//another way to reference item, by name
 
     public enum ItemType//What kind of item are we?
     {
+        Ingredient,
+        Consumable,
         Concoction,
         Equipment,
-        Ability
+        Ability, 
     }
 
-    
     public void UseItem()
     {
         //lets apply any effects on the player
@@ -34,6 +37,10 @@ public class InventoryItem : MonoBehaviour
 
         switch(itemType)
         {
+            case ItemType.Ingredient:
+                //Toggle Equip ability
+                break;
+            
             case ItemType.Concoction:
                 //affect stats
                 break;
@@ -41,7 +48,7 @@ public class InventoryItem : MonoBehaviour
             case ItemType.Equipment:
                 //Wear equipment
                 break;
-
+            
             case ItemType.Ability:
                 //Toggle Equip ability
                 break;
@@ -50,5 +57,15 @@ public class InventoryItem : MonoBehaviour
                 break;
 
         }
+    }
+
+    public void ConsumeItem(GameObject item)
+    {
+        InventoryItem i = item.GetComponent<InventoryItem>();
+
+        //use item
+        //remove from inventory
+        //if stacked remove from stack
+        //destroy item
     }
 }

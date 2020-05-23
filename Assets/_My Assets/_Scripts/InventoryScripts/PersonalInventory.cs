@@ -10,46 +10,19 @@ using System.Threading;
  * Author - Ian Rosenberg
  */
 
-public class PersonalInventory : MonoBehaviour
+public class PersonalInventory : Inventory
 {
 	[Header("Personal Inventory")]
-	private Dictionary<object, GameObject> inventoryItems;
-	
-	public GameObject elementOwnerPrefab;//The grid space in which an item can reside
 	public uint numSlots;//how many slots do we start with?
+	public GameObject characterOwner;
 	
 	private void Start()
 	{
-		inventoryItems = new Dictionary<object, GameObject>();
-		
 		Populate();
-	}
-
-	private void Update()
-	{
-
 	}
 
 	private void Populate()
 	{
 		ExpandInventory((int)numSlots);
-	}
-
-	private void AddSlot()
-	{
-		GameObject slotClone = Instantiate(elementOwnerPrefab, transform);
-		uint currentIndex = (uint)inventoryItems.Count();
-		//string n = slotClone.GetComponent<InventoryItem>().itemName;
-
-		inventoryItems.Add(currentIndex, slotClone);
-		//inventoryItems.Add(n, slotClone);
-	}
-
-	public void ExpandInventory(int slots)
-	{
-		for (int i = 0; i < slots; i++)
-		{
-			AddSlot();
-		}
 	}
 }
