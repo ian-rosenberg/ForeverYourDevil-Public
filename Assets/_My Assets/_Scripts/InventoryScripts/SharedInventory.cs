@@ -18,7 +18,7 @@ public class SharedInventory : MonoBehaviour
     {
         inventorySlots = new Dictionary<object, GameObject>();
 
-        ExpandInventory(1);
+        ExpandInventory(24);
 
         totalItems = 0;
     }
@@ -44,7 +44,7 @@ public class SharedInventory : MonoBehaviour
     {
         if (inventorySlots.ContainsValue(item))
         {
-            item.GetComponent<InventorySlot>().quantity++;
+            //item.GetComponent<InventoryItem>().quantity++;
 
             return;
         }

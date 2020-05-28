@@ -43,7 +43,7 @@ public class Inventory : MonoBehaviour
     {
         if (inventorySlots.ContainsValue(item))
         {
-            item.GetComponent<InventorySlot>().quantity++;
+            //item.GetComponent<InventorySlot>().quantity++;
 
             return;
         }

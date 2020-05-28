@@ -1,6 +1,45 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
+using System;
+
+#region Item JSON Deserialization
+
+[System.Serializable]
+public class Items
+{
+    public List<ItemBase> Ingredients;
+    public List<ItemBase> Consumables;
+    public List<ItemBase> Concoctions;
+    public List<ItemBase> Equipment;
+    public List<ItemBase> Abilities;
+}
+
+[System.Serializable]
+public class ItemBase
+{
+    public string ID;
+    public string Icon;
+    public string Name;
+    public bool Consumable;
+    public int Cooldown;
+    public int Duration;
+    public string EffectDescription;
+    public string Description;
+    public string SFX;
+    public StatBonus Bonuses;
+}
+
+[System.Serializable]
+public class StatBonus
+{
+    public int HP;
+    public int Stamina;
+    public int Tolerance;
+    public int Attack;
+}
+#endregion
 
 public class InventoryManagement : MonoBehaviour
 {
@@ -17,12 +56,17 @@ public class InventoryManagement : MonoBehaviour
     }
     #endregion
 
+    #region Item Master List
+    private Items itemList;
+    #endregion
+
     private List<GameObject> inventoryObjs;//The inventories in use;
     private GameObject sharedInventory;
 
     public GameObject blurShader;
     public GameObject sharedInventoryPrefab;
     public GameObject personalInventoryPrefab;
+
 
     public int numInventories;
 
@@ -40,6 +84,26 @@ public class InventoryManagement : MonoBehaviour
         CreateSharedInventory();
 
         //SetInventoriesInactive();
+
+        CreateItemDatabase("itemList");
+    }
+
+    private void CreateItemDatabase(string path)
+    {
+        TextAsset json = Resources.Load<TextAsset>(path);
+
+        itemList = new Items();
+        
+        itemList.Abilities = new List<ItemBase>();
+        itemList.Concoctions = new List<ItemBase>();
+        itemList.Consumables = new List<ItemBase>();
+        itemList.Equipment = new List<ItemBase>();
+        itemList.Ingredients = new List<ItemBase>();
+
+        itemList = JsonConvert.DeserializeObject<Items>(json.text);
+
+        Debug.Log(itemList);
+        Debug.Log(itemList.Consumables[0].Name);
     }
 
     private void AddInventory()

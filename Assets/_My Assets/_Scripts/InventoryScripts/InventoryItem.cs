@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using FMOD;
+using FMODUnity;
+
 /*
  * InventoryItem - Instance of an item in the inventory.
  * 
@@ -10,62 +13,23 @@ using UnityEngine.UI;
 
 public class InventoryItem : MonoBehaviour
 {
-    //items
-    [Header("Inventory Item")]
-    private int id; //id referencing an item from 
-    private ItemType itemType;// Categorization for switch cases
-    private GameObject owner;//who owns this item?
-    private GameObject ownerSlot;//the inventory slot that holds this item
+    public string ID;
+    public string Icon;
+    public string Name;
+    public bool Consumable;
+    public int Cooldown;
+    public int Duration;
+    public string EffectDescription;
+    public string Description;
+    public string SFX;
+    public ItemStats Bonuses;
+}
 
-    public Sprite sprite;//icon for item
+public class ItemStats
+{
+    int HP;
+    int Stamina;
+    int Tolerance;
+    int Attack;
 
-    public string itemName;//another way to reference item, by name
-
-    public enum ItemType//What kind of item are we?
-    {
-        Ingredient,
-        Consumable,
-        Concoction,
-        Equipment,
-        Ability, 
-    }
-
-    public void UseItem()
-    {
-        //lets apply any effects on the player
-        //owner.GetComponent<PlayerController>().ApplyEffect();
-
-        switch(itemType)
-        {
-            case ItemType.Ingredient:
-                //Toggle Equip ability
-                break;
-            
-            case ItemType.Concoction:
-                //affect stats
-                break;
-
-            case ItemType.Equipment:
-                //Wear equipment
-                break;
-            
-            case ItemType.Ability:
-                //Toggle Equip ability
-                break;
-
-            default://shouldn't get here
-                break;
-
-        }
-    }
-
-    public void ConsumeItem(GameObject item)
-    {
-        InventoryItem i = item.GetComponent<InventoryItem>();
-
-        //use item
-        //remove from inventory
-        //if stacked remove from stack
-        //destroy item
-    }
 }
