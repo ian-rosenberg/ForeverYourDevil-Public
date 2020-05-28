@@ -1,16 +1,16 @@
 fileFormatVersion: 2
-guid: ce46dde4cd7e7794c80af511bbdef93e
+guid: 652d78e26a17f434690c21cfa60c376d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5336362360606561854
-    second: PennyAnimTest_0
+      213: 5530087908418166590
+    second: PennyAnimTest_Happy_0
   - first:
-      213: 4598160044469264783
-    second: PennyAnimTest_1
+      213: 8307327323367536703
+    second: PennyAnimTest_Happy_1
   - first:
-      213: 609331140301793654
-    second: PennyAnimTest_2
+      213: -7350796969365207475
+    second: PennyAnimTest_Happy_2
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -56,7 +56,7 @@ TextureImporter:
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 597
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spriteGenerateFallbackPhysicsShape: 0
+  spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -95,7 +95,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: PennyAnimTest_0
+      name: PennyAnimTest_Happy_0
       rect:
         serializedVersion: 2
         x: 0
@@ -109,14 +109,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2c9e74fc4be61f5b0800000000000000
-      internalID: -5336362360606561854
+      spriteID: e3f92fd27a1debc40800000000000000
+      internalID: 5530087908418166590
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PennyAnimTest_1
+      name: PennyAnimTest_Happy_1
       rect:
         serializedVersion: 2
         x: 343
@@ -130,14 +130,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f812cf6c232ffcf30800000000000000
-      internalID: 4598160044469264783
+      spriteID: f38f73ebf2e894370800000000000000
+      internalID: 8307327323367536703
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PennyAnimTest_2
+      name: PennyAnimTest_Happy_2
       rect:
         serializedVersion: 2
         x: 682
@@ -151,8 +151,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 679a5489177c47800800000000000000
-      internalID: 609331140301793654
+      spriteID: d4608f04a19bcf990800000000000000
+      internalID: -7350796969365207475
       vertices: []
       indices: 
       edges: []
@@ -160,7 +160,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 583da35d2f46be549b3b96c75588af6d
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 

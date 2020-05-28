@@ -1,16 +1,16 @@
 fileFormatVersion: 2
-guid: ce46dde4cd7e7794c80af511bbdef93e
+guid: 84745bc64c14da84cb95891edddb5b3a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5336362360606561854
-    second: PennyAnimTest_0
+      213: -2321033709695768970
+    second: PennyAnimTest_mad_0
   - first:
-      213: 4598160044469264783
-    second: PennyAnimTest_1
+      213: -1576803039967878132
+    second: PennyAnimTest_mad_1
   - first:
-      213: 609331140301793654
-    second: PennyAnimTest_2
+      213: -2991609548466656474
+    second: PennyAnimTest_mad_2
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -56,7 +56,7 @@ TextureImporter:
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 597
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spriteGenerateFallbackPhysicsShape: 0
+  spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -95,7 +95,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: PennyAnimTest_0
+      name: PennyAnimTest_mad_0
       rect:
         serializedVersion: 2
         x: 0
@@ -109,14 +109,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2c9e74fc4be61f5b0800000000000000
-      internalID: -5336362360606561854
+      spriteID: 67660ed63280acfd0800000000000000
+      internalID: -2321033709695768970
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PennyAnimTest_1
+      name: PennyAnimTest_mad_1
       rect:
         serializedVersion: 2
         x: 343
@@ -130,14 +130,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f812cf6c232ffcf30800000000000000
-      internalID: 4598160044469264783
+      spriteID: c0465f94df11e1ae0800000000000000
+      internalID: -1576803039967878132
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PennyAnimTest_2
+      name: PennyAnimTest_mad_2
       rect:
         serializedVersion: 2
         x: 682
@@ -151,8 +151,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 679a5489177c47800800000000000000
-      internalID: 609331140301793654
+      spriteID: 62b6af447faab76d0800000000000000
+      internalID: -2991609548466656474
       vertices: []
       indices: 
       edges: []
@@ -160,7 +160,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 583da35d2f46be549b3b96c75588af6d
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 

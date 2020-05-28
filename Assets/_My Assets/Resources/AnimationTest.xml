@@ -116,5 +116,16 @@ xsi:schemaLocation="https://www.w3schools.com/xml VN_Schema.xsd">
       <line sprite1="Penny_Sweat" sprite2="Player">No, u.</line>
     </character>
   </conversation>
+	
+  <conversation id="Anim_Test">
+    <character name="Penny">
+      <line sprite1="Penny_Sad" sprite2="Player">This is the animation test.</line>
+      <line sprite1="Penny_Sad" sprite2="Player">Look at the animations.</line>
+      <line sprite1="Penny_Sad" sprite2="Player">Beautiful.</line>
+    </character>
+    <character name="Beautiful Friend">
+      <line sprite1="Penny_Sad" sprite2="Player">Such beauty.</line>
+    </character>
+  </conversation>
 
 </game>
