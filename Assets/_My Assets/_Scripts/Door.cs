@@ -1,12 +1,11 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Door : MonoBehaviour
 {
-    //Activate this in order to teleport the player to another location/scene
-    //Can be activated through either touch or interaction
-
+    /** Door - Activate this in order to teleport the player to another location/scene
+    * Author - Omar Ilyas
+    */
     protected gameManager gm;
 
     public bool locked; //Will this door work?
@@ -14,15 +13,14 @@ public class Door : MonoBehaviour
     public Transform spawnPoint; //Where to teleport the player
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         gm = gameManager.Instance;
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-
     }
 
     protected void Activate()
@@ -35,9 +33,9 @@ public class Door : MonoBehaviour
     {
         Debug.Log("Activated Door!");
         //Teleport player
-        gm.playerAgent.ResetPath();
-        gm.playerAgent.enabled = false;
-        gm.playerAnim.SetBool("StayIdle", true);
+        gm.player.agent.ResetPath();
+        gm.player.agent.enabled = false;
+        gm.player.anim.SetBool("StayIdle", true);
         //Pause game
         gm.PauseGame();
         gm.SetCanPause(false);
@@ -46,16 +44,15 @@ public class Door : MonoBehaviour
         yield return new WaitForSecondsRealtime(1f);
         gm.player.transform.position = spawnPoint.transform.position;
         gm.player.transform.rotation = spawnPoint.transform.rotation;
-        
+
         //Play unfade animation
         yield return new WaitForSecondsRealtime(0.5f);
         //Unpause Player
-        gm.playerAgent.enabled = true;
-        gm.playerAgent.velocity = Vector3.zero;
-        gm.playerRB.velocity = Vector3.zero;
-        gm.playerAnim.SetBool("StayIdle", false);
+        gm.player.agent.enabled = true;
+        gm.player.agent.velocity = Vector3.zero;
+        gm.player.rb.velocity = Vector3.zero;
+        gm.player.anim.SetBool("StayIdle", false);
         gm.UnPauseGame();
         gm.SetCanPause(true);
     }
-
 }

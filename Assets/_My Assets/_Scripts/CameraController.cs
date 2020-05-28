@@ -1,41 +1,52 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    /**
+     * Camera Controller - Manager for game's camera. Can be controlled by player, cutscene, enemy, or nothing.
+     *
+     * Author : Omar Ilyas
+     */
+
     //Camera controls
+    public enum MODE { START, FOLLOWING, STATIONARY, PAUSED, CUTSCENE };
+
+    public MODE cameraMode; //The current state of the camera
+    private MODE prevMode; //The previous mode that the camera was in.
     public FollowObject followScript;
     public Transform FollowY, FollowX, CameraResetPoint;
-    GameObject player;
+
+    Action cameraBehavior; //Current Behavior function of the camera
 
     public float rotateSpeed;
     public float cameraResetSpd;
-    float zoom = 0f;
+    private float zoom = 0f;
 
-    Quaternion orig_rot_x, orig_rot_y;
-    float mouseX, mouseY;
+    private Quaternion orig_rot_x, orig_rot_y;
+    private float mouseX, mouseY;
 
-    bool isCameraReseting;
+    private bool isCameraReseting;
 
     public GameObject ResetCameraNotification;
 
     // Start is called before the first frame update
-    void Awake()
-    {
-        player = followScript.obj;
-    }
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         InitializeCamera();
         ResetCameraNotification.SetActive(false);
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
+        //Run chosen behavior function
+        cameraBehavior();
+    }
 
+    public void Camera_Travelling()
+    {
         //TRAVELING CAMERA
         if (Input.GetButtonDown("Camera Reset") && !isCameraReseting)
         {
@@ -53,9 +64,6 @@ public class CameraController : MonoBehaviour
 
             FollowX.rotation = Quaternion.Euler(0f, mouseX, 0f);
             FollowY.localRotation = Quaternion.Euler(-mouseY, 0f, 0f);
-
-            //transform.RotateAround(player.transform.position, Vector3.up, mouseX);
-            // FollowY.RotateAround(player.transform.position, transform.right, mouseY);
         }
 
         //Zoom in and out with mouse wheel.
@@ -76,24 +84,29 @@ public class CameraController : MonoBehaviour
                 transform.position += transform.forward;
             }
         }
-
     }
 
     /**
      * @brief Set default values of the camera at start of game (or start of scene)
      */
-    void InitializeCamera()
+
+    private void InitializeCamera()
     {
         orig_rot_x = FollowX.rotation; // Set default pos to current pos
         mouseX = -45;
         orig_rot_y = FollowY.localRotation; // Set default rot to current rot
         mouseY = orig_rot_y.x;
         isCameraReseting = false;
+
+        cameraBehavior = Camera_Travelling;
+        cameraMode = MODE.FOLLOWING;
+        prevMode = MODE.START;
     }
 
     /**
      * @brief Reset camera to original position smoothly
      */
+
     public IEnumerator ResetCamera()
     {
         float limit = 0;
@@ -114,5 +127,33 @@ public class CameraController : MonoBehaviour
             yield return null; //advance frame
         }
         isCameraReseting = false;
+    }
+
+    /**
+     * @brief change the state of the camera and assign a target
+     * @param newMode the new state to put the camera into
+     * @param target the gameobject to focus on. Default null. Behavior changes based on state change
+     */
+
+    public void ChangeState(MODE newMode, GameObject target = null)
+    {
+        if (newMode != cameraMode) //No duplicates
+        {
+            //Change Camera Behavior function
+            switch (newMode)
+            {
+                case MODE.CUTSCENE:
+                    break;
+                case MODE.FOLLOWING:
+                    cameraBehavior = Camera_Travelling;
+                    break;
+                default: return;
+            }
+
+            //Change State and target
+            followScript.target = target;
+            prevMode = cameraMode;
+            cameraMode = newMode;
+        }
     }
 }

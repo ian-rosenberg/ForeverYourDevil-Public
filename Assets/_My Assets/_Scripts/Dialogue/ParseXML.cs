@@ -1,17 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Specialized;
-using UnityEngine;
-using System.IO;
 using System.Xml;
+using UnityEngine;
 using UnityEngine.SceneManagement;
-using FMOD;
-using FMODUnity;
 
 /**
  * @brief A collection of lines to load when a conversation is triggered or an option is chosen
  * @author Omar Ilyas
  */
+
 public class Conversation
 {
     public string Id { get; set; }                            /**Conversation name identifier. Cannot be blank*/
@@ -34,17 +31,18 @@ public class Conversation
      * @brief Add Dialogue line to the list
      * @param line Dialogue line object to add
      */
+
     public void AddLine(DialogueLine line)
     {
         DialogueLines.Add(line);
     }
-
 }
 
 /**
  * @brief A dialogue object containing the line and sprites to display and their information
  * @author Omar Ilyas
  */
+
 public class DialogueLine
 {
     public string Name { get; set; }              /**Name of Character saying the dialogue
@@ -59,6 +57,7 @@ public class DialogueLine
      * @param name Name of character speaking
      * @param content Dialogue that the character is saying
      */
+
     public DialogueLine(string name, string content)
     {
         Name = name;
@@ -72,6 +71,7 @@ public class DialogueLine
      * @param content Dialogue that the character is saying
      * @param sprites List of sprites to display
      */
+
     public DialogueLine(string name, string content, List<Sprite> sprites)
     {
         Name = name;
@@ -85,6 +85,7 @@ public class DialogueLine
      * @param content Dialogue that the character is saying
      * @param options List of choices and conversationIDs to go to
      */
+
     public DialogueLine(string name, string content, OrderedDictionary options)
     {
         Name = name;
@@ -100,6 +101,7 @@ public class DialogueLine
      * @param options List of choices and conversationIDs to go to
      * @param sprites List of sprites to display
      */
+
     public DialogueLine(string name, string content, List<Sprite> sprites, OrderedDictionary options)
     {
         Name = name;
@@ -107,13 +109,13 @@ public class DialogueLine
         Sprites = sprites;
         Options = options;
     }
-
 }
 
 /**
  * @brief Manager that parses lines from an XML file with the current scene name and sorts them into a list
  * @author Omar Ilyas
  */
+
 public class ParseXML : MonoBehaviour
 {
     private static ParseXML instance;                          /**Create singleton instance*/
@@ -133,7 +135,8 @@ public class ParseXML : MonoBehaviour
     /**
      * @brief Parse an XML file with the current scene name and store info into a list to send to Dialogue.cs
      */
-    void Awake()
+
+    private void Awake()
     {
         UnityEngine.Debug.Log("Started");
         //Initialize Conversation List
@@ -165,7 +168,7 @@ public class ParseXML : MonoBehaviour
             if (HasAttributes(conv, "voice"))
             {
                 //conversation.VoiceLine = Resources.Load<StudioEventEmitter>("Audio/" + conv.Attributes["voice"].Value);
-                conversation.VoiceLine = conv.Attributes["voice"].Value;               
+                conversation.VoiceLine = conv.Attributes["voice"].Value;
                 UnityEngine.Debug.Log(conv.Attributes["voice"].Value);
             }
             //Get characters
@@ -233,7 +236,6 @@ public class ParseXML : MonoBehaviour
                         dialogueList.Add(d);
                         UnityEngine.Debug.Log("Option list stored");
                     }
-
                 } //end get lines
             } //end get characters
 
@@ -241,18 +243,17 @@ public class ParseXML : MonoBehaviour
             conversation.DialogueLines = dialogueList;
             //Store conversation in conversationList
             conversationList.Add(conversation.Id, conversation);
-
         } //end get conversation
-
     } //end ParseXML
 
     /**
      * @brief Check if there are attributes within the XMLNode given
      * @param node node to check for attributes
-     * @param attribute optional specific attribute to search for 
+     * @param attribute optional specific attribute to search for
      * @return true if attributes present and optional attribute is found, else false
      */
-    bool HasAttributes(XmlNode node, string attribute = "")
+
+    private bool HasAttributes(XmlNode node, string attribute = "")
     {
         //Check if any attributes at all
         if (node.Attributes != null)
@@ -276,7 +277,8 @@ public class ParseXML : MonoBehaviour
      * @param spriteList The list of sprites. If no sprites are specified, the last sprites given are used.
      * @param line The line from the XML script to get sprites from.
      */
-    void GetSprites(List<Sprite> spriteList, XmlNode line)
+
+    private void GetSprites(List<Sprite> spriteList, XmlNode line)
     {
         //If sprite attribute is not specified, use the sprites from the previous line.
         if (HasAttributes(line, "sprite1") || HasAttributes(line, "sprite2") || HasAttributes(line, "sprite3") || HasAttributes(line, "sprite4"))
@@ -312,5 +314,4 @@ public class ParseXML : MonoBehaviour
             }
         }
     }
-
 }

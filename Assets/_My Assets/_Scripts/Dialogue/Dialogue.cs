@@ -1,12 +1,11 @@
-﻿using System.Collections;
+﻿using FMODUnity;
+using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
+using System.Linq;
+using System.Text.RegularExpressions;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using System.Text.RegularExpressions;
-using System.Linq;
-using FMODUnity;
 
 /**
  * @brief Manager for displaying images, text, etc from parsed dialogue from ParseXML
@@ -15,8 +14,8 @@ using FMODUnity;
 
 public class Dialogue : MonoBehaviour
 {
-    ParseXML parser;                        /**Parser index containing all sentences in List*/
-    gameManager gm;                /**Master manager controlling game state*/
+    private ParseXML parser;                        /**Parser index containing all sentences in List*/
+    private gameManager gm;                /**Master manager controlling game state*/
 
     private static Dialogue instance;       /**Create singleton instance*/
 
@@ -29,12 +28,11 @@ public class Dialogue : MonoBehaviour
             return instance;
         }
     }
-    string currentId;                       /**Conversation id to choose*/
-    int sentenceIndex;                      /**Index of sentence to go to*/
+
+    private string currentId;                       /**Conversation id to choose*/
+    private int sentenceIndex;                      /**Index of sentence to go to*/
 
     [Header("Audio")]
-    //public AudioSpectrum spectrumManager;
-    //public VoiceLineSyncer voiceManager;
     public FMOD.Studio.EventInstance dialogueAudio;              /**Voice line audio source*/
 
     [Header("Display")]
@@ -58,11 +56,12 @@ public class Dialogue : MonoBehaviour
 
     //Colors
     public Color tanOrange = new Color(0.8018868f, 0.304684f, 0.1777768f); /**Text color*/
+
     public Color pennyGreen = new Color(0.8018868f, 0.304684f, 0.1777768f); /**Text color*/
     public Color cerulianBlue = new Color(0.1764706f, 0.6452591f, 0.8f);   /**Text color*/
 
-    bool canPress = false;                  /**Is the user allowed to advance the text?*/
-    bool skip = false;                      /**Display all characters at once if true, one at a time if false*/
+    private bool canPress = false;                  /**Is the user allowed to advance the text?*/
+    private bool skip = false;                      /**Display all characters at once if true, one at a time if false*/
 
     /**
      * @brief Initialize dialogue manager and get parsed dialogue from ParseXML
@@ -82,7 +81,8 @@ public class Dialogue : MonoBehaviour
     /**
      * @brief Main game loop. Advance line of text or skip it depending on input.
      */
-    void Update()
+
+    private void Update()
     {
         //Advance/Skip Dialogue on KeyPress
         if (Input.GetButtonDown("Interact") && gm.gameState == gameManager.STATE.TALKING) //Return = enter key
@@ -103,7 +103,7 @@ public class Dialogue : MonoBehaviour
      * @brief Initialize/Clear dialogue box for a new set of dialogue
      */
 
-    void InitializeDialogue()
+    private void InitializeDialogue()
     {
         //Clear and hide Namebox
         nameBox.gameObject.transform.parent.gameObject.SetActive(false); //Replace with fade out animation
@@ -128,7 +128,8 @@ public class Dialogue : MonoBehaviour
     /**
      * @brief Waits for animation to finish before starting dialogue. (private)
      */
-    IEnumerator StartDialogue(string convID, bool start)
+
+    private IEnumerator StartDialogue(string convID, bool start)
     {
         AdvanceSprite.SetActive(false);
         canPress = false;
@@ -194,7 +195,8 @@ public class Dialogue : MonoBehaviour
     /**
      * @brief Waits for animation to finish before turning off dialogue canvas
      */
-    IEnumerator EndDialogue()
+
+    private IEnumerator EndDialogue()
     {
         Debug.Log("End Dialogue Called");
         textDisplay.transform.parent.transform.parent.gameObject.SetActive(false);
@@ -208,6 +210,7 @@ public class Dialogue : MonoBehaviour
     /**
      * @brief Advance one line in conversation dialogue list chosen and display on screen
      */
+
     public void AdvanceLine()
     {
         Debug.Log("Advance Line Called");
@@ -246,7 +249,6 @@ public class Dialogue : MonoBehaviour
                 multiplier++;
             }
         }
-
         else //If there are more lines
         {
             //Play voice line (stop and start for workaround)
@@ -297,6 +299,7 @@ public class Dialogue : MonoBehaviour
      * @brief Change the conversation and conversation id upon clicking a choice
      * @param convID the conversation to go to upon button click
      */
+
     public void ChangeConversation(string convID)
     {
         Debug.Log("Running Change Conversation : " + convID);
@@ -315,7 +318,8 @@ public class Dialogue : MonoBehaviour
      * @brief Coroutine that displays text char by char until line is exhausted or skipped
      * @param s string to display
      */
-    IEnumerator TypeText(string s)
+
+    private IEnumerator TypeText(string s)
     {
         Debug.Log("Running coroutine.");
 
@@ -354,7 +358,8 @@ public class Dialogue : MonoBehaviour
      * @param frameColor the new color of the background frame
      * @param textColor the new color of the text
      */
-    void SetFrameTextColor(Color frameColor, Color textColor)
+
+    private void SetFrameTextColor(Color frameColor, Color textColor)
     {
         textDisplay.color = textColor;
         nameBox.color = textColor;

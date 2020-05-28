@@ -116,5 +116,4 @@ xsi:schemaLocation="https://www.w3schools.com/xml VN_Schema.xsd">
       <line sprite1="Penny_Sweat" sprite2="Player">No, u.</line>
     </character>
   </conversation>
-
 </game>
