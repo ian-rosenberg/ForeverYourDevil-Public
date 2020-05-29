@@ -1,25 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InventorySlot : MonoBehaviour
 {
-    public GameObject child;
+    public ItemBase child;
     public bool inUse;
+    public int quantity;
+    public Image img;
 
-    private void Start()
+    private void Awake()
     {
         child = null;
         inUse = false;
-    }
-
-    public void SetItem(GameObject item)
-    {
-        child = item;
-    }
-
-    public GameObject GetItem()
-    {
-        return child;
+        quantity = 0;
+        img = GetComponent<Image>();
     }
 }

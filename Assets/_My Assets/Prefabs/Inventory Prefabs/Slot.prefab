@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8261391149008297938}
   - component: {fileID: 4183779114683802372}
-  - component: {fileID: 7877024825967877807}
   - component: {fileID: 744215220500733057}
+  - component: {fileID: 113232950310579170}
   m_Layer: 5
   m_Name: Slot
   m_TagString: Untagged
@@ -46,7 +46,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4735835988009977264}
   m_CullTransparentMesh: 0
---- !u!114 &7877024825967877807
+--- !u!114 &744215220500733057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4735835988009977264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4777f260a3e798b4d9b7a3f45d5ad2f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  child:
+    ID: 
+    Icon: 
+    Name: 
+    Consumable: 0
+    Cooldown: 0
+    Duration: 0
+    EffectDescription: 
+    Description: 
+    SFX: 
+    Bonuses:
+      HP: 0
+      Stamina: 0
+      Tolerance: 0
+      Attack: 0
+  inUse: 0
+  quantity: 0
+  img: {fileID: 0}
+--- !u!114 &113232950310579170
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -74,18 +104,3 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &744215220500733057
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4735835988009977264}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4777f260a3e798b4d9b7a3f45d5ad2f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  child: {fileID: 0}
-  inUse: 0
-  quantity: 0

@@ -57,7 +57,7 @@ public class InventoryManagement : MonoBehaviour
     #endregion
 
     #region Item Master List
-    private Items itemList;
+    public Items itemList;
     #endregion
 
     private List<GameObject> inventoryObjs;//The inventories in use;
@@ -81,11 +81,11 @@ public class InventoryManagement : MonoBehaviour
             //AddInventory();
         //}
 
+        CreateItemDatabase("itemList");
+
         CreateSharedInventory();
 
         //SetInventoriesInactive();
-
-        CreateItemDatabase("itemList");
     }
 
     private void CreateItemDatabase(string path)
@@ -101,9 +101,6 @@ public class InventoryManagement : MonoBehaviour
         itemList.Ingredients = new List<ItemBase>();
 
         itemList = JsonConvert.DeserializeObject<Items>(json.text);
-
-        Debug.Log(itemList);
-        Debug.Log(itemList.Consumables[0].Name);
     }
 
     private void AddInventory()

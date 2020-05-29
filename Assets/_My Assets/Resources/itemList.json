@@ -9,7 +9,7 @@
 		[
 				{
   				"ID" : "TP_Small",
-  				"Icon" : "Sprites/porridge.png",
+  				"Icon" : "Sprites/porridge",
   				"Name" : "Small Tan Pill's Porridge",
   				"Consumable" : true,
   				"Cooldown": 0,

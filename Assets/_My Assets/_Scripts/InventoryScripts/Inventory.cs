@@ -1,14 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using Newtonsoft.Json;
 
 public class Inventory : MonoBehaviour
 {
     [Header("Inventory Base Class")]
-    private Dictionary<object, GameObject> inventorySlots;
-    private int totalItems;
+    private int slotIndices;
 
-    public Dictionary<int, GameObject> items;
+    public Dictionary<object, GameObject> inventorySlots;
+    public int totalItems;
 
     public GameObject elementOwnerPrefab;//The grid space in which an item can reside
 
@@ -25,11 +27,11 @@ public class Inventory : MonoBehaviour
         }
         
         GameObject slotClone = Instantiate(elementOwnerPrefab, transform);
-        uint currentIndex = (uint)inventorySlots.Count;
 
-        inventorySlots.Add(currentIndex, slotClone);
+        inventorySlots.Add(slotIndices++, slotClone);
     }
-    public void AddSlotWithItem(GameObject item)
+
+    public void AddSlotWithItem(ItemBase item)
     {
         GameObject slotClone = Instantiate(elementOwnerPrefab, transform);
         uint currentIndex = (uint)inventorySlots.Count;
@@ -39,23 +41,32 @@ public class Inventory : MonoBehaviour
         slotClone.GetComponent<InventorySlot>().child = item;
     }
 
-    public void AddSingleItem(GameObject item)
+    public void AddSingleItem(ItemBase item)
     {
-        if (inventorySlots.ContainsValue(item))
+        for (int i = 0; i < inventorySlots.Count; i++)
         {
-            //item.GetComponent<InventorySlot>().quantity++;
+            ItemBase child = inventorySlots[i].GetComponent<InventorySlot>().child;
 
-            return;
+            if (child == item)
+            {
+                inventorySlots[i].GetComponent<InventorySlot>().quantity++;
+                totalItems++;
+                return;
+            }
         }
 
-        for(int i = 0; i < inventorySlots.Count; i++)
+        for (int i = 0; i < inventorySlots.Count; i++)
         {
-            GameObject child = inventorySlots[i].GetComponent<InventorySlot>().child;
-
-            if (child == null)
+            GameObject go = inventorySlots[i];
+            InventorySlot slot = go.GetComponent<InventorySlot>();
+            
+            if (!inventorySlots[i].GetComponent<InventorySlot>().inUse)
             {
-                inventorySlots[i].GetComponent<InventorySlot>().child = item;
-                break;
+                slot.child = item;
+                slot.img.sprite = Resources.Load<Sprite>(item.Icon);
+                slot.inUse = true;
+
+                return;
             }
         }
 
