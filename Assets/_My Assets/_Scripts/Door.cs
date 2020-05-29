@@ -10,6 +10,7 @@ public class Door : MonoBehaviour
 
     public bool locked; //Will this door work?
     public string areaID; //A name describing what location we're entering
+    public Material skybox; //Skybox to load in when teleporting
     public Transform spawnPoint; //Where to teleport the player
 
     // Start is called before the first frame update
@@ -45,6 +46,12 @@ public class Door : MonoBehaviour
         gm.player.transform.position = spawnPoint.transform.position;
         gm.player.transform.rotation = spawnPoint.transform.rotation;
 
+        //Change skybox
+        if (skybox)
+            RenderSettings.skybox = skybox;
+        //Reset Camera Quickly
+        gm.mainCamera.QuickResetCamera();
+
         //Play unfade animation
         yield return new WaitForSecondsRealtime(0.5f);
         //Unpause Player
@@ -54,5 +61,11 @@ public class Door : MonoBehaviour
         gm.player.anim.SetBool("StayIdle", false);
         gm.UnPauseGame();
         gm.SetCanPause(true);
+
+        //Change music
+        //Insert FMOD code here
+
+        //Change camera mode
+        //Insert Camera code here
     }
 }

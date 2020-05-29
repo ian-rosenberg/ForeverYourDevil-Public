@@ -1898,6 +1898,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   printPath: 0
   grid: {fileID: 1539110194}
+--- !u!54 &591512271 stripped
+Rigidbody:
+  m_CorrespondingSourceObject: {fileID: 4934818583679702468, guid: 456ea23be283ff443a9d3cda45f13747,
+    type: 3}
+  m_PrefabInstance: {fileID: 1957407103}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &661574954 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7736120608106499299, guid: 5912e50a99c2e3748adad53e6d7c74c2,
@@ -2757,6 +2763,11 @@ PrefabInstance:
       propertyPath: spawnPoint
       value: 
       objectReference: {fileID: 4985944454887157155}
+    - target: {fileID: 5487398546825805579, guid: c8a0873ad42ac6d42b224fbe8d8b694e,
+        type: 3}
+      propertyPath: skybox
+      value: 
+      objectReference: {fileID: 2100000, guid: 85cf0b004bc4a654b9e501efcce47902, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c8a0873ad42ac6d42b224fbe8d8b694e, type: 3}
 --- !u!4 &901532788 stripped
@@ -2868,6 +2879,16 @@ PrefabInstance:
       propertyPath: spawnPoint
       value: 
       objectReference: {fileID: 745811983}
+    - target: {fileID: 303601427907691864, guid: 3852882e5d771e441ad6f189c29077f0,
+        type: 3}
+      propertyPath: areaID
+      value: Level 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 303601427907691864, guid: 3852882e5d771e441ad6f189c29077f0,
+        type: 3}
+      propertyPath: skybox
+      value: 
+      objectReference: {fileID: 2100000, guid: 85cf0b004bc4a654b9e501efcce47902, type: 2}
     - target: {fileID: 4985944455226478768, guid: 3852882e5d771e441ad6f189c29077f0,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3005,7 +3026,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e78ac0e7d47c80049ad690a34901681b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCamera: {fileID: 0}
+  mainCamera: {fileID: 1944145311}
   battleAnim: {fileID: 1694975765}
   player: {fileID: 1957407122}
   playerSpawn:
@@ -5992,6 +6013,18 @@ MonoBehaviour:
   m_BeforeTransparentBundles: []
   m_BeforeStackBundles: []
   m_AfterStackBundles: []
+--- !u!114 &1944145311 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7736120608094991444, guid: 5912e50a99c2e3748adad53e6d7c74c2,
+    type: 3}
+  m_PrefabInstance: {fileID: 7736120608075829212}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1944145309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1b9266f8d09c8c4a8546fcbb18cd0ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1944145313 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7736120608094991450, guid: 5912e50a99c2e3748adad53e6d7c74c2,
@@ -6735,6 +6768,11 @@ PrefabInstance:
       propertyPath: playerGUI
       value: 
       objectReference: {fileID: 956900235}
+    - target: {fileID: 4934818583679702467, guid: 456ea23be283ff443a9d3cda45f13747,
+        type: 3}
+      propertyPath: rb
+      value: 
+      objectReference: {fileID: 591512271}
     - target: {fileID: 4934818583679702470, guid: 456ea23be283ff443a9d3cda45f13747,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -10822,6 +10860,11 @@ PrefabInstance:
       propertyPath: spawnPoint
       value: 
       objectReference: {fileID: 1026097335}
+    - target: {fileID: 303601427907691864, guid: 3852882e5d771e441ad6f189c29077f0,
+        type: 3}
+      propertyPath: skybox
+      value: 
+      objectReference: {fileID: 2100000, guid: e6a9272ab1cc4a6499a376d4ee2eb0c2, type: 2}
     - target: {fileID: 4985944455226478768, guid: 3852882e5d771e441ad6f189c29077f0,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -10956,6 +10999,11 @@ PrefabInstance:
       propertyPath: spawnPoint
       value: 
       objectReference: {fileID: 901532788}
+    - target: {fileID: 5487398546825805579, guid: c8a0873ad42ac6d42b224fbe8d8b694e,
+        type: 3}
+      propertyPath: skybox
+      value: 
+      objectReference: {fileID: 2100000, guid: e6a9272ab1cc4a6499a376d4ee2eb0c2, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c8a0873ad42ac6d42b224fbe8d8b694e, type: 3}
 --- !u!4 &5837732189340474114

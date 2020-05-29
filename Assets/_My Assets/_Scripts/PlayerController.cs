@@ -61,6 +61,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        rb = GetComponent<Rigidbody>();
         gameManager = gameManager.Instance;
 
         selected = null;

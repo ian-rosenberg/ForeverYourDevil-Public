@@ -129,6 +129,18 @@ public class CameraController : MonoBehaviour
         isCameraReseting = false;
     }
 
+    public void QuickResetCamera()
+    {
+        ResetCameraNotification.SetActive(false);
+
+        FollowX.localRotation = orig_rot_x;
+        mouseX = -45;
+        FollowY.localRotation = orig_rot_y;
+        mouseY = orig_rot_y.x;
+        zoom = 0f;
+        transform.position = CameraResetPoint.position;
+    }
+
     /**
      * @brief change the state of the camera and assign a target
      * @param newMode the new state to put the camera into
