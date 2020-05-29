@@ -2768,6 +2768,11 @@ PrefabInstance:
       propertyPath: skybox
       value: 
       objectReference: {fileID: 2100000, guid: 85cf0b004bc4a654b9e501efcce47902, type: 2}
+    - target: {fileID: 5487398546825805579, guid: c8a0873ad42ac6d42b224fbe8d8b694e,
+        type: 3}
+      propertyPath: areaID
+      value: Level 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c8a0873ad42ac6d42b224fbe8d8b694e, type: 3}
 --- !u!4 &901532788 stripped
@@ -2882,13 +2887,8 @@ PrefabInstance:
     - target: {fileID: 303601427907691864, guid: 3852882e5d771e441ad6f189c29077f0,
         type: 3}
       propertyPath: areaID
-      value: Level 2
+      value: Level 1
       objectReference: {fileID: 0}
-    - target: {fileID: 303601427907691864, guid: 3852882e5d771e441ad6f189c29077f0,
-        type: 3}
-      propertyPath: skybox
-      value: 
-      objectReference: {fileID: 2100000, guid: 85cf0b004bc4a654b9e501efcce47902, type: 2}
     - target: {fileID: 4985944455226478768, guid: 3852882e5d771e441ad6f189c29077f0,
         type: 3}
       propertyPath: m_LocalPosition.x

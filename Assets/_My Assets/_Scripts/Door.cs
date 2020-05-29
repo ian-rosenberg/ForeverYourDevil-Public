@@ -34,6 +34,7 @@ public class Door : MonoBehaviour
     {
         Debug.Log("Activated Door!");
         //Teleport player
+        gm.player.agent.isStopped = true;
         gm.player.agent.ResetPath();
         gm.player.agent.enabled = false;
         gm.player.anim.SetBool("StayIdle", true);
@@ -56,10 +57,9 @@ public class Door : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.5f);
         //Unpause Player
         gm.player.agent.enabled = true;
-        gm.player.agent.velocity = Vector3.zero;
-        gm.player.rb.velocity = Vector3.zero;
         gm.player.anim.SetBool("StayIdle", false);
         gm.UnPauseGame();
+        gm.player.agent.isStopped = false;
         gm.SetCanPause(true);
 
         //Change music
