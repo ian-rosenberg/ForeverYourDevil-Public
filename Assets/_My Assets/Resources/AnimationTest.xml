@@ -120,11 +120,14 @@ xsi:schemaLocation="https://www.w3schools.com/xml VN_Schema.xsd">
   <conversation id="Anim_Test">
     <character name="Penny">
       <line sprite1="Penny_Sad" sprite2="Player">This is the animation test.</line>
-      <line sprite1="Penny_Sad" sprite2="Player">Look at the animations.</line>
-      <line sprite1="Penny_Sad" sprite2="Player">Beautiful.</line>
+      <line sprite1="Penny_Sad" sprite2="Player">Happy.</line>
+      <line>Still happy.</line>
+      <line sprite1="Penny_Sad" sprite2="Player">Mad.</line>
     </character>
     <character name="Beautiful Friend">
-      <line sprite1="Penny_Sad" sprite2="Player">Such beauty.</line>
+      <line sprite1="Penny_Sad" sprite2="Player">Sad.</line>
+      <line>Still sad.</line>
+      <line sprite1="Penny_Sad" sprite2="Player">Surprised.</line>
     </character>
   </conversation>
 

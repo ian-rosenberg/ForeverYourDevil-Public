@@ -195,7 +195,7 @@ public class ParseXML : MonoBehaviour
                     {
                         previousLine = line.InnerText;
 
-                        //Get sprites from line
+                        //Get sprites from line/////////////////////////////////////////////////////////////////////////////////////////////
                         GetSprites(spriteList, line);
 
                         //Create a new dialogue line
