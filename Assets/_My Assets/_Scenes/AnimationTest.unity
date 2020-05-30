@@ -1707,18 +1707,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 526357891}
   m_CullTransparentMesh: 0
---- !u!114 &548472179 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7432381529970674560, guid: 6759e93c909b70b4a8bd129be701aaba,
-    type: 3}
-  m_PrefabInstance: {fileID: 7432381530516918003}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1340982972}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &590050122 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7432381529995214265, guid: 6759e93c909b70b4a8bd129be701aaba,
@@ -1777,18 +1765,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 7736120608075829212}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &667223480 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7432381530060065611, guid: 6759e93c909b70b4a8bd129be701aaba,
-    type: 3}
-  m_PrefabInstance: {fileID: 7432381530516918003}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 693787099}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &672606620
 GameObject:
   m_ObjectHideFlags: 0
@@ -1961,7 +1937,7 @@ Animator:
   m_GameObject: {fileID: 693787099}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: ede4d2cb3ab9f84499690a261cc00909, type: 2}
+  m_Controller: {fileID: 0}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -3307,7 +3283,7 @@ Animator:
   m_GameObject: {fileID: 1340982972}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: ede4d2cb3ab9f84499690a261cc00909, type: 2}
+  m_Controller: {fileID: 0}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -8717,12 +8693,12 @@ PrefabInstance:
         type: 3}
       propertyPath: LeftmostChar
       value: 
-      objectReference: {fileID: 667223480}
+      objectReference: {fileID: 693787100}
     - target: {fileID: 755819438948372293, guid: d535dedf575f07d4f9eb1aae482f88b6,
         type: 3}
       propertyPath: RightmostChar
       value: 
-      objectReference: {fileID: 548472179}
+      objectReference: {fileID: 1340982975}
     - target: {fileID: 755819438948372293, guid: d535dedf575f07d4f9eb1aae482f88b6,
         type: 3}
       propertyPath: canvasAnim
@@ -9176,8 +9152,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 8627431f4f14f6940af4f258cb745804,
-        type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 7432381529995214264, guid: 6759e93c909b70b4a8bd129be701aaba,
         type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -9243,8 +9218,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 6990191800186155092, guid: 354b148bf86a4004facd8d9b2c055aa5,
-        type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 7432381530621341542, guid: 6759e93c909b70b4a8bd129be701aaba,
         type: 3}
       propertyPath: m_Name
