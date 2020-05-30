@@ -40,6 +40,12 @@ xsi:schemaLocation="https://www.w3schools.com/xml VN_Schema.xsd">
       <line emotion_L="Default">wefjkgrdfglhgjafhdggjdgkldjhaefghgsa.</line>
       <line emotion_R="does not exist">My emotions do not exist.</line>  
     </character>
+  </conversation>
+
+  <conversation id="Anim_Test3">
+    <character name="Void">
+      <line AC_L="Test_AC">I am the void.</line>
+    </character>      
   </conversation>  
 
 </game>
