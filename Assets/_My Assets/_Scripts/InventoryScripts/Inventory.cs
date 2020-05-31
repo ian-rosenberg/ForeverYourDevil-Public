@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Newtonsoft.Json;
+using TMPro;
 
 public class Inventory : MonoBehaviour
 {
@@ -19,13 +20,13 @@ public class Inventory : MonoBehaviour
 
     public void AddSlot()
     {
-        if(inventorySlots == null)
+        if (inventorySlots == null)
         {
             inventorySlots = new Dictionary<object, GameObject>();
 
             totalItems = 0;
         }
-        
+
         GameObject slotClone = Instantiate(elementOwnerPrefab, transform);
 
         inventorySlots.Add(slotIndices++, slotClone);
@@ -39,17 +40,31 @@ public class Inventory : MonoBehaviour
         inventorySlots.Add(currentIndex, slotClone);
 
         slotClone.GetComponent<InventorySlot>().child = item;
+
+        InventorySlot slot = slotClone.GetComponent<InventorySlot>();
+
+        slot.quantity++;
+
+        slot.GetComponentInChildren<TextMeshProUGUI>().text = slot.quantity.ToString();
+
     }
 
     public void AddSingleItem(ItemBase item)
     {
         for (int i = 0; i < inventorySlots.Count; i++)
         {
+            InventorySlot slot = inventorySlots[i].GetComponent<InventorySlot>();
             ItemBase child = inventorySlots[i].GetComponent<InventorySlot>().child;
 
-            if (child == item)
+            if (child == null)
+                continue;
+
+            if (child.Name == item.Name)
             {
-                inventorySlots[i].GetComponent<InventorySlot>().quantity++;
+                slot.quantity++;
+
+                slot.GetComponentInChildren<TextMeshProUGUI>().text = slot.quantity.ToString();
+
                 totalItems++;
                 return;
             }
@@ -59,11 +74,17 @@ public class Inventory : MonoBehaviour
         {
             GameObject go = inventorySlots[i];
             InventorySlot slot = go.GetComponent<InventorySlot>();
-            
+
             if (!inventorySlots[i].GetComponent<InventorySlot>().inUse)
             {
                 slot.child = item;
                 slot.img.sprite = Resources.Load<Sprite>(item.Icon);
+
+                slot.quantity++;
+                totalItems++;
+
+                slot.GetComponentInChildren<TextMeshProUGUI>().text = slot.quantity.ToString();
+
                 slot.inUse = true;
 
                 return;

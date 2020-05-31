@@ -14,7 +14,7 @@
   				"Consumable" : true,
   				"Cooldown": 0,
   				"Duration": 3,
-  				"Effect Description" : "Restores 100 health.",
+  				"EffectDescription" : "Restores 100 health.",
   				"Description" : "A hearty drinkable meal from everyone's favorite hypercellulose gelatin timelord!!!",
   				"SFX": "{eb4e9ad8-c6ac-414f-8d5e-c3d012ca6ae6}",
   				"Bonuses" : {

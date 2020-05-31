@@ -88,6 +88,12 @@ public class InventoryManagement : MonoBehaviour
         //SetInventoriesInactive();
     }
 
+    public void AddPorridge()
+    {
+        SharedInventory sI = sharedInventory.GetComponentInChildren<SharedInventory>(); 
+        sI.AddSingleItem(itemList.Consumables[0]);
+    }
+
     private void CreateItemDatabase(string path)
     {
         TextAsset json = Resources.Load<TextAsset>(path);

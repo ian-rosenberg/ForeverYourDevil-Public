@@ -11,7 +11,7 @@ public class SharedInventory : Inventory
     {
         inventorySlots = new Dictionary<object, GameObject>();
 
-        ExpandInventory(4);
+        ExpandInventory(24);
 
         totalItems = 0;
 
