@@ -10,13 +10,13 @@ using FMODUnity;
 
 /**
  * @brief Manager for displaying images, text, etc from parsed dialogue from ParseXML
- * @author Omar Ilyas
+ * @author Omar Ilyas (edited by Ashley Roesler)
  */
 
 public class Dialogue : MonoBehaviour
 {
     ParseXML parser;                        /**Parser index containing all sentences in List*/
-    gameManager gm;                /**Master manager controlling game state*/
+    gameManager gm;                         /**Master manager controlling game state*/
 
     private static Dialogue instance;       /**Create singleton instance*/
 
@@ -44,8 +44,8 @@ public class Dialogue : MonoBehaviour
     public TextMeshProUGUI textDisplay;     /**Display for text*/
     public Image nameBoxFrame;              /**Background frame of textbox*/
     public Image textBoxFrame;              /**Background frame of textbox*/
-    public Image LeftmostChar;              /**Leftmost Character*/
-    public Image RightmostChar;             /**Rightmost Char*/
+    public Animator LeftmostChar;           /**Leftmost Character*/
+    public Animator RightmostChar;          /**Rightmost Character*/
     public Animator canvasAnim;             /**Animator object to turn on exit animation*/
 
     [Header("Text and choices")]
@@ -67,7 +67,6 @@ public class Dialogue : MonoBehaviour
     /**
      * @brief Initialize dialogue manager and get parsed dialogue from ParseXML
      */
-
     private void Start()
     {
         canPress = false;
@@ -102,7 +101,6 @@ public class Dialogue : MonoBehaviour
     /**
      * @brief Initialize/Clear dialogue box for a new set of dialogue
      */
-
     void InitializeDialogue()
     {
         //Clear and hide Namebox
@@ -118,7 +116,6 @@ public class Dialogue : MonoBehaviour
      * @brief Activate dialogue box and load from conversation specified.
      * @param conversationID id of conversation to load
      */
-
     public void TriggerDialogue(string conversationID)
     {
         InitializeDialogue();
@@ -160,14 +157,8 @@ public class Dialogue : MonoBehaviour
         //Get conversation
         currentId = convID;
 
-        //Set sprites
-        if (parser.conversationList[currentId].DialogueLines[0].Sprites.Any())
-        {
-            if (parser.conversationList[currentId].DialogueLines[0].Sprites[0])
-                LeftmostChar.sprite = parser.conversationList[currentId].DialogueLines[0].Sprites[0];
-            if (parser.conversationList[currentId].DialogueLines[0].Sprites[1])
-                RightmostChar.sprite = parser.conversationList[currentId].DialogueLines[0].Sprites[1];
-        }
+        // set animations
+        SetAnimations(parser.conversationList[currentId].DialogueLines, 0);
 
         //Wait for animation to end before starting line and voice
         if (start) yield return new WaitForSeconds(1.717f);
@@ -184,8 +175,8 @@ public class Dialogue : MonoBehaviour
             //Play Audio
             dialogueAudio.start();
 
-            Debug.Log(LeftmostChar.sprite.name);
-            Debug.Log(RightmostChar.sprite.name);
+            Debug.Log(LeftmostChar.GetCurrentAnimatorClipInfo(0)[0].clip.name);
+            Debug.Log(RightmostChar.GetCurrentAnimatorClipInfo(0)[0].clip.name);
         }
         //Go to next line
         AdvanceLine();
@@ -254,17 +245,11 @@ public class Dialogue : MonoBehaviour
             dialogueAudio.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
             dialogueAudio.start(); // <---DUMB
 
-            //Set sprites
-            if (dialog[sentenceIndex].Sprites.Any())
-            {
-                if (dialog[sentenceIndex].Sprites[0])
-                    LeftmostChar.sprite = dialog[sentenceIndex].Sprites[0];
-                if (dialog[sentenceIndex].Sprites[1])
-                    RightmostChar.sprite = dialog[sentenceIndex].Sprites[1];
-            }
+            // set animations
+            SetAnimations(dialog, sentenceIndex);
 
-            Debug.Log(LeftmostChar.sprite.name);
-            Debug.Log(RightmostChar.sprite.name);
+            Debug.Log(LeftmostChar.GetCurrentAnimatorClipInfo(0)[0].clip.name);
+            Debug.Log(RightmostChar.GetCurrentAnimatorClipInfo(0)[0].clip.name);
 
             //Set name
             if (!dialog[sentenceIndex].Name.Equals(""))
@@ -291,6 +276,61 @@ public class Dialogue : MonoBehaviour
             sentenceIndex++;
             Debug.Log("Sentence Index: " + sentenceIndex);
         }
+    }
+
+    /**
+     * @brief Sets the current left and right animations
+     */
+    void SetAnimations(List<DialogueLine> dialog, int index)
+    {
+        // set animation for leftmost character
+        if (dialog[index].AC_Array[0])
+        {
+            LeftmostChar.runtimeAnimatorController = dialog[index].AC_Array[0];
+        }
+        if (dialog[index].Emotion_Array[0] != DialogueLine.Emotion.NONE)
+        {
+            if (ContainsParam(LeftmostChar, dialog[index].Emotion_Array[0].ToString()))
+            {
+                LeftmostChar.SetTrigger(dialog[index].Emotion_Array[0].ToString());
+            }
+            else
+            {
+                LeftmostChar.SetTrigger("MakeDefault");
+            }
+        }
+
+        // set animation for rightmost character
+        if (dialog[index].AC_Array[1])
+        {
+            RightmostChar.runtimeAnimatorController = dialog[index].AC_Array[1];
+        }
+        if (dialog[index].Emotion_Array[1] != DialogueLine.Emotion.NONE)
+        {
+            if (ContainsParam(RightmostChar, dialog[index].Emotion_Array[1].ToString()))
+            {
+                RightmostChar.SetTrigger(dialog[index].Emotion_Array[1].ToString());
+            }
+            else
+            {
+                RightmostChar.SetTrigger("MakeDefault");
+            }
+        }
+    }
+
+    /**
+     * @brief Checks if the given animator has a parameter with the given string name
+     */
+    bool ContainsParam(Animator anim, string param)
+    {
+        foreach(AnimatorControllerParameter acp in anim.parameters)
+        {
+            if (acp.name == param)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

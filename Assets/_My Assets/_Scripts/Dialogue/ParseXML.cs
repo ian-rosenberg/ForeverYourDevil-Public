@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Specialized;
 using UnityEngine;
 using System.IO;
@@ -7,6 +6,9 @@ using System.Xml;
 using UnityEngine.SceneManagement;
 using FMOD;
 using FMODUnity;
+using UnityEditor.Animations;
+using System.Linq;
+using System;
 
 /**
  * @brief A collection of lines to load when a conversation is triggered or an option is chosen
@@ -15,7 +17,7 @@ using FMODUnity;
 public class Conversation
 {
     public string Id { get; set; }                            /**Conversation name identifier. Cannot be blank*/
-    public string VoiceLine { get; set; }                  /**Optional Wav file containing voice line to play with conversation.*/
+    public string VoiceLine { get; set; }                     /**Optional Wav file containing voice line to play with conversation.*/
     public List<DialogueLine> DialogueLines { get; set; }     /**A list of dialogue lines to display*/
 
     public Conversation()
@@ -38,20 +40,33 @@ public class Conversation
     {
         DialogueLines.Add(line);
     }
-
 }
 
 /**
  * @brief A dialogue object containing the line and sprites to display and their information
- * @author Omar Ilyas
+ * @author Omar Ilyas (edited by Ashley Roesler)
  */
 public class DialogueLine
 {
-    public string Name { get; set; }              /**Name of Character saying the dialogue
+    public enum Emotion                           /**Determines which "emotion" you want to trigger*/
+    {                                             /**These match the AnimatorController Triggers*/
+        MakeDefault, 
+        MakeIdle,
+        MakeHappy,
+        MakeMad,
+        MakeSad,
+        MakeSurprised, 
+        NONE
+    };                                          
+
+    public string Name { get; set; }              /**Name of Character saying the dialogue*/
                                                   /**If null, there will be no name displayed*/
 
     public string Content { get; set; }           /**Dialogue text displayed in the DialogueBox*/
-    public List<Sprite> Sprites;                  /**Sprites to show/hide on screen*/
+
+    public AnimatorController[] AC_Array;         /**Determines characters displayed, [0] is left, [1] is right*/
+    public Emotion[] Emotion_Array;               /**Determines the animations played for each character, [0] left and [1] right*/
+
     public OrderedDictionary Options;             /**Options labels and the conversation id they go to when selected*/
 
     /**
@@ -63,24 +78,27 @@ public class DialogueLine
     {
         Name = name;
         Content = content;
-        //Sprites = sprites;
+        AC_Array = null;
+        Emotion_Array = null;
     }
 
     /**
-     * Create a DialogueLine without any options but with sprites
+     * Create a DialogueLine without any options but with animations
      * @param name Name of character speaking
      * @param content Dialogue that the character is saying
-     * @param sprites List of sprites to display
+     * @param ac_array Array of AnimatorControllers to use
+     * @param emotion_array Array of Emotions to display
      */
-    public DialogueLine(string name, string content, List<Sprite> sprites)
+    public DialogueLine(string name, string content, AnimatorController[] ac_array, Emotion[] emotion_array)
     {
         Name = name;
         Content = content;
-        Sprites = sprites;
+        AC_Array = ac_array;
+        Emotion_Array = emotion_array;
     }
 
     /**
-     * Create a DialogueLine with options but no sprites
+     * Create a DialogueLine with options but no animations
      * @param name Name of character speaking
      * @param content Dialogue that the character is saying
      * @param options List of choices and conversationIDs to go to
@@ -89,30 +107,50 @@ public class DialogueLine
     {
         Name = name;
         Content = content;
-        //Sprites = sprites;
+        AC_Array = null;
+        Emotion_Array = null;
         Options = options;
     }
 
     /**
-     * Create a DialogueLine with options and sprites
+     * Create a DialogueLine with options and animations
      * @param name Name of character speaking
      * @param content Dialogue that the character is saying
      * @param options List of choices and conversationIDs to go to
-     * @param sprites List of sprites to display
+     * @param ac_array Array of AnimatorControllers to use
+     * @param emotion_array Array of Emotions to display
      */
-    public DialogueLine(string name, string content, List<Sprite> sprites, OrderedDictionary options)
+    public DialogueLine(string name, string content, AnimatorController[] ac_array, Emotion[] emotion_array, OrderedDictionary options)
     {
         Name = name;
         Content = content;
-        Sprites = sprites;
+        AC_Array = ac_array;
+        Emotion_Array = emotion_array;
         Options = options;
     }
 
+    /**
+     * @brief Converts the given string into an Emotion (case insensitive)
+     */
+    public static Emotion StringToEmotion(string str)
+    {
+        str = "Make" + str;
+
+        try
+        {
+            return (Emotion)Enum.Parse(typeof(Emotion), str, true);
+        }
+        catch (Exception e)
+        {
+            UnityEngine.Debug.LogWarning("Missing emotion: " + e.Message);
+            return Emotion.MakeDefault;
+        }
+    }
 }
 
 /**
  * @brief Manager that parses lines from an XML file with the current scene name and sorts them into a list
- * @author Omar Ilyas
+ * @author Omar Ilyas (edited by Ashley Roesler)
  */
 public class ParseXML : MonoBehaviour
 {
@@ -136,6 +174,7 @@ public class ParseXML : MonoBehaviour
     void Awake()
     {
         UnityEngine.Debug.Log("Started");
+
         //Initialize Conversation List
         conversationList = new Dictionary<string, Conversation>();
 
@@ -161,6 +200,7 @@ public class ParseXML : MonoBehaviour
                 conversation.Id = conv.Attributes["id"].Value;
                 UnityEngine.Debug.Log(conv.Attributes["id"].Value);
             }
+
             //Set voice line (if present)
             if (HasAttributes(conv, "voice"))
             {
@@ -168,6 +208,7 @@ public class ParseXML : MonoBehaviour
                 conversation.VoiceLine = conv.Attributes["voice"].Value;               
                 UnityEngine.Debug.Log(conv.Attributes["voice"].Value);
             }
+
             //Get characters
             XmlNodeList characterList = conv.SelectNodes("character");
             UnityEngine.Debug.Log("characters: " + characterList.Count);
@@ -187,22 +228,33 @@ public class ParseXML : MonoBehaviour
                 UnityEngine.Debug.Log("Dialog line nodes created: " + lineList.Count);
                 foreach (XmlNode line in lineList)
                 {
-                    //Create New SpriteList
-                    List<Sprite> spriteList = new List<Sprite>();
+                    // create new animation value arrays (AnimatorControllers and Emotions)
+                    AnimatorController[] ac_array = new AnimatorController[2] { null, null };
+                    DialogueLine.Emotion[] emotion_array = new DialogueLine.Emotion[2] { DialogueLine.Emotion.NONE, DialogueLine.Emotion.NONE };
+
+                    // set default animation values as a starting point if no previous lines of dialogue
+                    if (!dialogueList.Any())
+                    {
+                        ac_array[0] = Resources.Load<AnimatorController>("Animations/Default_AC");
+                        ac_array[1] = Resources.Load<AnimatorController>("Animations/Default_AC");
+
+                        emotion_array[0] = DialogueLine.Emotion.MakeDefault;
+                        emotion_array[1] = DialogueLine.Emotion.MakeDefault;
+                    }
 
                     //Parse dialogue lines
                     if (line.Name == "line")
                     {
-                        previousLine = line.InnerText;
+                        previousLine = line.InnerText; // used when dealing with options
 
-                        //Get sprites from line
-                        GetSprites(spriteList, line);
+                        // get animations from line
+                        GetAnimations(ac_array, emotion_array, line);
 
-                        //Create a new dialogue line
-                        DialogueLine d = new DialogueLine(characterName, line.InnerText, spriteList);
+                        // create a new dialogue line
+                        DialogueLine d = new DialogueLine(characterName, line.InnerText, ac_array, emotion_array);
                         UnityEngine.Debug.Log("Dialog line created");
 
-                        //Add line to dialogue list
+                        // add line to dialogue list
                         dialogueList.Add(d);
                         UnityEngine.Debug.Log("Dialog line stored");
                     }
@@ -296,6 +348,8 @@ public class ParseXML : MonoBehaviour
                 {
                     Sprite sprite = Resources.Load<Sprite>("Sprites/" + line.Attributes["sprite2"].Value);
                     spriteList.Add(sprite);
+
+                    //RuntimeAnimatorController characterAC = Resources.Load<RuntimeAnimatorController>("Animations/");
                 }
                 //Get sprites from line (if they exist)
                 if (HasAttributes(line, "sprite3"))
@@ -313,4 +367,56 @@ public class ParseXML : MonoBehaviour
         }
     }
 
+    /**
+     * @brief Parse all animation attributes in given line
+     * @param ac_array The array of AnimatorControllers. If none are specified, the last given are used.
+     * @param emotion_array The array of Emotions. If none are specified, the last given are used.
+     * @param line The line from the XML script to get sprites from.
+     */
+    void GetAnimations(AnimatorController[] ac_array, DialogueLine.Emotion[] emotion_array, XmlNode line)
+    {
+        // if AC_L
+        if (HasAttributes(line, "AC_L"))
+        {
+            ac_array[0] = Resources.Load<AnimatorController>("Animations/" + line.Attributes["AC_L"].Value);
+
+            if (ac_array[0])
+            {
+                UnityEngine.Debug.Log(ac_array[0].name);
+            }
+            else
+            {
+                UnityEngine.Debug.LogWarning("Error loading AC: " + line.Attributes["AC_L"].Value);
+            }
+        }
+
+        // if AC_R
+        if (HasAttributes(line, "AC_R"))
+        {
+            ac_array[1] = Resources.Load<AnimatorController>("Animations/" + line.Attributes["AC_R"].Value);
+
+            if (ac_array[1])
+            {
+                UnityEngine.Debug.Log(ac_array[1].name);
+            }
+            else
+            {
+                UnityEngine.Debug.LogWarning("Error loading AC: " + line.Attributes["AC_R"].Value);
+            }
+        }
+
+        // if emotion_L
+        if (HasAttributes(line, "emotion_L"))
+        {
+            emotion_array[0] = DialogueLine.StringToEmotion(line.Attributes["emotion_L"].Value);
+            UnityEngine.Debug.Log(emotion_array[0]);
+        }
+
+        // if emotion_R
+        if (HasAttributes(line, "emotion_R"))
+        {
+            emotion_array[1] = DialogueLine.StringToEmotion(line.Attributes["emotion_R"].Value);
+            UnityEngine.Debug.Log(emotion_array[1]);
+        }
+    }
 }
