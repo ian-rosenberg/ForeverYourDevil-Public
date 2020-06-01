@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Schema must be removed before gameplay
+<game
+xmlns="https://www.w3schools.com"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="https://www.w3schools.com/xml VN_Schema.xsd">
+  -->
+<game>
+  
+  <!--Testing Animations-->  
+  <conversation id="Anim_Test">
+    <character name="Penny">
+      <line AC_L="Test_AC" AC_R="Test_AC" emotion_L="Idle" emotion_R="Idle">This is the animation test.</line>
+      <line emotion_L="Happy">Happy.</line>
+      <line>Still happy.</line>
+      <line emotion_L="Mad">Mad.</line>
+    </character>
+    <character name="Beautiful Friend">
+      <line AC_L="Default_AC" AC_R="Test_AC" emotion_R="Sad">Sad. Oh, look, tan pill.</line>
+      <line>Still sad.</line>
+      <line emotion_R="Surprised">Surprised.</line>
+    </character> 
+  </conversation>
+
+  <conversation id="Anim_Test2">
+    <character name="Cinnamon Roll">
+        <line AC_L="Test_AC" emotion_L="Surprised">Who are you?</line>
+    </character>
+    <character name="???">
+        <line>wgfehrjgtkfhdwqwefgrhj.</line>
+    </character>
+    <character name="Cinnabon">
+        <line emotion_L="Idle">Oh.</line>
+    </character>
+    <character name="wgfehrjgtkfhdwqwefgrhj">
+      <line>wefjkgrdfglhgjafhdggjdgkldjhaefghgsa.</line>
+    </character>
+    <character name="Cinnamon Toast Crunch">
+      <line emotion_L="Default">wefjkgrdfglhgjafhdggjdgkldjhaefghgsa.</line>
+      <line emotion_R="does not exist">My emotions do not exist.</line>  
+    </character>
+  </conversation>
+
+  <conversation id="Anim_Test3">
+    <character name="Void">
+      <line AC_L="Test_AC">I am the void.</line>
+    </character>      
+  </conversation>  
+
+</game>
