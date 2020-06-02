@@ -1,25 +1,22 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class NPCController : MonoBehaviour
 {
-    Dialogue diagManager;
-    gameManager gameManager;
+    private Dialogue diagManager;
+    private gameManager gameManager;
     public string conversationID; //Conversation number for communication
     public GameObject talkIndicator;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         diagManager = Dialogue.Instance;
         gameManager = gameManager.Instance;
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-
     }
 
     private void OnTriggerStay(Collider other)
@@ -43,5 +40,4 @@ public class NPCController : MonoBehaviour
             talkIndicator.SetActive(false);
         }
     }
-
 }

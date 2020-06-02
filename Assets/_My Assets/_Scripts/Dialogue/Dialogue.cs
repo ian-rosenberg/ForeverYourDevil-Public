@@ -1,22 +1,21 @@
-﻿using System.Collections;
+﻿using FMODUnity;
+using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
+using System.Linq;
+using System.Text.RegularExpressions;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using System.Text.RegularExpressions;
-using System.Linq;
-using FMODUnity;
 
 /**
  * @brief Manager for displaying images, text, etc from parsed dialogue from ParseXML
- * @author Omar Ilyas
+ * @author Omar Ilyas (edited by Ashley Roesler)
  */
 
 public class Dialogue : MonoBehaviour
 {
     ParseXML parser;                        /**Parser index containing all sentences in List*/
-    gameManager gm;                /**Master manager controlling game state*/
+    gameManager gm;                         /**Master manager controlling game state*/
 
     private static Dialogue instance;       /**Create singleton instance*/
 
@@ -29,12 +28,11 @@ public class Dialogue : MonoBehaviour
             return instance;
         }
     }
-    string currentId;                       /**Conversation id to choose*/
-    int sentenceIndex;                      /**Index of sentence to go to*/
+
+    private string currentId;                       /**Conversation id to choose*/
+    private int sentenceIndex;                      /**Index of sentence to go to*/
 
     [Header("Audio")]
-    //public AudioSpectrum spectrumManager;
-    //public VoiceLineSyncer voiceManager;
     public FMOD.Studio.EventInstance dialogueAudio;              /**Voice line audio source*/
 
     [Header("Display")]
@@ -44,8 +42,8 @@ public class Dialogue : MonoBehaviour
     public TextMeshProUGUI textDisplay;     /**Display for text*/
     public Image nameBoxFrame;              /**Background frame of textbox*/
     public Image textBoxFrame;              /**Background frame of textbox*/
-    public Image LeftmostChar;              /**Leftmost Character*/
-    public Image RightmostChar;             /**Rightmost Char*/
+    public Animator LeftmostChar;           /**Leftmost Character*/
+    public Animator RightmostChar;          /**Rightmost Character*/
     public Animator canvasAnim;             /**Animator object to turn on exit animation*/
 
     [Header("Text and choices")]
@@ -58,16 +56,16 @@ public class Dialogue : MonoBehaviour
 
     //Colors
     public Color tanOrange = new Color(0.8018868f, 0.304684f, 0.1777768f); /**Text color*/
+
     public Color pennyGreen = new Color(0.8018868f, 0.304684f, 0.1777768f); /**Text color*/
     public Color cerulianBlue = new Color(0.1764706f, 0.6452591f, 0.8f);   /**Text color*/
 
-    bool canPress = false;                  /**Is the user allowed to advance the text?*/
-    bool skip = false;                      /**Display all characters at once if true, one at a time if false*/
+    private bool canPress = false;                  /**Is the user allowed to advance the text?*/
+    private bool skip = false;                      /**Display all characters at once if true, one at a time if false*/
 
     /**
      * @brief Initialize dialogue manager and get parsed dialogue from ParseXML
      */
-
     private void Start()
     {
         canPress = false;
@@ -82,7 +80,8 @@ public class Dialogue : MonoBehaviour
     /**
      * @brief Main game loop. Advance line of text or skip it depending on input.
      */
-    void Update()
+
+    private void Update()
     {
         //Advance/Skip Dialogue on KeyPress
         if (Input.GetButtonDown("Interact") && gm.gameState == gameManager.STATE.TALKING) //Return = enter key
@@ -102,7 +101,6 @@ public class Dialogue : MonoBehaviour
     /**
      * @brief Initialize/Clear dialogue box for a new set of dialogue
      */
-
     void InitializeDialogue()
     {
         //Clear and hide Namebox
@@ -118,7 +116,6 @@ public class Dialogue : MonoBehaviour
      * @brief Activate dialogue box and load from conversation specified.
      * @param conversationID id of conversation to load
      */
-
     public void TriggerDialogue(string conversationID)
     {
         InitializeDialogue();
@@ -128,7 +125,8 @@ public class Dialogue : MonoBehaviour
     /**
      * @brief Waits for animation to finish before starting dialogue. (private)
      */
-    IEnumerator StartDialogue(string convID, bool start)
+
+    private IEnumerator StartDialogue(string convID, bool start)
     {
         AdvanceSprite.SetActive(false);
         canPress = false;
@@ -160,14 +158,8 @@ public class Dialogue : MonoBehaviour
         //Get conversation
         currentId = convID;
 
-        //Set sprites
-        if (parser.conversationList[currentId].DialogueLines[0].Sprites.Any())
-        {
-            if (parser.conversationList[currentId].DialogueLines[0].Sprites[0])
-                LeftmostChar.sprite = parser.conversationList[currentId].DialogueLines[0].Sprites[0];
-            if (parser.conversationList[currentId].DialogueLines[0].Sprites[1])
-                RightmostChar.sprite = parser.conversationList[currentId].DialogueLines[0].Sprites[1];
-        }
+        // set animations
+        SetAnimations(parser.conversationList[currentId].DialogueLines, 0);
 
         //Wait for animation to end before starting line and voice
         if (start) yield return new WaitForSeconds(1.717f);
@@ -184,8 +176,8 @@ public class Dialogue : MonoBehaviour
             //Play Audio
             dialogueAudio.start();
 
-            Debug.Log(LeftmostChar.sprite.name);
-            Debug.Log(RightmostChar.sprite.name);
+            Debug.Log(LeftmostChar.GetCurrentAnimatorClipInfo(0)[0].clip.name);
+            Debug.Log(RightmostChar.GetCurrentAnimatorClipInfo(0)[0].clip.name);
         }
         //Go to next line
         AdvanceLine();
@@ -194,7 +186,8 @@ public class Dialogue : MonoBehaviour
     /**
      * @brief Waits for animation to finish before turning off dialogue canvas
      */
-    IEnumerator EndDialogue()
+
+    private IEnumerator EndDialogue()
     {
         Debug.Log("End Dialogue Called");
         textDisplay.transform.parent.transform.parent.gameObject.SetActive(false);
@@ -208,6 +201,7 @@ public class Dialogue : MonoBehaviour
     /**
      * @brief Advance one line in conversation dialogue list chosen and display on screen
      */
+
     public void AdvanceLine()
     {
         Debug.Log("Advance Line Called");
@@ -246,7 +240,6 @@ public class Dialogue : MonoBehaviour
                 multiplier++;
             }
         }
-
         else //If there are more lines
         {
             //Play voice line (stop and start for workaround)
@@ -254,17 +247,11 @@ public class Dialogue : MonoBehaviour
             dialogueAudio.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
             dialogueAudio.start(); // <---DUMB
 
-            //Set sprites
-            if (dialog[sentenceIndex].Sprites.Any())
-            {
-                if (dialog[sentenceIndex].Sprites[0])
-                    LeftmostChar.sprite = dialog[sentenceIndex].Sprites[0];
-                if (dialog[sentenceIndex].Sprites[1])
-                    RightmostChar.sprite = dialog[sentenceIndex].Sprites[1];
-            }
+            // set animations
+            SetAnimations(dialog, sentenceIndex);
 
-            Debug.Log(LeftmostChar.sprite.name);
-            Debug.Log(RightmostChar.sprite.name);
+            Debug.Log(LeftmostChar.GetCurrentAnimatorClipInfo(0)[0].clip.name);
+            Debug.Log(RightmostChar.GetCurrentAnimatorClipInfo(0)[0].clip.name);
 
             //Set name
             if (!dialog[sentenceIndex].Name.Equals(""))
@@ -294,9 +281,65 @@ public class Dialogue : MonoBehaviour
     }
 
     /**
+     * @brief Sets the current left and right animations
+     */
+    void SetAnimations(List<DialogueLine> dialog, int index)
+    {
+        // set animation for leftmost character
+        if (dialog[index].AC_Array[0])
+        {
+            LeftmostChar.runtimeAnimatorController = dialog[index].AC_Array[0];
+        }
+        if (dialog[index].Emotion_Array[0] != DialogueLine.Emotion.NONE)
+        {
+            if (ContainsParam(LeftmostChar, dialog[index].Emotion_Array[0].ToString()))
+            {
+                LeftmostChar.SetTrigger(dialog[index].Emotion_Array[0].ToString());
+            }
+            else
+            {
+                LeftmostChar.SetTrigger("MakeDefault");
+            }
+        }
+
+        // set animation for rightmost character
+        if (dialog[index].AC_Array[1])
+        {
+            RightmostChar.runtimeAnimatorController = dialog[index].AC_Array[1];
+        }
+        if (dialog[index].Emotion_Array[1] != DialogueLine.Emotion.NONE)
+        {
+            if (ContainsParam(RightmostChar, dialog[index].Emotion_Array[1].ToString()))
+            {
+                RightmostChar.SetTrigger(dialog[index].Emotion_Array[1].ToString());
+            }
+            else
+            {
+                RightmostChar.SetTrigger("MakeDefault");
+            }
+        }
+    }
+
+    /**
+     * @brief Checks if the given animator has a parameter with the given string name
+     */
+    bool ContainsParam(Animator anim, string param)
+    {
+        foreach(AnimatorControllerParameter acp in anim.parameters)
+        {
+            if (acp.name == param)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * @brief Change the conversation and conversation id upon clicking a choice
      * @param convID the conversation to go to upon button click
      */
+
     public void ChangeConversation(string convID)
     {
         Debug.Log("Running Change Conversation : " + convID);
@@ -315,7 +358,8 @@ public class Dialogue : MonoBehaviour
      * @brief Coroutine that displays text char by char until line is exhausted or skipped
      * @param s string to display
      */
-    IEnumerator TypeText(string s)
+
+    private IEnumerator TypeText(string s)
     {
         Debug.Log("Running coroutine.");
 
@@ -354,7 +398,8 @@ public class Dialogue : MonoBehaviour
      * @param frameColor the new color of the background frame
      * @param textColor the new color of the text
      */
-    void SetFrameTextColor(Color frameColor, Color textColor)
+
+    private void SetFrameTextColor(Color frameColor, Color textColor)
     {
         textDisplay.color = textColor;
         nameBox.color = textColor;
