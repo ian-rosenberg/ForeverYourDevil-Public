@@ -57,6 +57,12 @@ public class DialogueLine
         MakeHappy,
         MakeMad,
         MakeSad,
+        MakeSadTalk,
+        MakeAmazed,
+        MakeAmazedTalk,
+        MakeConfused,
+        MakeConfusedTalk,
+        MakeTalking,
         MakeSurprised, 
         NONE
     };                                          
