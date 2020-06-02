@@ -231,6 +231,7 @@ MonoBehaviour:
       Attack: 0
   inUse: 0
   quantity: 0
+  maxQuantity: 99
   img: {fileID: 0}
 --- !u!114 &113232950310579170
 MonoBehaviour:

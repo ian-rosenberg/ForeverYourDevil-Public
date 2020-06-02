@@ -8,6 +8,7 @@ public class InventorySlot : MonoBehaviour
     public ItemBase child;
     public bool inUse;
     public int quantity;
+    public int maxQuantity;
     public Image img;
 
     private void Awake()
