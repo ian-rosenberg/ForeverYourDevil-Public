@@ -2713,7 +2713,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e78ac0e7d47c80049ad690a34901681b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCamera: {fileID: 0}
+  mainCamera: {fileID: 1944145311}
   battleAnim: {fileID: 1694975765}
   player: {fileID: 1957407122}
   playerSpawn:
@@ -2724,7 +2724,7 @@ MonoBehaviour:
   normalWorld: {fileID: 81750403}
   battleWorld: {fileID: 1624661013}
   pauseMenu: {fileID: 1291242769}
-  CanvasAnimator: {fileID: 0}
+  CanvasAnimator: {fileID: 1694975765}
   gameState: 0
 --- !u!1 &1061123594
 GameObject:
@@ -5394,6 +5394,18 @@ MonoBehaviour:
   m_BeforeTransparentBundles: []
   m_BeforeStackBundles: []
   m_AfterStackBundles: []
+--- !u!114 &1944145311 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7736120608094991444, guid: 5912e50a99c2e3748adad53e6d7c74c2,
+    type: 3}
+  m_PrefabInstance: {fileID: 7736120608075829212}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1944145309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1b9266f8d09c8c4a8546fcbb18cd0ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1944145313 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7736120608094991450, guid: 5912e50a99c2e3748adad53e6d7c74c2,
