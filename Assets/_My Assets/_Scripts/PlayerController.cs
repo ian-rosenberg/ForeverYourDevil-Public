@@ -91,14 +91,16 @@ public class PlayerController : MonoBehaviour
 
     public void Player_Travelling()
     {
+        Debug.Log("Player_Travelling();");
+
         //Set animator (need to change)
         if (!anim.GetBool("Traveling"))
         {
-            anim.SetBool("StayIdle", false);
             anim.SetBool("Traveling", true);
             anim.SetTrigger("TravelingTrigger");
             anim.SetBool("Combat", false);
         }
+        anim.SetBool("StayIdle", false);
 
         //Click to move (w/pathfinding)
         if (Input.GetMouseButtonDown(0)) //If left click (not hold)
@@ -150,6 +152,7 @@ public class PlayerController : MonoBehaviour
 
     public void Player_Talking()
     {
+        Debug.Log("Player_Talking();");
         agent.ResetPath(); //Resets directions to agent to stop it
         anim.SetBool("StayIdle", true);
     }
