@@ -14,6 +14,8 @@ using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour
 {
+    #region Main Variables
+
     private gameManager gameManager;
 
     //Pathfinding
@@ -57,6 +59,8 @@ public class PlayerController : MonoBehaviour
     public PlayerGUI playerGUI; //Gui menu of the player
     private bool combatMoving; //Is the player moving during combat?
 
+    #endregion Main Variables
+
     // Awake is called before start
     private void Awake()
     {
@@ -80,6 +84,28 @@ public class PlayerController : MonoBehaviour
         clickIndicator.SetActive(false);
     }
 
+    public void ChangedStateTo(gameManager.STATE newState)
+    {
+        switch (newState)
+        {
+            case gameManager.STATE.START:
+                Debug.LogError("Cannot switch GM State to START. This should not happen.");
+                break;
+            case gameManager.STATE.TRAVELING:
+                currentBehavior = Player_Travelling;
+                break;
+            case gameManager.STATE.COMBAT:
+                currentBehavior = Player_Combat;
+                break;
+            case gameManager.STATE.PAUSED:
+                currentBehavior = Player_Paused;
+                break;
+            case gameManager.STATE.TALKING:
+                currentBehavior = Player_Talking;
+                break;
+        }
+    }
+
     // Update is called once per frame
     private void Update()
     {
@@ -91,8 +117,6 @@ public class PlayerController : MonoBehaviour
 
     public void Player_Travelling()
     {
-        Debug.Log("Player_Travelling();");
-
         //Set animator (need to change)
         if (!anim.GetBool("Traveling"))
         {
@@ -152,7 +176,6 @@ public class PlayerController : MonoBehaviour
 
     public void Player_Talking()
     {
-        Debug.Log("Player_Talking();");
         agent.ResetPath(); //Resets directions to agent to stop it
         anim.SetBool("StayIdle", true);
     }
@@ -216,6 +239,11 @@ public class PlayerController : MonoBehaviour
         agent.speed = normalSpeed;
         //Set if anim is in run or idle (set by number in blend tree)
         anim.SetFloat("Speed", (agent.velocity.magnitude / agent.speed));
+    }
+
+    public void Player_Paused()
+    {
+        //Disable Colliders, Rigidbodies, etc.
     }
 
     #endregion Behavior Functions

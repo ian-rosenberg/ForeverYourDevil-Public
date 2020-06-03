@@ -10,8 +10,8 @@
 
 public class FollowObject : MonoBehaviour
 {
-    [Tooltip("Gameobject to follow")]
-    public GameObject target;
+    [Tooltip("Transform of the gameobject to follow")]
+    public Transform target;
 
     [Tooltip("Does this follow obj's x position?")]
     public bool x_pos;
