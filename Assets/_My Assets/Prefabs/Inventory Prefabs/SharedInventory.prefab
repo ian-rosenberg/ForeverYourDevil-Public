@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5096731870002146522}
   - component: {fileID: 3562386790116854122}
   - component: {fileID: 6198321805750202353}
-  m_Layer: 5
+  m_Layer: 12
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -85,7 +85,7 @@ GameObject:
   - component: {fileID: 2919842898536342673}
   - component: {fileID: 1337477192932508446}
   - component: {fileID: 3533013108045771310}
-  m_Layer: 5
+  m_Layer: 12
   m_Name: Handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -159,7 +159,7 @@ GameObject:
   - component: {fileID: 7667433027219995588}
   - component: {fileID: 8111192586975294763}
   - component: {fileID: 8664867901856090666}
-  m_Layer: 5
+  m_Layer: 12
   m_Name: Viewport
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -246,7 +246,7 @@ GameObject:
   - component: {fileID: 4528938565497898604}
   - component: {fileID: 8570971437310343003}
   - component: {fileID: 1332786676976944366}
-  m_Layer: 5
+  m_Layer: 12
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -330,7 +330,7 @@ GameObject:
   - component: {fileID: 2224032812713850128}
   - component: {fileID: 700760045217692711}
   - component: {fileID: 6738608596935087799}
-  m_Layer: 5
+  m_Layer: 12
   m_Name: ItemList
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -406,7 +406,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99fb3c1b22ebb084aa3442c060b0c25b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  elementOwnerPrefab: {fileID: 4735835988009977264, guid: 2a1b8da1745c8174babd4af7579d1e2a,
+  totalItems: 0
+  elementOwnerPrefab: {fileID: 3293102853292309666, guid: 11b7e823e6cadd6428cdfc48fc91c229,
     type: 3}
 --- !u!1 &4998130441950449116
 GameObject:
@@ -420,7 +421,7 @@ GameObject:
   - component: {fileID: 1584533311905439976}
   - component: {fileID: 3637003327958751341}
   - component: {fileID: 3441751374812580179}
-  m_Layer: 5
+  m_Layer: 12
   m_Name: SharedInventory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -527,7 +528,7 @@ GameObject:
   - component: {fileID: 2402971843323138129}
   - component: {fileID: 955179437046660430}
   - component: {fileID: 5210069975672814153}
-  m_Layer: 5
+  m_Layer: 12
   m_Name: Scrollbar Vertical
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -647,7 +648,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 703665992108305086}
-  m_Layer: 5
+  m_Layer: 12
   m_Name: Sliding Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}

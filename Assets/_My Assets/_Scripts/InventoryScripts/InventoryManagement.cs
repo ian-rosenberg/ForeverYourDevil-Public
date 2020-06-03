@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using Newtonsoft.Json;
 using System;
 
@@ -134,5 +135,5 @@ public class InventoryManagement : MonoBehaviour
     public void SetSharedInventoryActive()
     {
         sharedInventory.SetActive(true);
-    }
+    } 
 }
