@@ -69,6 +69,8 @@ public class PlayerController : MonoBehaviour
         path = null;
 
         prevPath = path;
+
+        currentBehavior = Player_Travelling;
     }
 
     // Start is called before the first frame update

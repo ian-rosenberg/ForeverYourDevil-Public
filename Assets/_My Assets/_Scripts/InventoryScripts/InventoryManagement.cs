@@ -86,7 +86,7 @@ public class InventoryManagement : MonoBehaviour
 
         CreateSharedInventory();
 
-        //SetInventoriesInactive();
+        SetInventoriesInactive();
     }
 
     public void AddPorridge()
@@ -126,14 +126,14 @@ public class InventoryManagement : MonoBehaviour
     {
         sharedInventory.SetActive(false);
 
-        foreach(GameObject inventory in inventoryObjs)
+        /*foreach(GameObject inventory in inventoryObjs)
         {
             inventory.SetActive(false);
-        }
+        }*/
     }
 
-    public void SetSharedInventoryActive()
+    public void SetSharedInventoryActive(bool flag)
     {
-        sharedInventory.SetActive(true);
+        sharedInventory.SetActive(flag);
     } 
 }
