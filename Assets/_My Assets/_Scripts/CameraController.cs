@@ -59,52 +59,55 @@ public class CameraController : MonoBehaviour
 
     public void Camera_Following()
     {
-        //Camera Reset
-        if (Input.GetButtonDown("Camera Reset") && !isCameraReseting)
+        if (gm.gameState != gameManager.STATE.PAUSED)
         {
-            StartCoroutine(ResetCamera());
-        }
-
-        //Move camera with right click and hold
-        if (Input.GetMouseButton(1) && !isCameraReseting) //If hold right click
-        {
-            ResetCameraNotification.SetActive(true);
-            mouseX += Input.GetAxis("Mouse X") * rotateSpeed;
-            mouseY += Input.GetAxis("Mouse Y") * rotateSpeed;
-
-            mouseY = Mathf.Clamp(mouseY, -30, 45);
-
-            FollowX.rotation = Quaternion.Euler(0f, mouseX, 0f);
-            FollowY.localRotation = Quaternion.Euler(-mouseY, 0f, 0f);
-        }
-
-        //Zoom in and out with mouse wheel.
-        if (Input.GetAxis("Mouse ScrollWheel") < 0) // back
-        {
-            ResetCameraNotification.SetActive(true);
-            if (zoom >= -.8f)
+            //Camera Reset
+            if (Input.GetButtonDown("Camera Reset") && !isCameraReseting)
             {
-                zoom += Input.GetAxisRaw("Mouse ScrollWheel");
-                transform.position -= transform.forward;
+                StartCoroutine(ResetCamera());
             }
-        }
-        if (Input.GetAxis("Mouse ScrollWheel") > 0) // forward
-        {
-            if (zoom <= .8f)
-            {
-                zoom += Input.GetAxisRaw("Mouse ScrollWheel");
-                transform.position += transform.forward;
-            }
-        }
 
-        //DEBUG - lock onto specified target with keypress
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            ChangeCameraState(MODE.FOLLOWING, enemyLockOn.transform);
-        }
-        if (Input.GetKeyUp(KeyCode.B))
-        {
-            ChangeCameraState(MODE.FOLLOWING, gm.player.transform);
+            //Move camera with right click and hold
+            if (Input.GetMouseButton(1) && !isCameraReseting) //If hold right click
+            {
+                ResetCameraNotification.SetActive(true);
+                mouseX += Input.GetAxis("Mouse X") * rotateSpeed;
+                mouseY += Input.GetAxis("Mouse Y") * rotateSpeed;
+
+                mouseY = Mathf.Clamp(mouseY, -30, 45);
+
+                FollowX.rotation = Quaternion.Euler(0f, mouseX, 0f);
+                FollowY.localRotation = Quaternion.Euler(-mouseY, 0f, 0f);
+            }
+
+            //Zoom in and out with mouse wheel.
+            if (Input.GetAxis("Mouse ScrollWheel") < 0) // back
+            {
+                ResetCameraNotification.SetActive(true);
+                if (zoom >= -.8f)
+                {
+                    zoom += Input.GetAxisRaw("Mouse ScrollWheel");
+                    transform.position -= transform.forward;
+                }
+            }
+            if (Input.GetAxis("Mouse ScrollWheel") > 0) // forward
+            {
+                if (zoom <= .8f)
+                {
+                    zoom += Input.GetAxisRaw("Mouse ScrollWheel");
+                    transform.position += transform.forward;
+                }
+            }
+
+            //DEBUG - lock onto specified target with keypress
+            if (Input.GetKeyDown(KeyCode.B))
+            {
+                ChangeCameraState(MODE.FOLLOWING, enemyLockOn.transform);
+            }
+            if (Input.GetKeyUp(KeyCode.B))
+            {
+                ChangeCameraState(MODE.FOLLOWING, gm.player.transform);
+            }
         }
     }
 
@@ -228,7 +231,7 @@ public class CameraController : MonoBehaviour
                     else
                         //If not specified, follow the player
                         followScript.target = gm.player.transform;
-                        followScript.transform.position = gm.player.transform.position;
+                    followScript.transform.position = gm.player.transform.position;
                     break;
 
                 case MODE.STATIONARY:
@@ -280,6 +283,6 @@ public class CameraController : MonoBehaviour
 
     private void Camera_Stationary()
     {
-        
+
     }
 }
