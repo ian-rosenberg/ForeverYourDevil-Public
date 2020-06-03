@@ -172,31 +172,31 @@ public class CameraController : MonoBehaviour
      * @param newState the new state of the gameManager
      */
 
-    public void ChangedStateTo(gameManager.STATE newState)
-    {
-        switch (newState)
-        {
-            case gameManager.STATE.START:
-                Debug.LogError("Cannot switch GM State to START. This should not happen.");
-                break;
+    //public void ChangedStateTo(gameManager.STATE newState)
+    //{
+    //    switch (newState)
+    //    {
+    //        case gameManager.STATE.START:
+    //            Debug.LogError("Cannot switch GM State to START. This should not happen.");
+    //            break;
 
-            case gameManager.STATE.TRAVELING:
-                ChangeCameraState(MODE.FOLLOWING, gm.player.transform);
-                break;
+    //        case gameManager.STATE.TRAVELING:
+    //            ChangeCameraState(MODE.FOLLOWING, gm.player.transform);
+    //            break;
 
-            case gameManager.STATE.COMBAT:
-                ChangeCameraState(MODE.COMBAT);
-                break;
+    //        case gameManager.STATE.COMBAT:
+    //            ChangeCameraState(MODE.COMBAT);
+    //            break;
 
-            case gameManager.STATE.PAUSED:
-                ChangeCameraState(MODE.PAUSED);
-                break;
+    //        case gameManager.STATE.PAUSED:
+    //            //ChangeCameraState(MODE.PAUSED);
+    //            break;
 
-            case gameManager.STATE.TALKING:
-                ChangeCameraState(MODE.STATIONARY, gm.player.transform);
-                break;
-        }
-    }
+    //        case gameManager.STATE.TALKING:
+    //            ChangeCameraState(MODE.STATIONARY, gm.player.transform);
+    //            break;
+    //    }
+    //}
 
     /**
      * @brief change the state of the camera and assign a target to follow, or a position to warp to if stationary
@@ -217,26 +217,43 @@ public class CameraController : MonoBehaviour
 
                 case MODE.FOLLOWING:
                     cameraBehavior = Camera_Following;
+                    followScript.enabled = true;
                     if (target)
                     {
+                        //Follow target specified
                         followScript.target = target;
+                        followScript.transform.position = gm.player.transform.position;
+
                     }
+                    else
+                        //If not specified, follow the player
+                        followScript.target = gm.player.transform;
+                        followScript.transform.position = gm.player.transform.position;
                     break;
 
                 case MODE.STATIONARY:
+                    Debug.Log("Reached Stationary Case.");
                     cameraBehavior = Camera_Stationary;
+                    followScript.enabled = false;
+                    if (target)
+                    {
+                        followScript.transform.position = target.position;
+                    }
                     break;
 
                 case MODE.PAUSED:
                     cameraBehavior = Camera_Paused;
+                    followScript.enabled = false;
                     break;
 
                 case MODE.COMBAT:
                     cameraBehavior = Camera_Combat;
+                    followScript.enabled = true;
                     break;
 
                 case MODE.CUTSCENE:
                     cameraBehavior = Camera_Cutscene;
+                    followScript.enabled = false;
                     break;
             }
 
@@ -251,21 +268,18 @@ public class CameraController : MonoBehaviour
 
     private void Camera_Combat()
     {
-        throw new NotImplementedException();
     }
 
     private void Camera_Cutscene()
     {
-        throw new NotImplementedException();
     }
 
     private void Camera_Paused()
     {
-        throw new NotImplementedException();
     }
 
     private void Camera_Stationary()
     {
-        throw new NotImplementedException();
+        
     }
 }

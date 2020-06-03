@@ -7,16 +7,18 @@ public class Door : MonoBehaviour
     * Author - Omar Ilyas
     */
     protected gameManager gm;
-    
+
     [Header("Properties")]
     public bool locked = false; //Will this door work?
+
     public string areaID = "Tan Pill's Domain"; //A name describing what location we're entering
     public CameraController.MODE newCameraMode = CameraController.MODE.FOLLOWING; //New Camera state to put the camera into
-    public Transform destinationPoint; //Where to teleport the player
+    public Transform SpawnPoint; //Where to teleport the player
 
     [Header("Optional")]
     public Material skybox; //Skybox to load in when teleporting (optional)
-    public Vector3 cameraSpawnPoint; //New camera position to spawn camera in (only mandatory/applied for MODE.STATIONARY) (optional)
+
+    public Transform cameraSpawnPoint; //New camera position to spawn camera in (only mandatory/applied for MODE.STATIONARY) (optional)
 
     // Start is called before the first frame update
     private void Start()
@@ -49,12 +51,19 @@ public class Door : MonoBehaviour
         //Play canvas animation
         gm.CanvasAnimator.SetTrigger("Door");
         yield return new WaitForSecondsRealtime(1f);
-        gm.player.transform.position = destinationPoint.transform.position;
-        gm.player.transform.rotation = destinationPoint.transform.rotation;
+        gm.player.transform.position = SpawnPoint.transform.position;
+        gm.player.transform.rotation = SpawnPoint.transform.rotation;
 
         //Change skybox
         if (skybox)
+        {
             RenderSettings.skybox = skybox;
+            DynamicGI.UpdateEnvironment();
+        }
+        
+        //Change CameraMode + Location
+        gm.mainCamera.ChangeCameraState(newCameraMode, cameraSpawnPoint);
+
         //Reset Camera Quickly
         gm.mainCamera.QuickResetCamera();
 
@@ -69,8 +78,5 @@ public class Door : MonoBehaviour
 
         //Change music
         //Insert FMOD code here
-
-        //Change camera mode
-        //Insert Camera code here
     }
 }
