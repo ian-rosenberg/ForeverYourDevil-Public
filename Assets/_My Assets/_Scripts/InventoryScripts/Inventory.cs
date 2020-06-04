@@ -45,25 +45,25 @@ public class Inventory : MonoBehaviour
 
         slot.quantity++;
 
-        slot.GetComponentInChildren<TextMeshProUGUI>().text = slot.quantity.ToString();
-
+        slot.SetQuantityText();
     }
 
     public void AddSingleItem(ItemBase item)
     {
         for (int i = 0; i < inventorySlots.Count; i++)
         {
-            InventorySlot slot = inventorySlots[i].GetComponent<InventorySlot>();
-            ItemBase child = inventorySlots[i].GetComponent<InventorySlot>().child;
+            GameObject go = inventorySlots[i];
+            InventorySlot slot = go.GetComponent<InventorySlot>();
+            ItemBase child = slot.child;
 
-            if (child == null)
+            if (child == null || !slot.inUse)
                 continue;
 
             if (child.Name == item.Name)
             {
                 slot.quantity++;
 
-                slot.GetComponentInChildren<TextMeshProUGUI>().text = slot.quantity.ToString();
+                slot.SetQuantityText();
 
                 totalItems++;
                 return;
@@ -75,7 +75,7 @@ public class Inventory : MonoBehaviour
             GameObject go = inventorySlots[i];
             InventorySlot slot = go.GetComponent<InventorySlot>();
 
-            if (!inventorySlots[i].GetComponent<InventorySlot>().inUse)
+            if (!slot.inUse)
             {
                 slot.child = item;
                 slot.img.sprite = Resources.Load<Sprite>(item.Icon);
@@ -83,7 +83,7 @@ public class Inventory : MonoBehaviour
                 slot.quantity++;
                 totalItems++;
 
-                slot.GetComponentInChildren<TextMeshProUGUI>().text = slot.quantity.ToString();
+                slot.SetQuantityText();
 
                 slot.inUse = true;
 

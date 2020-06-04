@@ -7,11 +7,11 @@ public class gameManager : MonoBehaviour
 
     private bool canPause = true; //Allow pausing?
 
-    //public GameObject CameraX, CameraY;
+    #region SOME VARIABLES IN THIS REGION MAY BE REMOVED ONCE COMBAT TRANSITION SYSTEM IS IMPROVED
+
     [Header("Common")]
     public CameraController mainCamera; //Main parent object for camera
 
-    public Animator battleAnim; //Canvas for battle transition
     public PlayerController player; //Reference to player script
 
     [Header("Combat")] //Will most likely move to combat manager
@@ -24,6 +24,8 @@ public class gameManager : MonoBehaviour
     public GameObject normalWorld; //Represents overworld
 
     public GameObject battleWorld; //Represents battlefield
+
+    #endregion VARIABLES IN THIS REGION WILL BE REMOVED ONCE COMBAT TRANSITION SYSTEM IS IMPROVED
 
     [Header("Menus")]
     public GameObject pauseMenu;
@@ -50,7 +52,11 @@ public class gameManager : MonoBehaviour
 
     #endregion Main Variables
 
-    // Start is called before the first frame update
+    private void Awake()
+    {
+        player = PlayerController.Instance;
+        mainCamera = CameraController.Instance;
+    }
     private void Start()
     {
         ChangeState(STATE.TRAVELING);
@@ -76,32 +82,21 @@ public class gameManager : MonoBehaviour
         }
     }
 
-    //Change the state of the game and update all dependant classes's game states
+    /**
+     * @brief Change the state of the game and update all dependant classes's game states
+     */
+
     public void ChangeState(STATE state)
     {
-        if (state != gameState) //Make sure state is not a duplicate
+        if (state != gameState && state != STATE.START) //Make sure state is not a duplicate
         {
-            switch (state)
-            {
-                case STATE.TALKING:
-                    player.currentBehavior = player.Player_Talking;
-                    break;
-
-                case STATE.TRAVELING:
-                    player.currentBehavior = player.Player_Travelling;
-                    break;
-
-                case STATE.COMBAT:
-                    player.currentBehavior = player.Player_Combat;
-                    break;
-
-                case STATE.START:
-                    Debug.LogError("Cannot go back to Start. Don't collect $200.");
-                    return;
-            }
             //If state is valid, change it.
             prevState = gameState;
             gameState = state;
+
+            //Send message to dependant components within GameManager
+            BroadcastMessage("ChangedStateTo", state);
+            Debug.Log("Message Sent?");
         }
     }
 
@@ -125,6 +120,11 @@ public class gameManager : MonoBehaviour
         }
     }
 
+    public void ToggleInventory()
+    {
+        InventoryManagement.Instance.SetSharedInventoryActive(!InventoryManagement.Instance.isActiveAndEnabled);
+    }
+
     public void SetCanPause(bool pause)
     {
         canPause = pause;
@@ -141,7 +141,7 @@ public class gameManager : MonoBehaviour
         enemyCombatTriggerer = enemy;
         PauseGame();
         SetCanPause(false);
-        battleAnim.SetTrigger("Battle");
+        CanvasAnimator.SetTrigger("Battle");
         StartCoroutine(LoadCombatDelay());
     }
 
@@ -171,11 +171,14 @@ public class gameManager : MonoBehaviour
         //Teleport Enemy to the BattleField
         enemyCombatTriggerer.transform.position = player.grid.NearestGridNode(enemySpawn[0].position).worldPosition;
         enemyCombatTriggerer = null;
+
+        //Teleport Camera to the battlefield
+        mainCamera.followScript.transform.position = cameraSpawn.transform.position;
         mainCamera.followScript.SetOffset(cameraSpawn.transform.position);
 
         //Change the GameState to Combat
         ChangeState(STATE.COMBAT);
-        battleAnim.SetTrigger("Loaded");
+        CanvasAnimator.SetTrigger("Loaded");
         SetCanPause(true);
     }
 

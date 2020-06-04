@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Events;
 using Newtonsoft.Json;
 using System;
 
@@ -29,6 +31,16 @@ public class ItemBase
     public string Description;
     public string SFX;
     public StatBonus Bonuses;
+
+    public string StatBonusesToString()
+    {
+        string bonuses = "HP: " + Bonuses.HP +
+            "\t Stamina: " + Bonuses.Stamina + "\n" +
+            "Attack: " + Bonuses.Attack +
+            "\t Tolerance: " + Bonuses.Tolerance;
+
+        return bonuses;
+    }
 }
 
 [System.Serializable]
@@ -58,6 +70,8 @@ public class InventoryManagement : MonoBehaviour
 
     #region Item Master List
     public Items itemList;
+
+    private Dictionary<object, Sprite> itemImages;
     #endregion
 
     private List<GameObject> inventoryObjs;//The inventories in use;
@@ -98,8 +112,10 @@ public class InventoryManagement : MonoBehaviour
     {
         TextAsset json = Resources.Load<TextAsset>(path);
 
+        itemImages = new Dictionary<object, Sprite>();
+
         itemList = new Items();
-        
+
         itemList.Abilities = new List<ItemBase>();
         itemList.Concoctions = new List<ItemBase>();
         itemList.Consumables = new List<ItemBase>();
@@ -107,6 +123,46 @@ public class InventoryManagement : MonoBehaviour
         itemList.Ingredients = new List<ItemBase>();
 
         itemList = JsonConvert.DeserializeObject<Items>(json.text);
+
+        if (itemList.Abilities.Count > 0)
+        {
+            foreach (ItemBase item in itemList.Abilities)
+            {
+                itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
+            } 
+        }
+
+        if (itemList.Concoctions.Count > 0)
+        {
+            foreach (ItemBase item in itemList.Concoctions)
+            {
+                itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
+            }
+        }
+
+        if (itemList.Consumables.Count > 0)
+        {
+            foreach (ItemBase item in itemList.Consumables)
+            {
+                itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
+            }
+        }
+
+        if (itemList.Equipment.Count > 0)
+        {
+            foreach (ItemBase item in itemList.Equipment)
+            {
+                itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
+            }
+        }
+
+        if (itemList.Ingredients.Count > 0)
+        {
+            foreach (ItemBase item in itemList.Ingredients)
+            {
+                itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
+            }
+        }
     }
 
     private void AddInventory()
@@ -125,14 +181,19 @@ public class InventoryManagement : MonoBehaviour
     {
         sharedInventory.SetActive(false);
 
-        foreach(GameObject inventory in inventoryObjs)
+        /*foreach(GameObject inventory in inventoryObjs)
         {
             inventory.SetActive(false);
-        }
+        }*/
     }
 
-    public void SetSharedInventoryActive()
+    public void SetSharedInventoryActive(bool flag)
     {
-        sharedInventory.SetActive(true);
+        sharedInventory.SetActive(flag);
+    }
+
+    public Sprite GetItemImage(ItemBase item)
+    {
+        return itemImages[item];
     }
 }

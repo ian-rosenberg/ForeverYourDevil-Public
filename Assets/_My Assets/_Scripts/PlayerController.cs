@@ -14,6 +14,20 @@ using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour
 {
+    //Singleton creation
+    private static PlayerController instance;
+    public static PlayerController Instance
+    {
+        get
+        {
+            if (instance == null)
+                instance = FindObjectOfType<PlayerController>();
+            return instance;
+        }
+    }
+
+    #region Main Variables
+
     private gameManager gameManager;
 
     //Pathfinding
@@ -57,6 +71,8 @@ public class PlayerController : MonoBehaviour
     public PlayerGUI playerGUI; //Gui menu of the player
     private bool combatMoving; //Is the player moving during combat?
 
+    #endregion Main Variables
+
     // Awake is called before start
     private void Awake()
     {
@@ -69,6 +85,8 @@ public class PlayerController : MonoBehaviour
         path = null;
 
         prevPath = path;
+
+        currentBehavior = Player_Travelling;
     }
 
     // Start is called before the first frame update
@@ -78,6 +96,28 @@ public class PlayerController : MonoBehaviour
         ChangeStamina(stamina, maxStamina);
         ChangeTolerance(tolerance, maxTolerance);
         clickIndicator.SetActive(false);
+    }
+
+    public void ChangedStateTo(gameManager.STATE newState)
+    {
+        switch (newState)
+        {
+            case gameManager.STATE.START:
+                Debug.LogError("Cannot switch GM State to START. This should not happen.");
+                break;
+            case gameManager.STATE.TRAVELING:
+                currentBehavior = Player_Travelling;
+                break;
+            case gameManager.STATE.COMBAT:
+                currentBehavior = Player_Combat;
+                break;
+            case gameManager.STATE.PAUSED:
+                currentBehavior = Player_Paused;
+                break;
+            case gameManager.STATE.TALKING:
+                currentBehavior = Player_Talking;
+                break;
+        }
     }
 
     // Update is called once per frame
@@ -94,11 +134,11 @@ public class PlayerController : MonoBehaviour
         //Set animator (need to change)
         if (!anim.GetBool("Traveling"))
         {
-            anim.SetBool("StayIdle", false);
             anim.SetBool("Traveling", true);
             anim.SetTrigger("TravelingTrigger");
             anim.SetBool("Combat", false);
         }
+        anim.SetBool("StayIdle", false);
 
         //Click to move (w/pathfinding)
         if (Input.GetMouseButtonDown(0)) //If left click (not hold)
@@ -213,6 +253,11 @@ public class PlayerController : MonoBehaviour
         agent.speed = normalSpeed;
         //Set if anim is in run or idle (set by number in blend tree)
         anim.SetFloat("Speed", (agent.velocity.magnitude / agent.speed));
+    }
+
+    public void Player_Paused()
+    {
+        //Disable Colliders, Rigidbodies, etc.
     }
 
     #endregion Behavior Functions
