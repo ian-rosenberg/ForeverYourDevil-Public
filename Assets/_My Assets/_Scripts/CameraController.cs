@@ -10,6 +10,18 @@ public class CameraController : MonoBehaviour
      * Author : Omar Ilyas
      */
 
+    //Singleton creation
+    private static CameraController instance;
+    public static CameraController Instance
+    {
+        get
+        {
+            if (instance == null)
+                instance = FindObjectOfType<CameraController>();
+            return instance;
+        }
+    }
+
     private gameManager gm;
 
     //Camera controls

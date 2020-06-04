@@ -45,7 +45,7 @@ public class FollowObject : MonoBehaviour
         if (z_pos) new_pos += new Vector3(0, 0, target.transform.position.z);
 
         //Apply final vectors
-        transform.position = Vector3.SmoothDamp(transform.position, new_pos, ref dampVelocity, lagTimer);
+        transform.position = Vector3.SmoothDamp(transform.position, new_pos+offset, ref dampVelocity, lagTimer);
 
         //Reset new_pos
         new_pos = Vector3.zero;
