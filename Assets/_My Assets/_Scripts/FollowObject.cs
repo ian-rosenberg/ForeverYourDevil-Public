@@ -25,9 +25,9 @@ public class FollowObject : MonoBehaviour
     public Vector3 offset;
 
     private Vector3 new_pos; /**New position for this obj*/
+    private Vector3 dampVelocity = Vector3.zero;
 
     [Header("DEBUG")]
-    [Range(0f, 1f)]
     public float lagTimer = 0.9f; //Camera lagging. 1 = no lag, 0 = stationary
 
     // Start is called before the first frame update
@@ -45,7 +45,7 @@ public class FollowObject : MonoBehaviour
         if (z_pos) new_pos += new Vector3(0, 0, target.transform.position.z);
 
         //Apply final vectors
-        transform.position = Vector3.SlerpUnclamped(transform.position, new_pos + offset, lagTimer);
+        transform.position = Vector3.SmoothDamp(transform.position, new_pos, ref dampVelocity, lagTimer);
 
         //Reset new_pos
         new_pos = Vector3.zero;

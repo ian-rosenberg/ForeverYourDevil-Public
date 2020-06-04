@@ -13,7 +13,7 @@ public class CameraController : MonoBehaviour
     private gameManager gm;
 
     //Camera controls
-    public enum MODE { START, FOLLOWING, STATIONARY, PAUSED, CUTSCENE, COMBAT };
+    public enum MODE { START, FOLLOWING, STATIONARY, FREE, PAUSED, CUTSCENE, COMBAT };
 
     [Header("Camera Controls")]
     public MODE cameraMode; //The current state of the camera
@@ -24,6 +24,7 @@ public class CameraController : MonoBehaviour
 
     private Action cameraBehavior; //Current Behavior function of the camera
 
+    [Header("Speeds")]
     public float rotateSpeed;
     public float cameraResetSpd;
     private float zoom = 0f;
@@ -37,6 +38,7 @@ public class CameraController : MonoBehaviour
 
     [Header("DEBUG")]
     public Transform enemyLockOn;
+    private Vector3 dampVelocity = Vector3.zero;
 
     private void Awake()
     {
@@ -258,6 +260,10 @@ public class CameraController : MonoBehaviour
                     cameraBehavior = Camera_Cutscene;
                     followScript.enabled = false;
                     break;
+                case MODE.FREE:
+                    cameraBehavior = Camera_Free;
+                    followScript.enabled = false;
+                    break;
             }
 
             //Change State (only if the new state is not a duplicate
@@ -271,6 +277,11 @@ public class CameraController : MonoBehaviour
 
     private void Camera_Combat()
     {
+    }
+
+    private void Camera_Free()
+    {
+
     }
 
     private void Camera_Cutscene()

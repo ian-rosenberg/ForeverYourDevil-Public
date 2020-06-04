@@ -7,7 +7,7 @@ public class gameManager : MonoBehaviour
 
     private bool canPause = true; //Allow pausing?
 
-    #region VARIABLES IN THIS REGION WILL BE REMOVED ONCE COMBAT TRANSITION SYSTEM IS IMPROVED
+    #region SOME VARIABLES IN THIS REGION MAY BE REMOVED ONCE COMBAT TRANSITION SYSTEM IS IMPROVED
 
     [Header("Common")]
     public CameraController mainCamera; //Main parent object for camera
