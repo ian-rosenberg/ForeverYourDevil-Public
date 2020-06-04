@@ -27,7 +27,7 @@ Shader "Sun_Temple/Decal_Puddle" {
 
         sampler2D _Mask, _BumpMap;
         half4 _Color;
-        half _MaskFade, _Roughness, _ScrollSpeed ;
+        half _MaskFade, _Roughness, _ScrollSpeed;
 
         struct Input {
         	half2 uv_MainTex;
