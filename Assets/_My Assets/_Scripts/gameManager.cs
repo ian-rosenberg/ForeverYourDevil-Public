@@ -12,7 +12,6 @@ public class gameManager : MonoBehaviour
     [Header("Common")]
     public CameraController mainCamera; //Main parent object for camera
 
-    public Animator battleAnim; //Canvas for battle transition
     public PlayerController player; //Reference to player script
 
     [Header("Combat")] //Will most likely move to combat manager
@@ -53,7 +52,11 @@ public class gameManager : MonoBehaviour
 
     #endregion Main Variables
 
-    // Start is called before the first frame update
+    private void Awake()
+    {
+        player = PlayerController.Instance;
+        mainCamera = CameraController.Instance;
+    }
     private void Start()
     {
         ChangeState(STATE.TRAVELING);
@@ -138,7 +141,7 @@ public class gameManager : MonoBehaviour
         enemyCombatTriggerer = enemy;
         PauseGame();
         SetCanPause(false);
-        battleAnim.SetTrigger("Battle");
+        CanvasAnimator.SetTrigger("Battle");
         StartCoroutine(LoadCombatDelay());
     }
 
@@ -168,11 +171,14 @@ public class gameManager : MonoBehaviour
         //Teleport Enemy to the BattleField
         enemyCombatTriggerer.transform.position = player.grid.NearestGridNode(enemySpawn[0].position).worldPosition;
         enemyCombatTriggerer = null;
+
+        //Teleport Camera to the battlefield
+        mainCamera.followScript.transform.position = cameraSpawn.transform.position;
         mainCamera.followScript.SetOffset(cameraSpawn.transform.position);
 
         //Change the GameState to Combat
         ChangeState(STATE.COMBAT);
-        battleAnim.SetTrigger("Loaded");
+        CanvasAnimator.SetTrigger("Loaded");
         SetCanPause(true);
     }
 

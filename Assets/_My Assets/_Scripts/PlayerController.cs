@@ -14,6 +14,18 @@ using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour
 {
+    //Singleton creation
+    private static PlayerController instance;
+    public static PlayerController Instance
+    {
+        get
+        {
+            if (instance == null)
+                instance = FindObjectOfType<PlayerController>();
+            return instance;
+        }
+    }
+
     #region Main Variables
 
     private gameManager gameManager;
