@@ -1,0 +1,1210 @@
+fileFormatVersion: 2
+guid: fc5183b293173594194f32cfc7733818
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -7284314715348846304
+    second: sheetpennytestv2_0
+  - first:
+      213: 1211930927823983714
+    second: sheetpennytestv2_1
+  - first:
+      213: 1151631411551122873
+    second: sheetpennytestv2_2
+  - first:
+      213: 6202830556715894076
+    second: sheetpennytestv2_3
+  - first:
+      213: -5627114097482522803
+    second: sheetpennytestv2_4
+  - first:
+      213: -7045543616530894373
+    second: sheetpennytestv2_5
+  - first:
+      213: 7671977659065636437
+    second: sheetpennytestv2_6
+  - first:
+      213: 6786215075017430788
+    second: sheetpennytestv2_7
+  - first:
+      213: 5570700828020449481
+    second: sheetpennytestv2_8
+  - first:
+      213: 6755832798370660250
+    second: sheetpennytestv2_9
+  - first:
+      213: 5038730998678648435
+    second: sheetpennytestv2_10
+  - first:
+      213: 3310905661786105667
+    second: sheetpennytestv2_11
+  - first:
+      213: -9119206037274662678
+    second: sheetpennytestv2_12
+  - first:
+      213: 8885752725949513577
+    second: sheetpennytestv2_13
+  - first:
+      213: 2934412718520988448
+    second: sheetpennytestv2_14
+  - first:
+      213: -8505237100863820634
+    second: sheetpennytestv2_15
+  - first:
+      213: 8131423331837925510
+    second: sheetpennytestv2_16
+  - first:
+      213: -1442092713257302457
+    second: sheetpennytestv2_17
+  - first:
+      213: -960546981527290529
+    second: sheetpennytestv2_18
+  - first:
+      213: -1390155308203745044
+    second: sheetpennytestv2_19
+  - first:
+      213: -3345811093957149223
+    second: sheetpennytestv2_20
+  - first:
+      213: 833269453387148861
+    second: sheetpennytestv2_21
+  - first:
+      213: -2863770015973260966
+    second: sheetpennytestv2_22
+  - first:
+      213: 1990481092694898151
+    second: sheetpennytestv2_23
+  - first:
+      213: 2591094191715605416
+    second: sheetpennytestv2_24
+  - first:
+      213: -4197467810621418538
+    second: sheetpennytestv2_25
+  - first:
+      213: -9008001274757080286
+    second: sheetpennytestv2_26
+  - first:
+      213: -5199222512519961974
+    second: sheetpennytestv2_27
+  - first:
+      213: 616915436406291869
+    second: sheetpennytestv2_28
+  - first:
+      213: 7640339819315424463
+    second: sheetpennytestv2_29
+  - first:
+      213: 8002585431273571478
+    second: sheetpennytestv2_30
+  - first:
+      213: 4964208787575651510
+    second: sheetpennytestv2_31
+  - first:
+      213: -5427919312892357479
+    second: sheetpennytestv2_32
+  - first:
+      213: -7654579551119341316
+    second: sheetpennytestv2_33
+  - first:
+      213: -1294295968314824670
+    second: sheetpennytestv2_34
+  - first:
+      213: 2555974632623117169
+    second: sheetpennytestv2_35
+  - first:
+      213: -587530407936241883
+    second: sheetpennytestv2_36
+  - first:
+      213: 31480635025758116
+    second: sheetpennytestv2_37
+  - first:
+      213: 5985637647336468928
+    second: sheetpennytestv2_38
+  - first:
+      213: -8625311230865195148
+    second: sheetpennytestv2_39
+  - first:
+      213: 4300145245945336662
+    second: sheetpennytestv2_40
+  - first:
+      213: 1495767681720214949
+    second: sheetpennytestv2_41
+  - first:
+      213: -6240075025313771471
+    second: sheetpennytestv2_42
+  - first:
+      213: -4424289052701221051
+    second: sheetpennytestv2_43
+  - first:
+      213: -8055918944419739630
+    second: sheetpennytestv2_44
+  - first:
+      213: -902496780696453462
+    second: sheetpennytestv2_45
+  - first:
+      213: -1576054390831807792
+    second: sheetpennytestv2_46
+  - first:
+      213: -8885407019790251784
+    second: sheetpennytestv2_47
+  - first:
+      213: -2527291328926888200
+    second: sheetpennytestv2_48
+  - first:
+      213: -2928640189636302866
+    second: sheetpennytestv2_49
+  - first:
+      213: -8629526311950635224
+    second: sheetpennytestv2_50
+  - first:
+      213: 6023957473153445801
+    second: sheetpennytestv2_51
+  - first:
+      213: 2737204052021967370
+    second: sheetpennytestv2_52
+  - first:
+      213: -4182563002433948050
+    second: sheetpennytestv2_45
+  externalObjects: {}
+  serializedVersion: 10
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: -1
+    aniso: -1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: -1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 760
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 0
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: sheetpennytestv2_0
+      rect:
+        serializedVersion: 2
+        x: 140
+        y: 5837
+        width: 364
+        height: 721
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0293b7f3c5ae8ea90800000000000000
+      internalID: -7284314715348846304
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_1
+      rect:
+        serializedVersion: 2
+        x: 826
+        y: 5837
+        width: 364
+        height: 721
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 264124df1c4a1d010800000000000000
+      internalID: 1211930927823983714
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_2
+      rect:
+        serializedVersion: 2
+        x: 1512
+        y: 5837
+        width: 364
+        height: 721
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9b5bfadcaaa6bff00800000000000000
+      internalID: 1151631411551122873
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_3
+      rect:
+        serializedVersion: 2
+        x: 2201
+        y: 5837
+        width: 453
+        height: 721
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c354dfef681e41650800000000000000
+      internalID: 6202830556715894076
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_4
+      rect:
+        serializedVersion: 2
+        x: 147
+        y: 5074
+        width: 447
+        height: 718
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d4f16f4ca8978e1b0800000000000000
+      internalID: -5627114097482522803
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_5
+      rect:
+        serializedVersion: 2
+        x: 601
+        y: 5714
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd1b72fd863393e90800000000000000
+      internalID: -7045543616530894373
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_6
+      rect:
+        serializedVersion: 2
+        x: 823
+        y: 5074
+        width: 517
+        height: 721
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 55617557807587a60800000000000000
+      internalID: 7671977659065636437
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_7
+      rect:
+        serializedVersion: 2
+        x: 1499
+        y: 5074
+        width: 541
+        height: 724
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 40790d3e7aa7d2e50800000000000000
+      internalID: 6786215075017430788
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_8
+      rect:
+        serializedVersion: 2
+        x: 2185
+        y: 5074
+        width: 541
+        height: 724
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9c0222463ea1f4d40800000000000000
+      internalID: 5570700828020449481
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_9
+      rect:
+        serializedVersion: 2
+        x: 2874
+        y: 5074
+        width: 538
+        height: 724
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a9ff0dcd22a81cd50800000000000000
+      internalID: 6755832798370660250
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_10
+      rect:
+        serializedVersion: 2
+        x: 3560
+        y: 5074
+        width: 541
+        height: 724
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3767dfe952b2de540800000000000000
+      internalID: 5038730998678648435
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_11
+      rect:
+        serializedVersion: 2
+        x: 153
+        y: 4317
+        width: 357
+        height: 740
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 347279f4823b2fd20800000000000000
+      internalID: 3310905661786105667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_12
+      rect:
+        serializedVersion: 2
+        x: 842
+        y: 4317
+        width: 358
+        height: 734
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ae865aabc62127180800000000000000
+      internalID: -9119206037274662678
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_13
+      rect:
+        serializedVersion: 2
+        x: 1525
+        y: 4317
+        width: 360
+        height: 731
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 96ffd288609805b70800000000000000
+      internalID: 8885752725949513577
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_14
+      rect:
+        serializedVersion: 2
+        x: 2211
+        y: 4317
+        width: 361
+        height: 735
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 023f4dff1d029b820800000000000000
+      internalID: 2934412718520988448
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_15
+      rect:
+        serializedVersion: 2
+        x: 153
+        y: 3557
+        width: 357
+        height: 740
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ace9806be357f980800000000000000
+      internalID: -8505237100863820634
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_16
+      rect:
+        serializedVersion: 2
+        x: 842
+        y: 3557
+        width: 358
+        height: 737
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 688d58c207e98d070800000000000000
+      internalID: 8131423331837925510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_17
+      rect:
+        serializedVersion: 2
+        x: 1525
+        y: 3557
+        width: 361
+        height: 730
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7468e1d5158acfbe0800000000000000
+      internalID: -1442092713257302457
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_18
+      rect:
+        serializedVersion: 2
+        x: 2211
+        y: 3557
+        width: 364
+        height: 737
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f5dfdf70c937ba2f0800000000000000
+      internalID: -960546981527290529
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_19
+      rect:
+        serializedVersion: 2
+        x: 2900
+        y: 3557
+        width: 360
+        height: 740
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ce064efcc1d25bce0800000000000000
+      internalID: -1390155308203745044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_20
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 2800
+        width: 377
+        height: 730
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9dd7f13798a4191d0800000000000000
+      internalID: -3345811093957149223
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_21
+      rect:
+        serializedVersion: 2
+        x: 829
+        y: 2800
+        width: 380
+        height: 730
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d3e235b272e509b00800000000000000
+      internalID: 833269453387148861
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_22
+      rect:
+        serializedVersion: 2
+        x: 1516
+        y: 2800
+        width: 379
+        height: 730
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a51cf77e758d148d0800000000000000
+      internalID: -2863770015973260966
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_23
+      rect:
+        serializedVersion: 2
+        x: 2205
+        y: 2800
+        width: 376
+        height: 730
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7e5f53ef10c9f9b10800000000000000
+      internalID: 1990481092694898151
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_24
+      rect:
+        serializedVersion: 2
+        x: 2891
+        y: 2800
+        width: 378
+        height: 730
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ab59cc607a65f320800000000000000
+      internalID: 2591094191715605416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_25
+      rect:
+        serializedVersion: 2
+        x: 3577
+        y: 2800
+        width: 379
+        height: 730
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6d316cfe3499fb5c0800000000000000
+      internalID: -4197467810621418538
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_26
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 2040
+        width: 377
+        height: 728
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 22b96d921962df280800000000000000
+      internalID: -9008001274757080286
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_27
+      rect:
+        serializedVersion: 2
+        x: 829
+        y: 2040
+        width: 377
+        height: 728
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a82a809eba6a8d7b0800000000000000
+      internalID: -5199222512519961974
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_28
+      rect:
+        serializedVersion: 2
+        x: 1515
+        y: 2040
+        width: 380
+        height: 728
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d9db3732259bf8800800000000000000
+      internalID: 616915436406291869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_29
+      rect:
+        serializedVersion: 2
+        x: 2205
+        y: 2040
+        width: 376
+        height: 728
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fcc619dd590f70a60800000000000000
+      internalID: 7640339819315424463
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_30
+      rect:
+        serializedVersion: 2
+        x: 2890
+        y: 2040
+        width: 377
+        height: 728
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 69407cbdc05ee0f60800000000000000
+      internalID: 8002585431273571478
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_31
+      rect:
+        serializedVersion: 2
+        x: 3577
+        y: 2040
+        width: 379
+        height: 728
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6bcb15e379964e440800000000000000
+      internalID: 4964208787575651510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_32
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 1280
+        width: 415
+        height: 720
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 994919da4282ca4b0800000000000000
+      internalID: -5427919312892357479
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_33
+      rect:
+        serializedVersion: 2
+        x: 791
+        y: 1280
+        width: 412
+        height: 720
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cf80096347875c590800000000000000
+      internalID: -7654579551119341316
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_34
+      rect:
+        serializedVersion: 2
+        x: 1480
+        y: 1280
+        width: 412
+        height: 721
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 228ef5e9cacb90ee0800000000000000
+      internalID: -1294295968314824670
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_35
+      rect:
+        serializedVersion: 2
+        x: 2166
+        y: 1280
+        width: 415
+        height: 720
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1731960e265a87320800000000000000
+      internalID: 2555974632623117169
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_36
+      rect:
+        serializedVersion: 2
+        x: 2852
+        y: 1280
+        width: 415
+        height: 720
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 52f4834f43ca8d7f0800000000000000
+      internalID: -587530407936241883
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_37
+      rect:
+        serializedVersion: 2
+        x: 3541
+        y: 1280
+        width: 412
+        height: 720
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4a793048877df6000800000000000000
+      internalID: 31480635025758116
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_38
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 514
+        width: 434
+        height: 727
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c1f1bb1ab1411350800000000000000
+      internalID: 5985637647336468928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_39
+      rect:
+        serializedVersion: 2
+        x: 791
+        y: 514
+        width: 466
+        height: 727
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 47fb717622dbc4880800000000000000
+      internalID: -8625311230865195148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_40
+      rect:
+        serializedVersion: 2
+        x: 1480
+        y: 514
+        width: 525
+        height: 727
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 653182b615f2dab30800000000000000
+      internalID: 4300145245945336662
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_41
+      rect:
+        serializedVersion: 2
+        x: 2053
+        y: 514
+        width: 16
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5a5617718c802c410800000000000000
+      internalID: 1495767681720214949
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_42
+      rect:
+        serializedVersion: 2
+        x: 2166
+        y: 514
+        width: 528
+        height: 727
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 130d26863dcc669a0800000000000000
+      internalID: -6240075025313771471
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_43
+      rect:
+        serializedVersion: 2
+        x: 2852
+        y: 514
+        width: 528
+        height: 727
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 54f18162c84c992c0800000000000000
+      internalID: -4424289052701221051
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: sheetpennytestv2_44
+      rect:
+        serializedVersion: 2
+        x: 3539
+        y: 514
+        width: 527
+        height: 727
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2188582f660a33090800000000000000
+      internalID: -8055918944419739630
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: cec36749f20ff1f499c5202a2aca4eaf
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

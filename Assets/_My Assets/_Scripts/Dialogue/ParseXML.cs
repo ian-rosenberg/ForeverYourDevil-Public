@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using FMOD;
 using FMODUnity;
-using UnityEditor.Animations;
 using System.Linq;
 using System;
 
@@ -57,6 +56,12 @@ public class DialogueLine
         MakeHappy,
         MakeMad,
         MakeSad,
+        MakeSadTalk,
+        MakeAmazed,
+        MakeAmazedTalk,
+        MakeConfused,
+        MakeConfusedTalk,
+        MakeTalking,
         MakeSurprised, 
         NONE
     };                                          
@@ -66,7 +71,7 @@ public class DialogueLine
 
     public string Content { get; set; }           /**Dialogue text displayed in the DialogueBox*/
 
-    public AnimatorController[] AC_Array;         /**Determines characters displayed, [0] is left, [1] is right*/
+    public RuntimeAnimatorController[] AC_Array;  /**Determines characters displayed, [0] is left, [1] is right*/
     public Emotion[] Emotion_Array;               /**Determines the animations played for each character, [0] left and [1] right*/
 
     public OrderedDictionary Options;             /**Options labels and the conversation id they go to when selected*/
@@ -92,7 +97,7 @@ public class DialogueLine
      * @param ac_array Array of AnimatorControllers to use
      * @param emotion_array Array of Emotions to display
      */
-    public DialogueLine(string name, string content, AnimatorController[] ac_array, Emotion[] emotion_array)
+    public DialogueLine(string name, string content, RuntimeAnimatorController[] ac_array, Emotion[] emotion_array)
     {
         Name = name;
         Content = content;
@@ -124,7 +129,7 @@ public class DialogueLine
      * @param ac_array Array of AnimatorControllers to use
      * @param emotion_array Array of Emotions to display
      */
-    public DialogueLine(string name, string content, AnimatorController[] ac_array, Emotion[] emotion_array, OrderedDictionary options)
+    public DialogueLine(string name, string content, RuntimeAnimatorController[] ac_array, Emotion[] emotion_array, OrderedDictionary options)
     {
         Name = name;
         Content = content;
@@ -235,14 +240,14 @@ public class ParseXML : MonoBehaviour
                 foreach (XmlNode line in lineList)
                 {
                     // create new animation value arrays (AnimatorControllers and Emotions)
-                    AnimatorController[] ac_array = new AnimatorController[2] { null, null };
+                    RuntimeAnimatorController[] ac_array = new RuntimeAnimatorController[2] { null, null };
                     DialogueLine.Emotion[] emotion_array = new DialogueLine.Emotion[2] { DialogueLine.Emotion.NONE, DialogueLine.Emotion.NONE };
 
                     // set default animation values as a starting point if no previous lines of dialogue
                     if (!dialogueList.Any())
                     {
-                        ac_array[0] = Resources.Load<AnimatorController>("Animations/Default_AC");
-                        ac_array[1] = Resources.Load<AnimatorController>("Animations/Default_AC");
+                        ac_array[0] = Resources.Load<RuntimeAnimatorController>("Animations/Default_AC");
+                        ac_array[1] = Resources.Load<RuntimeAnimatorController>("Animations/Default_AC");
 
                         emotion_array[0] = DialogueLine.Emotion.MakeDefault;
                         emotion_array[1] = DialogueLine.Emotion.MakeDefault;
@@ -378,12 +383,12 @@ public class ParseXML : MonoBehaviour
      * @param emotion_array The array of Emotions. If none are specified, the last given are used.
      * @param line The line from the XML script to get sprites from.
      */
-    void GetAnimations(AnimatorController[] ac_array, DialogueLine.Emotion[] emotion_array, XmlNode line)
+    void GetAnimations(RuntimeAnimatorController[] ac_array, DialogueLine.Emotion[] emotion_array, XmlNode line)
     {
         // if AC_L
         if (HasAttributes(line, "AC_L"))
         {
-            ac_array[0] = Resources.Load<AnimatorController>("Animations/" + line.Attributes["AC_L"].Value);
+            ac_array[0] = Resources.Load<RuntimeAnimatorController>("Animations/" + line.Attributes["AC_L"].Value);
 
             if (ac_array[0])
             {
@@ -398,7 +403,7 @@ public class ParseXML : MonoBehaviour
         // if AC_R
         if (HasAttributes(line, "AC_R"))
         {
-            ac_array[1] = Resources.Load<AnimatorController>("Animations/" + line.Attributes["AC_R"].Value);
+            ac_array[1] = Resources.Load<RuntimeAnimatorController>("Animations/" + line.Attributes["AC_R"].Value);
 
             if (ac_array[1])
             {
