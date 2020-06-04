@@ -7,7 +7,8 @@ public class gameManager : MonoBehaviour
 
     private bool canPause = true; //Allow pausing?
 
-    //public GameObject CameraX, CameraY;
+    #region SOME VARIABLES IN THIS REGION MAY BE REMOVED ONCE COMBAT TRANSITION SYSTEM IS IMPROVED
+
     [Header("Common")]
     public CameraController mainCamera; //Main parent object for camera
 
@@ -24,6 +25,8 @@ public class gameManager : MonoBehaviour
     public GameObject normalWorld; //Represents overworld
 
     public GameObject battleWorld; //Represents battlefield
+
+    #endregion VARIABLES IN THIS REGION WILL BE REMOVED ONCE COMBAT TRANSITION SYSTEM IS IMPROVED
 
     [Header("Menus")]
     public GameObject pauseMenu;
@@ -76,32 +79,21 @@ public class gameManager : MonoBehaviour
         }
     }
 
-    //Change the state of the game and update all dependant classes's game states
+    /**
+     * @brief Change the state of the game and update all dependant classes's game states
+     */
+
     public void ChangeState(STATE state)
     {
-        if (state != gameState) //Make sure state is not a duplicate
+        if (state != gameState && state != STATE.START) //Make sure state is not a duplicate
         {
-            switch (state)
-            {
-                case STATE.TALKING:
-                    player.currentBehavior = player.Player_Talking;
-                    break;
-
-                case STATE.TRAVELING:
-                    player.currentBehavior = player.Player_Travelling;
-                    break;
-
-                case STATE.COMBAT:
-                    player.currentBehavior = player.Player_Combat;
-                    break;
-
-                case STATE.START:
-                    Debug.LogError("Cannot go back to Start. Don't collect $200.");
-                    return;
-            }
             //If state is valid, change it.
             prevState = gameState;
             gameState = state;
+
+            //Send message to dependant components within GameManager
+            BroadcastMessage("ChangedStateTo", state);
+            Debug.Log("Message Sent?");
         }
     }
 
