@@ -3,7 +3,7 @@
 Shader "Custom/Blur Effect" {
 	Properties{
 		_Color("Main Color", Color) = (1,1,1,1)
-		_BumpAmt("Distortion", Range(0,128)) = 10
+		_BumpAmt("Distortion", Range(0,128)) = 128
 		_MainTex("Tint Color (RGB)", 2D) = "white" {}
 		_BumpMap("Normalmap", 2D) = "bump" {}
 		_Size("Size", Range(0, 20)) = 1

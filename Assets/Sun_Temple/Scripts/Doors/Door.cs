@@ -33,7 +33,7 @@ namespace SunTemple
 
 
         void Start(){
-            StartRotation = transform.localEulerAngles ;
+            StartRotation = transform.localEulerAngles;
 			DoorCollider = GetComponent<BoxCollider> ();
 
 			if (!DoorCollider) {
