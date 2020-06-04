@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+targetNamespace="https://www.w3schools.com"
+xmlns="https://www.w3schools.com"
+elementFormDefault="qualified">
+
+  <!--
+    Conversation Hierarchy
+    Title of xml script MUST be the same name as the level/scene name
+      <game>
+        <conversation id="_____">
+          <character name="_____" (optional)>
+            <line sprite1="____" (optional) sprite2="____" (optional)>________________</line>
+            <option>
+              <choice id="____">________</choice>
+            </option>
+          </character>
+        </conversation>
+      </game> //END
+  -->
+  
+  <!--Root node-->
+  <xs:element name = "game">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name = "conversation" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name = "character" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:choice minOccurs="0" maxOccurs="unbounded">
+                    <xs:element name = "line">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute name="sprite1" type="xs:string" use="optional"/>
+                            <xs:attribute name="sprite2" type="xs:string" use="optional"/>
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name = "options">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name = "choice" minOccurs="1" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                  <xs:attribute name="id" type="xs:string" use="required"/>
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:choice>
+                  <xs:attribute name="name" type="xs:string"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:string" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
