@@ -9,6 +9,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
 {
     private bool selected;
 
+    public ItemDetails detailsObj;
     public ItemBase child;
     public bool inUse;
     public int quantity;
@@ -25,6 +26,9 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
         selected = false;
         img = GetComponent<Image>();
         ownerInventory = this.transform.parent.gameObject;
+
+        GameObject details = GameObject.FindGameObjectWithTag("ItemDetails");  
+        detailsObj = details.GetComponentInChildren<ItemDetails>();
     }
 
     public void OnPointerClick(PointerEventData pointerEventData)
@@ -46,6 +50,8 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
         GetComponentInChildren<HighlightSelf>().Highlight(Color.green);
 
         selected = true;
+
+        detailsObj.SetDetails(child);
     }
 
     public void UnSelect()
