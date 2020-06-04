@@ -2,25 +2,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.AI;
-using TMPro;
 
 /**
  * PlayerController - Script for player movement out-ofcombat and within combat
- * 
+ *
  * Authors - Omar Ilyas, Ian Rosenberg
- * 
+ *
  * Tutorials used: Brackys - Navmesh Tutorials - https://www.youtube.com/watch?v=CHV1ymlw-P8&t=11s
  */
 
 public class PlayerController : MonoBehaviour
 {
+    #region Main Variables
+
     private gameManager gameManager;
 
     //Pathfinding
     [Header("AStar Pathfinding")]
     public AStarNode combatPosition; // node representing the grid position of the player
+
     public Vector3 nodeBattlePos; // node position of player on battlefield
     public CharacterPathfinding pathfinder;//pathfinding script
 
@@ -34,32 +35,37 @@ public class PlayerController : MonoBehaviour
 
     [Header("Player")]
     public Animator anim; // animation controller for player
+
     public Action currentBehavior; //Function pointer for player behavior (changed by gameManager)
 
     [Tooltip("Specify what layer(s) to use in raycast")]
     public LayerMask layerMask;
 
-    NavMeshAgent agent; /**Player Agent Component for pathfinding movement*/
+    public NavMeshAgent agent; /**Player Agent Component for pathfinding movement*/
     public float normalSpeed, sprintSpeed;
-    //public Rigidbody rb;
+    public Rigidbody rb;
 
     public GameObject clickIndicator; //Has 2 particle effects, one for normal and one for turning off.
     public Animator clickIndicAnim;
 
     [Header("Combat")]
     public int health = 100; //Current Health of the player; 0 kills player
+
     public int maxHealth = 100; //Max Health the player is allowed to heal to
     public int tolerance = 25; //Current Tolerance. Max will kill the player
     public int maxTolerance = 100; //Max Tolerance before player is killed
     public int stamina = 6; // Current Stamina, allows player to do actions
     public int maxStamina = 6; //Max stamina player is allowed to have
     public PlayerGUI playerGUI; //Gui menu of the player
-    bool combatMoving; //Is the player moving during combat?
+    private bool combatMoving; //Is the player moving during combat?
+
+    #endregion Main Variables
 
     // Awake is called before start
-    void Awake()
+    private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        rb = GetComponent<Rigidbody>();
         gameManager = gameManager.Instance;
 
         selected = null;
@@ -67,10 +73,12 @@ public class PlayerController : MonoBehaviour
         path = null;
 
         prevPath = path;
+
+        currentBehavior = Player_Travelling;
     }
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         ChangeHealth(health, maxHealth);
         ChangeStamina(stamina, maxStamina);
@@ -78,14 +86,37 @@ public class PlayerController : MonoBehaviour
         clickIndicator.SetActive(false);
     }
 
+    public void ChangedStateTo(gameManager.STATE newState)
+    {
+        switch (newState)
+        {
+            case gameManager.STATE.START:
+                Debug.LogError("Cannot switch GM State to START. This should not happen.");
+                break;
+            case gameManager.STATE.TRAVELING:
+                currentBehavior = Player_Travelling;
+                break;
+            case gameManager.STATE.COMBAT:
+                currentBehavior = Player_Combat;
+                break;
+            case gameManager.STATE.PAUSED:
+                currentBehavior = Player_Paused;
+                break;
+            case gameManager.STATE.TALKING:
+                currentBehavior = Player_Talking;
+                break;
+        }
+    }
+
     // Update is called once per frame
-    void FixedUpdate()
+    private void Update()
     {
         //Apply current behavior
         currentBehavior();
     }
 
     #region Behavior Functions
+
     public void Player_Travelling()
     {
         //Set animator (need to change)
@@ -95,6 +126,7 @@ public class PlayerController : MonoBehaviour
             anim.SetTrigger("TravelingTrigger");
             anim.SetBool("Combat", false);
         }
+        anim.SetBool("StayIdle", false);
 
         //Click to move (w/pathfinding)
         if (Input.GetMouseButtonDown(0)) //If left click (not hold)
@@ -118,7 +150,6 @@ public class PlayerController : MonoBehaviour
                     agent.SetDestination(hit.point);
                 }
             }
-
         }
         //Right click to sprint
         if (Input.GetButton("Sprint"))
@@ -144,24 +175,24 @@ public class PlayerController : MonoBehaviour
             clickIndicator.SetActive(false);
         }
     }
+
     public void Player_Talking()
     {
         agent.ResetPath(); //Resets directions to agent to stop it
+        anim.SetBool("StayIdle", true);
     }
+
     public void Player_Combat()
     {
         if (!anim.GetBool("Combat"))
         {
+            anim.SetBool("StayIdle", false);
             anim.SetBool("Traveling", false);
             anim.SetTrigger("CombatTrigger");
             anim.SetBool("Combat", true);
         }
         //Click to move (w/pathfinding)
-        Debug.Log("player turn");
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            print("space key was pressed");
-        }
+
         //Determine if walkable
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); //create ray obj from camera to click point
         RaycastHit hit;
@@ -203,7 +234,6 @@ public class PlayerController : MonoBehaviour
                         combatMoving = true;
                         StartCoroutine(CombatMove());
                     }
-
                 }
             }
         }
@@ -211,34 +241,46 @@ public class PlayerController : MonoBehaviour
         agent.speed = normalSpeed;
         //Set if anim is in run or idle (set by number in blend tree)
         anim.SetFloat("Speed", (agent.velocity.magnitude / agent.speed));
-
     }
-    #endregion
+
+    public void Player_Paused()
+    {
+        //Disable Colliders, Rigidbodies, etc.
+    }
+
+    #endregion Behavior Functions
 
     #region Player Stats
-    public void ChangeHealth(int newHealth, int newMaxHealth) {
+
+    public void ChangeHealth(int newHealth, int newMaxHealth)
+    {
         health = newHealth;
         maxHealth = newMaxHealth;
         playerGUI.ChangeHealth(newHealth, newMaxHealth);
     }
-    public void ChangeTolerance(int newTolerance, int newMaxTolerance) {
+
+    public void ChangeTolerance(int newTolerance, int newMaxTolerance)
+    {
         tolerance = newTolerance;
         maxTolerance = newMaxTolerance;
         playerGUI.ChangeTolerance(newTolerance, newMaxTolerance);
     }
-    public void ChangeStamina(int newStamina, int newMaxStamina) {
+
+    public void ChangeStamina(int newStamina, int newMaxStamina)
+    {
         stamina = newStamina;
         maxStamina = newMaxStamina;
         playerGUI.ChangeStamina(newStamina, newMaxStamina);
     }
-    #endregion
+
+    #endregion Player Stats
 
     public bool ToggleAutoMove()
     {
         return !autoMove;
     }
 
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("ClickIndicator"))
         {
@@ -248,12 +290,11 @@ public class PlayerController : MonoBehaviour
     }
 
     //Turn Click Indicator off (called by anim event)
-    IEnumerator ClickOff()
+    private IEnumerator ClickOff()
     {
         clickIndicAnim.SetTrigger("Off");
         yield return new WaitForSeconds(0.25f);
         //clickIndicator.SetActive(false);
-
     }
 
     public Vector3 GetDefaultGridSpawn()
@@ -279,8 +320,6 @@ public class PlayerController : MonoBehaviour
             //Move along path with NavMesh
             while (i < lockedPath.Count)
             {
-
-
                 agent.SetDestination(lockedPath[i].worldPosition);
                 yield return null;
                 //If reached destination node (with some forgiveness)
@@ -293,7 +332,7 @@ public class PlayerController : MonoBehaviour
                     Debug.Log("Arrived at node: " + i);
                     i++; //Go to next node
                     stamina--; //Subtract stamina and text update
-                    
+
                     //agent.ResetPath();
                 }
             }

@@ -1,99 +1,139 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    /**
+     * Camera Controller - Manager for game's camera. Can be controlled by player, cutscene, enemy, or nothing.
+     *
+     * Author : Omar Ilyas
+     */
+
+    private gameManager gm;
+
     //Camera controls
+    public enum MODE { START, FOLLOWING, STATIONARY, FREE, PAUSED, CUTSCENE, COMBAT };
+
+    [Header("Camera Controls")]
+    public MODE cameraMode; //The current state of the camera
+
+    private MODE prevMode; //The previous mode that the camera was in.
     public FollowObject followScript;
     public Transform FollowY, FollowX, CameraResetPoint;
-    GameObject player;
 
+    private Action cameraBehavior; //Current Behavior function of the camera
+
+    [Header("Speeds")]
     public float rotateSpeed;
     public float cameraResetSpd;
-    float zoom = 0f;
+    private float zoom = 0f;
 
-    Quaternion orig_rot_x, orig_rot_y;
-    float mouseX, mouseY;
+    private Quaternion orig_rot_x, orig_rot_y;
+    private float mouseX, mouseY;
 
-    bool isCameraReseting;
+    private bool isCameraReseting;
 
     public GameObject ResetCameraNotification;
 
-    // Start is called before the first frame update
-    void Awake()
+    [Header("DEBUG")]
+    public Transform enemyLockOn;
+    private Vector3 dampVelocity = Vector3.zero;
+
+    private void Awake()
     {
-        player = followScript.obj;
+        gm = gameManager.Instance;
     }
+
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         InitializeCamera();
         ResetCameraNotification.SetActive(false);
     }
 
     // Update is called once per frame
-    void Update()
+    private void LateUpdate()
     {
+        //Run chosen behavior function
+        cameraBehavior();
+    }
 
-        //TRAVELING CAMERA
-        if (Input.GetButtonDown("Camera Reset") && !isCameraReseting)
+    public void Camera_Following()
+    {
+        if (gm.gameState != gameManager.STATE.PAUSED)
         {
-            StartCoroutine(ResetCamera());
-        }
-
-        //Move camera with right click and hold
-        if (Input.GetMouseButton(1) && !isCameraReseting) //If hold right click
-        {
-            ResetCameraNotification.SetActive(true);
-            mouseX += Input.GetAxis("Mouse X") * rotateSpeed;
-            mouseY += Input.GetAxis("Mouse Y") * rotateSpeed;
-
-            mouseY = Mathf.Clamp(mouseY, -30, 45);
-
-            FollowX.rotation = Quaternion.Euler(0f, mouseX, 0f);
-            FollowY.localRotation = Quaternion.Euler(-mouseY, 0f, 0f);
-
-            //transform.RotateAround(player.transform.position, Vector3.up, mouseX);
-            // FollowY.RotateAround(player.transform.position, transform.right, mouseY);
-        }
-
-        //Zoom in and out with mouse wheel.
-        if (Input.GetAxis("Mouse ScrollWheel") < 0) // back
-        {
-            ResetCameraNotification.SetActive(true);
-            if (zoom >= -.8f)
+            //Camera Reset
+            if (Input.GetButtonDown("Camera Reset") && !isCameraReseting)
             {
-                zoom += Input.GetAxisRaw("Mouse ScrollWheel");
-                transform.position -= transform.forward;
+                StartCoroutine(ResetCamera());
+            }
+
+            //Move camera with right click and hold
+            if (Input.GetMouseButton(1) && !isCameraReseting) //If hold right click
+            {
+                ResetCameraNotification.SetActive(true);
+                mouseX += Input.GetAxis("Mouse X") * rotateSpeed;
+                mouseY += Input.GetAxis("Mouse Y") * rotateSpeed;
+
+                mouseY = Mathf.Clamp(mouseY, -30, 45);
+
+                FollowX.rotation = Quaternion.Euler(0f, mouseX, 0f);
+                FollowY.localRotation = Quaternion.Euler(-mouseY, 0f, 0f);
+            }
+
+            //Zoom in and out with mouse wheel.
+            if (Input.GetAxis("Mouse ScrollWheel") < 0) // back
+            {
+                ResetCameraNotification.SetActive(true);
+                if (zoom >= -.8f)
+                {
+                    zoom += Input.GetAxisRaw("Mouse ScrollWheel");
+                    transform.position -= transform.forward;
+                }
+            }
+            if (Input.GetAxis("Mouse ScrollWheel") > 0) // forward
+            {
+                if (zoom <= .8f)
+                {
+                    zoom += Input.GetAxisRaw("Mouse ScrollWheel");
+                    transform.position += transform.forward;
+                }
+            }
+
+            //DEBUG - lock onto specified target with keypress
+            if (Input.GetKeyDown(KeyCode.B))
+            {
+                ChangeCameraState(MODE.FOLLOWING, enemyLockOn.transform);
+            }
+            if (Input.GetKeyUp(KeyCode.B))
+            {
+                ChangeCameraState(MODE.FOLLOWING, gm.player.transform);
             }
         }
-        if (Input.GetAxis("Mouse ScrollWheel") > 0) // forward
-        {
-            if (zoom <= .8f)
-            {
-                zoom += Input.GetAxisRaw("Mouse ScrollWheel");
-                transform.position += transform.forward;
-            }
-        }
-
     }
 
     /**
      * @brief Set default values of the camera at start of game (or start of scene)
      */
-    void InitializeCamera()
+
+    private void InitializeCamera()
     {
         orig_rot_x = FollowX.rotation; // Set default pos to current pos
         mouseX = -45;
         orig_rot_y = FollowY.localRotation; // Set default rot to current rot
         mouseY = orig_rot_y.x;
         isCameraReseting = false;
+
+        cameraBehavior = Camera_Following;
+        cameraMode = MODE.FOLLOWING;
+        prevMode = MODE.START;
     }
 
     /**
      * @brief Reset camera to original position smoothly
      */
+
     public IEnumerator ResetCamera()
     {
         float limit = 0;
@@ -114,5 +154,146 @@ public class CameraController : MonoBehaviour
             yield return null; //advance frame
         }
         isCameraReseting = false;
+    }
+
+    /**
+    * @brief Reset camera to original position immediately, no interpolation.
+    */
+
+    public void QuickResetCamera()
+    {
+        ResetCameraNotification.SetActive(false);
+
+        FollowX.localRotation = orig_rot_x;
+        mouseX = -45;
+        FollowY.localRotation = orig_rot_y;
+        mouseY = orig_rot_y.x;
+        zoom = 0f;
+        transform.position = CameraResetPoint.position;
+    }
+
+    /**
+     * @brief Get gameManager state change to change Camera state
+     * @param newState the new state of the gameManager
+     */
+
+    //public void ChangedStateTo(gameManager.STATE newState)
+    //{
+    //    switch (newState)
+    //    {
+    //        case gameManager.STATE.START:
+    //            Debug.LogError("Cannot switch GM State to START. This should not happen.");
+    //            break;
+
+    //        case gameManager.STATE.TRAVELING:
+    //            ChangeCameraState(MODE.FOLLOWING, gm.player.transform);
+    //            break;
+
+    //        case gameManager.STATE.COMBAT:
+    //            ChangeCameraState(MODE.COMBAT);
+    //            break;
+
+    //        case gameManager.STATE.PAUSED:
+    //            //ChangeCameraState(MODE.PAUSED);
+    //            break;
+
+    //        case gameManager.STATE.TALKING:
+    //            ChangeCameraState(MODE.STATIONARY, gm.player.transform);
+    //            break;
+    //    }
+    //}
+
+    /**
+     * @brief change the state of the camera and assign a target to follow, or a position to warp to if stationary
+     * @param newMode the new state to put the camera into
+     * @param target the gameobject to focus on. Default null. Behavior changes based on state change
+     */
+
+    public void ChangeCameraState(MODE newMode, Transform target = null)
+    {
+        if (newMode != MODE.START)
+        {
+            //Change Camera Behavior function
+            switch (newMode)
+            {
+                case MODE.START:
+                    Debug.LogError("Cannot switch Camera State to START. This should not happen.");
+                    break;
+
+                case MODE.FOLLOWING:
+                    cameraBehavior = Camera_Following;
+                    followScript.enabled = true;
+                    if (target)
+                    {
+                        //Follow target specified
+                        followScript.target = target;
+                        followScript.transform.position = gm.player.transform.position;
+
+                    }
+                    else
+                        //If not specified, follow the player
+                        followScript.target = gm.player.transform;
+                    followScript.transform.position = gm.player.transform.position;
+                    break;
+
+                case MODE.STATIONARY:
+                    Debug.Log("Reached Stationary Case.");
+                    cameraBehavior = Camera_Stationary;
+                    followScript.enabled = false;
+                    if (target)
+                    {
+                        followScript.transform.position = target.position;
+                    }
+                    break;
+
+                case MODE.PAUSED:
+                    cameraBehavior = Camera_Paused;
+                    followScript.enabled = false;
+                    break;
+
+                case MODE.COMBAT:
+                    cameraBehavior = Camera_Combat;
+                    followScript.enabled = true;
+                    break;
+
+                case MODE.CUTSCENE:
+                    cameraBehavior = Camera_Cutscene;
+                    followScript.enabled = false;
+                    break;
+                case MODE.FREE:
+                    cameraBehavior = Camera_Free;
+                    followScript.enabled = false;
+                    break;
+            }
+
+            //Change State (only if the new state is not a duplicate
+            if (newMode != cameraMode)
+            {
+                prevMode = cameraMode;
+                cameraMode = newMode;
+            }
+        }
+    }
+
+    private void Camera_Combat()
+    {
+    }
+
+    private void Camera_Free()
+    {
+
+    }
+
+    private void Camera_Cutscene()
+    {
+    }
+
+    private void Camera_Paused()
+    {
+    }
+
+    private void Camera_Stationary()
+    {
+
     }
 }

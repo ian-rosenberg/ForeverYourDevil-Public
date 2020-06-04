@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.00.00">
+	<object class="AudioFile" id="{37f75fe0-8d3f-4332-92f8-a5218e062c54}">
+		<property name="assetPath">
+			<value>Voice Lines/Test/Genovese/genovese_threat.wav</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>27.620136054421767</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{90eccefb-ebf6-42a4-82a9-d479c0771509}</destination>
+		</relationship>
+	</object>
+</objects>
