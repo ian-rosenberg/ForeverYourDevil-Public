@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class SharedInventory : Inventory
 {
-
     // Start is called before the first frame update
     void Awake()
     {
@@ -16,5 +15,14 @@ public class SharedInventory : Inventory
         totalItems = 0;
 
         AddSingleItem(InventoryManagement.Instance.itemList.Consumables[0]);
+    }
+
+    public void CloseInventory()
+    {
+        InventoryManagement.Instance.SetInventoriesInactive();
+
+        gameManager.Instance.SetCanPause(true);
+
+        gameManager.Instance.pauseMenu.SetActive(true);
     }
 }
