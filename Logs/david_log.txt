@@ -1,0 +1,16 @@
+log: 
+	
+	added debug lines
+	
+	behaviours are not running in combat
+		need to find a way to update, but only in combat
+
+battle manager:
+	accepts data from game manager
+		need to know what state the game is in
+	2 big portions: if state.combat == true or false
+	
+enemy script: added public action current behaviour in order to work with the battle manager
+added includes from player script
+	
+battle scenes: preload certain assets depending on location

@@ -1,0 +1,31 @@
+xcom notes:
+
+	board games/ttrpg
+	
+many parts make a whole: no one trooper or type of trooper can handle everything. by playing to each others strengths you make a competent team
+	characters should not be jacks of all trades. they should have limits that can be made up by the others(limit what potions each can use?)
+
+risk- xcom is at its best when players take risk https://www.youtube.com/watch?v=7L8vAGGitr8
+	turn timers- prevents the player from being too cautious, forces risk taking
+	mechanics- combat gets harder after x turns? players simply lose? jail system?
+	rewards- players will react negatively to being punished for taking too long, need to find a way of rewarding them for being quick(or tactical)
+		better loot? more xp? more mats for potions? 
+	
+difficulty- if we put it into a tactical setting, then the combat must be tactical
+
+power creep- start off underpowered compared to enemyies, slowly grow in ability. everything needs to be earned
+https://www.youtube.com/watch?v=y2mSk88hGRI
+
+combat basics:
+cover- full, half, none
+attacking: percent chance to kill based on cover, distance, etc
+grid based movemennt
+action point system maybe?
+options- normal attack, potions
+individual mods/upgrades?
+training/ earned levels
+talent trees
+variety of enemies- keeps playing from becoming complacent
+enemy power creep
+enemies in different combos can counter certain strategies
+each combat should be different 
