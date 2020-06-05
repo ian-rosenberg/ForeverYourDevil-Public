@@ -32,6 +32,12 @@ public class gameManager : MonoBehaviour
 
     public Animator CanvasAnimator;
 
+    [Header("Click Indicator")]
+    public GameObject clickIndicator; //Has 2 particle effects, one for normal and one for turning off.
+    public Animator clickIndicAnim;
+
+
+
     //Singleton creation
     private static gameManager instance;
 
@@ -60,7 +66,15 @@ public class gameManager : MonoBehaviour
     private void Start()
     {
         ChangeState(STATE.TRAVELING);
-        prevState = STATE.START; //Start out of combat
+        prevState = STATE.START; //Start out of combat\
+        clickIndicator.SetActive(false);
+    }
+
+    public IEnumerator ClickOff()
+    {
+        clickIndicAnim.SetTrigger("Off");
+        yield return new WaitForSeconds(0.25f);
+        //clickIndicator.SetActive(false);
     }
 
     // Update is called once per frame
@@ -120,9 +134,13 @@ public class gameManager : MonoBehaviour
         }
     }
 
-    public void ToggleInventory()
+    public void OpenInventory()
     {
-        InventoryManagement.Instance.SetSharedInventoryActive(!InventoryManagement.Instance.isActiveAndEnabled);
+        pauseMenu.SetActive(false);
+
+        SetCanPause(false);
+
+        InventoryManagement.Instance.SetSharedInventoryActive(true);
     }
 
     public void SetCanPause(bool pause)
