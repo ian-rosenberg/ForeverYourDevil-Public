@@ -138,13 +138,17 @@ public class gameManager : MonoBehaviour
     {
         pauseMenu.SetActive(false);
 
+        SetCanPause(false);
+
         InventoryManagement.Instance.SetSharedInventoryActive(true);
     }
 
     public void CloseInventory()
     {
         InventoryManagement.Instance.SetSharedInventoryActive(false);
-        
+
+        SetCanPause(true);
+
         pauseMenu.SetActive(true);
     }
 
