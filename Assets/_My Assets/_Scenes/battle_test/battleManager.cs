@@ -110,6 +110,12 @@ public class battleManager : MonoBehaviour
         while (player.stamina >= 1)
         {
             //Debug.Log("has stamina");
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                StartCoroutine(enemy_turn());
+                yield return null;
+            }
+
             
             yield return null;
 
@@ -117,7 +123,7 @@ public class battleManager : MonoBehaviour
 
 
         Debug.Log("go to next turn");
-        
+
         StartCoroutine(enemy_turn());
         yield return null;
 
