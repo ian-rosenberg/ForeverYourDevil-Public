@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum battleState { AMBUSH, ENEMY_TURN, PLAYER_TURN };
+public enum battleState { START, AMBUSH, ENEMY_TURN, PLAYER_TURN };
 //CHANGE STATE WITH THE GAME MANAGER
 public class battleManager : MonoBehaviour
 {
@@ -10,7 +10,7 @@ public class battleManager : MonoBehaviour
     public PlayerController player; //Reference to player script
     public gameManager gm; //reference to gameManager for player states
     private bool playerTurn=false;
-    public battleState battleState;
+    public battleState currentState;
     battleState prevState;
     
     private static battleManager instance;
@@ -56,10 +56,7 @@ public class battleManager : MonoBehaviour
             //return;
 
         }
-        if (battleState == battleState.PLAYER_TURN)
-        {
-            //Debug.Log("PLAYER turn");
-        }
+        
 
 
 
@@ -79,7 +76,6 @@ public class battleManager : MonoBehaviour
             case gameManager.STATE.COMBAT:
                 playerTurn = true;
                 StartCoroutine(player_turn());
-                
                 break;
             case gameManager.STATE.PAUSED:
 
@@ -93,42 +89,48 @@ public class battleManager : MonoBehaviour
         }
     }
 
+    public void ChangeBattleState(battleState state)
+    {
+        if (state != currentState && state != battleState.START) //Make sure state is not a duplicate
+        {
+            //If state is valid, change it.
+            prevState = currentState;
+            currentState = state;
+
+            //Send message to dependant components within GameManager
+            BroadcastMessage("ChangedStateTo", state);
+            Debug.Log("new combat state: "+currentState);
+        }
+    }
+
     public IEnumerator player_turn()
     {
         Debug.Log("player");
-        //ChangeState(battleState.PLAYER_TURN);
+        ChangeBattleState(battleState.PLAYER_TURN);
         while (player.stamina >= 1)
         {
             //Debug.Log("has stamina");
+            
             yield return null;
 
         }
+
+
+        Debug.Log("go to next turn");
         
-
-        //Debug.Log("go to next turn");
-
+        StartCoroutine(enemy_turn());
         yield return null;
 
     }
-    public void first_turn()
-    {
-        Debug.Log("player");
-        //ChangeState(battleState.PLAYER_TURN);
-
-        while (player.stamina >= 1)
-        {
-            Debug.Log("has stamina");
-
-        }
-        Debug.Log("go to next turn");
-    }
+    
     
     /*if player turn && keycode space; start enemy coroutine*/
     IEnumerator enemy_turn()
     {
         Debug.Log("enemy");
-        //ChangeState(battleState.ENEMY_TURN);
+        ChangeBattleState(battleState.ENEMY_TURN);
         yield return new WaitForSecondsRealtime(10f);
+        player.ChangeStamina(3, 9);
         StartCoroutine(player_turn());
         
 
