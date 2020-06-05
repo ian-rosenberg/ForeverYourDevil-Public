@@ -10,6 +10,18 @@ public class CameraController : MonoBehaviour
      * Author : Omar Ilyas
      */
 
+    //Singleton creation
+    private static CameraController instance;
+    public static CameraController Instance
+    {
+        get
+        {
+            if (instance == null)
+                instance = FindObjectOfType<CameraController>();
+            return instance;
+        }
+    }
+
     private gameManager gm;
 
     //Camera controls
@@ -125,6 +137,7 @@ public class CameraController : MonoBehaviour
         mouseY = orig_rot_y.x;
         isCameraReseting = false;
 
+        followScript.target = gm.player.transform;
         cameraBehavior = Camera_Following;
         cameraMode = MODE.FOLLOWING;
         prevMode = MODE.START;
