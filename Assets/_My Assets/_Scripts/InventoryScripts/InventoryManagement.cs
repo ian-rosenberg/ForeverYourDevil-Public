@@ -99,7 +99,7 @@ public class InventoryManagement : MonoBehaviour
 
         CreateSharedInventory();
 
-        //SetInventoriesInactive();
+        SetInventoriesInactive();
     }
 
     public void AddPorridge()
