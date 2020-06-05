@@ -131,7 +131,7 @@ MonoBehaviour:
   followScript: {fileID: 7736120609396605049}
   FollowY: {fileID: 7736120608106499299}
   FollowX: {fileID: 7736120608333222186}
-  CameraResetPoint: {fileID: 0}
+  CameraResetPoint: {fileID: 1922969498}
   rotateSpeed: 9.58
   cameraResetSpd: 0.2
   ResetCameraNotification: {fileID: 0}
@@ -308,4 +308,4 @@ MonoBehaviour:
   y_pos: 1
   z_pos: 1
   offset: {x: 0, y: 0, z: 0}
-  lagTimer: 0.2
+  lagTimer: 0.3

@@ -702,7 +702,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: faf9dd6575ef88042b1de83ba0902f17,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -444521105353760620, guid: faf9dd6575ef88042b1de83ba0902f17,
         type: 3}
@@ -11375,6 +11375,11 @@ PrefabInstance:
       propertyPath: ResetCameraNotification
       value: 
       objectReference: {fileID: 2134313769}
+    - target: {fileID: 7736120608094991444, guid: 5912e50a99c2e3748adad53e6d7c74c2,
+        type: 3}
+      propertyPath: enemyLockOn
+      value: 
+      objectReference: {fileID: 1117287279}
     - target: {fileID: 7736120609396605048, guid: 5912e50a99c2e3748adad53e6d7c74c2,
         type: 3}
       propertyPath: m_LocalPosition.x
