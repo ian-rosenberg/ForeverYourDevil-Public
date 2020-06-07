@@ -36,11 +36,8 @@ public class gameManager : MonoBehaviour
     public GameObject clickIndicator; //Has 2 particle effects, one for normal and one for turning off.
     public Animator clickIndicAnim;
 
-
-
     //Singleton creation
     private static gameManager instance;
-
     public static gameManager Instance
     {
         get

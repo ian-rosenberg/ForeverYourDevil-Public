@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PartyManager : MonoBehaviour
 {
@@ -10,9 +8,8 @@ public class PartyManager : MonoBehaviour
 
     [Header("Party")]
     public PartyMember currentPlayer;
-    public PartyMember[] party;
 
-    
+    public PartyMember[] party;
 
     public static PartyManager Instance
     {
@@ -22,15 +19,16 @@ public class PartyManager : MonoBehaviour
                 instance = FindObjectOfType<PartyManager>();
             return instance;
         }
-    }    
-    
+    }
+
     //Singleton creation
     private static PartyManager instance;
-    
+
     [Header("Inventories")]
     private SharedInventory sharedInventory;
+
     private PersonalInventory[] personalInventories;
-    
+
     public enum STATE { START, TRAVELING, COMBAT, PAUSED, TALKING }
 
     public STATE gameState; //Current State of the game
@@ -44,14 +42,12 @@ public class PartyManager : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
     }
 }

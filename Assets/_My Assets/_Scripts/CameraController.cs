@@ -137,6 +137,7 @@ public class CameraController : MonoBehaviour
         mouseY = orig_rot_y.x;
         isCameraReseting = false;
 
+        followScript.target = gm.player.transform;
         cameraBehavior = Camera_Following;
         cameraMode = MODE.FOLLOWING;
         prevMode = MODE.START;
