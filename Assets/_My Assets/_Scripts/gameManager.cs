@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Interactions;
 
 public class gameManager : MonoBehaviour
 {
@@ -56,7 +58,28 @@ public class gameManager : MonoBehaviour
     public STATE gameState; //Current State of the game
     private STATE prevState; //Previous State of the game (before pausing)
 
+    private PlayerControls pControls;
+
     #endregion Main Variables
+
+
+    #region Player Actions
+    private void OnEnable()
+    {
+        pControls = new PlayerControls();
+
+        pControls.Player.TogglePause.performed += TogglePause;
+
+        pControls.Player.TogglePause.Enable();
+    }
+
+    private void OnDisable()
+    {
+        pControls.Player.AutoTravel.performed -= TogglePause;
+
+        pControls.Player.AutoTravel.Disable();
+    }
+    #endregion
 
     private void Awake()
     {
@@ -77,24 +100,31 @@ public class gameManager : MonoBehaviour
         //clickIndicator.SetActive(false);
     }
 
-    // Update is called once per frame
-    private void Update()
+    public void TogglePause(InputAction.CallbackContext context)
     {
-        //Pause Game
-        if (Input.GetButtonDown("Pause") && canPause)
+        switch (context.phase)
         {
-            if (gameState == STATE.PAUSED)
-            {
-                pauseMenu.SetActive(false);
-                UnPauseGame();
-            }
-            else
-            {
-                pauseMenu.SetActive(true);
-                PauseGame();
-            }
+            case InputActionPhase.Performed:
+                if (canPause)
+                {
+                    if (gameState == STATE.PAUSED)
+                    {
+                        pauseMenu.SetActive(false);
+                        UnPauseGame();
+                    }
+                    else
+                    {
+                        pauseMenu.SetActive(true);
+                        PauseGame();
+                    }
+                }
+                break;
+
+            default:
+                break;
         }
     }
+
 
     /**
      * @brief Change the state of the game and update all dependant classes's game states
