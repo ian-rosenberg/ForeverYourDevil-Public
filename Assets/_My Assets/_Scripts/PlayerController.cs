@@ -106,6 +106,7 @@ public class PlayerController : PartyMember
         float h = axes.x;
         float v = axes.y;
 
+        //Manual WASD/Gamepad Travel
         if (Mathf.Abs(h) > 0 || Mathf.Abs(v) > 0)
         {
             if (!agent.isStopped)
@@ -117,6 +118,8 @@ public class PlayerController : PartyMember
 
         //Apply current behavior
         currentBehavior();
+
+        anim.SetFloat("Speed", (agent.velocity.magnitude / sprintSpeed));
     }
 
     private void OnTriggerEnter(Collider other)
@@ -130,6 +133,11 @@ public class PlayerController : PartyMember
     private void Sprint(InputAction.CallbackContext context)
     {
         sprint = !sprint;
+        
+        if (sprint)
+            agent.speed = sprintSpeed;
+        else
+            agent.speed = normalSpeed;
     }
 
 
@@ -142,12 +150,7 @@ public class PlayerController : PartyMember
 
     public void Player_Travelling()
     {
-        if (sprint)
-            agent.speed = sprintSpeed;
-        else
-            agent.speed = normalSpeed;
-        
-        //Set animator (need to change)
+       //Set animator (need to change)
         if (!anim.GetBool("Traveling"))
         {
             anim.SetBool("Traveling", true);
@@ -155,9 +158,6 @@ public class PlayerController : PartyMember
             anim.SetBool("Combat", false);
         }
         anim.SetBool("StayIdle", false);
-
-        //Set if anim is in run or idle (set by number in blend tree)
-        anim.SetFloat("Speed", (agent.velocity.magnitude / agent.speed) * .5f);
     }
 
     public void AutoTravel(InputAction.CallbackContext context)
@@ -165,11 +165,6 @@ public class PlayerController : PartyMember
         if (gameManager.gameState != gameManager.STATE.TRAVELING)
             return;
         
-        if (sprint)
-            agent.speed = sprintSpeed;
-        else
-            agent.speed = normalSpeed;
-
         //Automatic travel via Input System
         if (!anim.GetBool("Traveling"))
         {
@@ -235,8 +230,7 @@ public class PlayerController : PartyMember
         }
 
         agent.speed = normalSpeed;
-        //Set if anim is in run or idle (set by number in blend tree)
-        anim.SetFloat("Speed", (agent.velocity.magnitude / agent.speed));
+        //Set if anim is in run or idle (set by number in blend tree
     }
 
     public void Player_Combat()
@@ -269,8 +263,6 @@ public class PlayerController : PartyMember
         }
 
         agent.speed = normalSpeed;
-        //Set if anim is in run or idle (set by number in blend tree)
-        anim.SetFloat("Speed", (agent.velocity.magnitude / agent.speed));
     }
 
     public IEnumerator CombatMove()

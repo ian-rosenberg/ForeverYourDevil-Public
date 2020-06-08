@@ -61,6 +61,25 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
         GetComponentInChildren<HighlightSelf>().Highlight(Color.black);
     }
 
+    public void Select()
+    {
+        selected = true;
+
+        GetComponentInChildren<HighlightSelf>().Highlight(Color.green);
+
+        if (child != null)
+            detailsObj.SetDetails(child);
+        else
+        {
+            detailsObj.effectDescription.text = "Effect Description:";
+            detailsObj.effects.text = "Effects:";
+            detailsObj.itemDescription.text = "Description:";
+            detailsObj.itemImage.sprite = null;
+            detailsObj.itemName.text = "";
+        }
+    }
+    
+
     public void SetQuantityText()
     {
         GetComponentInChildren<TextMeshProUGUI>().text = quantity.ToString();

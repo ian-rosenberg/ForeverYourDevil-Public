@@ -58,6 +58,8 @@ public class CameraController : MonoBehaviour
     private bool camReset = false;
     private bool camLockState = false;
     private PlayerControls pControls;
+    private Vector3 camOffsetReset;
+
 
     private void OnEnable()
     {
@@ -121,13 +123,19 @@ public class CameraController : MonoBehaviour
                 FollowY.localRotation = Quaternion.Euler(-mouseY, 0f, 0f);
             }
 
+            //Debug.Log(Mouse.current.scroll.ReadValue().y);
+
             //Zoom in and out with mouse wheel.
+            //float z = Mathf.Clamp(Mouse.current.scroll, -.8f, .8f);
+
+            //transform.position += new Vector3(0, 0, z);
+            
             if (Mouse.current.scroll.ReadValue().y < 0) // back
             {
                 ResetCameraNotification.SetActive(true);
                 if (zoom >= -.8f)
                 {
-                    zoom += Mouse.current.scroll.ReadValue().y;
+                    zoom += -.1f;
                     transform.position -= transform.forward;
                 }
             }
@@ -135,7 +143,7 @@ public class CameraController : MonoBehaviour
             {
                 if (zoom <= .8f)
                 {
-                    zoom += Mouse.current.scroll.ReadValue().y;
+                    zoom += .1f;
                     transform.position += transform.forward;
                 }
             }

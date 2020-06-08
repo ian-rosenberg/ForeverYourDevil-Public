@@ -190,7 +190,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""id"": ""ba7f699d-397a-4a24-880a-9fe898ebc144"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """"
+                    ""interactions"": ""Press""
                 },
                 {
                     ""name"": ""Interact"",
@@ -198,7 +198,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""id"": ""669f1a91-d8ad-4cd5-a55b-0c74a06452be"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """"
+                    ""interactions"": ""Press""
                 },
                 {
                     ""name"": ""Cancel"",
@@ -206,7 +206,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""id"": ""385c02fd-f081-4ae3-b9b5-08afeff8119f"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """"
+                    ""interactions"": ""Press""
                 }
             ],
             ""bindings"": [
@@ -214,7 +214,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""name"": ""WASD"",
                     ""id"": ""f8c42ab5-77ea-4905-aff2-9b4ac9a33e08"",
                     ""path"": ""2DVector"",
-                    ""interactions"": """",
+                    ""interactions"": ""Press"",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Navigate"",
@@ -227,7 +227,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Gamepad;Keyboard&Mouse"",
+                    ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -238,7 +238,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -249,7 +249,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Navigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -257,7 +257,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 {
                     ""name"": ""right"",
                     ""id"": ""57f468ae-1ff0-4c70-b308-80e084242281"",
-                    ""path"": ""<Keyboard>/delete"",
+                    ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
@@ -269,7 +269,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""name"": ""ArrowKeys"",
                     ""id"": ""360010e4-264b-4de3-b582-fe7c667f9a46"",
                     ""path"": ""2DVector"",
-                    ""interactions"": """",
+                    ""interactions"": ""Press"",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Navigate"",

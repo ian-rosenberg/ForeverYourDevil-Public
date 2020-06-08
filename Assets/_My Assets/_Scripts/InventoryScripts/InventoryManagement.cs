@@ -130,48 +130,50 @@ public class InventoryManagement : MonoBehaviour
     {
         Debug.Log("UI navigation callback");
 
-        if (gameManager.Instance.pauseMenu)
+        if (gameManager.Instance.gameState != gameManager.STATE.PAUSED)
             return;
 
-        Inventory inv = currentInventory.GetComponent<Inventory>();
+        Inventory inv = currentInventory.GetComponentInChildren<Inventory>();
+
         int oldIndex = inv.selectedIndex;
 
-        Vector2 movement = context.ReadValue<Vector2>().normalized;
+        Vector2 movement = context.ReadValue<Vector2>();
 
         if (movement.x == 1)
         {
-            if (!(inv.selectedIndex < inv.totalSlots))
-                inv.selectedIndex += 1;
+            if (inv.selectedIndex < inv.totalSlots - 1)
+                inv.SetIndex(1);
         }
         else if (movement.x == -1)
         {
-            if (!(inv.selectedIndex >= 1))
-                inv.selectedIndex -= 1;
-        }
-        else if (movement.y == 1)
-        {
-            if (!(inv.selectedIndex + 4 < inv.totalSlots))
-                inv.selectedIndex += 4;
+            if (inv.selectedIndex > 0)
+                inv.SetIndex(-1);
         }
         else if (movement.y == -1)
         {
-            if (!(inv.selectedIndex - 4 > 1))
-                inv.selectedIndex -= 4;
+            if (inv.selectedIndex + 4 < inv.totalSlots)
+                inv.SetIndex(4);
+        }
+        else if (movement.y == 1)
+        {
+            if (inv.selectedIndex - 4 >= 0)
+                inv.SetIndex(-4);
         }
 
-        if (inv.inventorySlots[oldIndex])
+        if (inv.inventorySlots[inv.selectedIndex] != null)
         {
-            InventorySlot slot = inv.inventorySlots[inv.selectedIndex].GetComponent<InventorySlot>();
-            InventorySlot oldSlot = inv.inventorySlots[oldIndex].GetComponent<InventorySlot>();
+            GameObject newSlotObj = inv.inventorySlots[inv.selectedIndex];
+            GameObject oldSlotObj = inv.inventorySlots[oldIndex];
+
+            InventorySlot slot = newSlotObj.GetComponent<InventorySlot>();
+            InventorySlot oldSlot = oldSlotObj.GetComponent<InventorySlot>();
 
             if (oldSlot.Selected())
             {
                 oldSlot.UnSelect();
             }
 
-            slot.GetComponentInChildren<HighlightSelf>().Highlight(Color.green);
-
-            slot.detailsObj.SetDetails(slot.child);
+            slot.Select();
         }
     }
 

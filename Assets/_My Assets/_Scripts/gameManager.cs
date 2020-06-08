@@ -156,8 +156,6 @@ public class gameManager : MonoBehaviour
         {
             ChangeState(STATE.PAUSED);
             Time.timeScale = 0;
-
-            pInput.currentActionMap = pControls.UI;
         }
     }
 
@@ -167,8 +165,6 @@ public class gameManager : MonoBehaviour
         {
             ChangeState(prevState);
             Time.timeScale = 1;
-
-            pInput.SwitchCurrentActionMap("Player");
         }
     }
 

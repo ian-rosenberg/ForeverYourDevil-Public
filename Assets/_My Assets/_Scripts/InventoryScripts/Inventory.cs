@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Newtonsoft.Json;
 using TMPro;
+using System;
 
 public class Inventory : MonoBehaviour
 {
@@ -11,14 +12,11 @@ public class Inventory : MonoBehaviour
     private int slotIndices;
 
     public Dictionary<object, GameObject> inventorySlots;
-    public int selectedIndex;
+    public int selectedIndex = 0;
     public int totalSlots;
     public int totalItems;
 
     public GameObject elementOwnerPrefab;//The grid space in which an item can reside
-
-
-    // Start is called before the first frame update
 
     public void AddSlot()
     {
@@ -32,8 +30,7 @@ public class Inventory : MonoBehaviour
         GameObject slotClone = Instantiate(elementOwnerPrefab, transform);
 
         inventorySlots.Add(slotIndices++, slotClone);
-
-        selectedIndex = 0;
+        totalSlots++;
     }
 
     public void AddSlotWithItem(ItemBase item)
@@ -111,5 +108,10 @@ public class Inventory : MonoBehaviour
     public void DropItem()
     {
 
+    }
+
+    public void SetIndex(int val)
+    {
+        selectedIndex += val;
     }
 }
