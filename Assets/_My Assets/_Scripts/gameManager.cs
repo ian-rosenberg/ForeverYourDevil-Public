@@ -39,6 +39,9 @@ public class gameManager : MonoBehaviour
     public Animator clickIndicAnim;
 
 
+    [Header("Player Input")]
+    private PlayerInput pInput;
+
 
     //Singleton creation
     private static gameManager instance;
@@ -66,18 +69,19 @@ public class gameManager : MonoBehaviour
     #region Player Actions
     private void OnEnable()
     {
+        pInput = GetComponentInChildren<PlayerInput>();
         pControls = new PlayerControls();
 
-        pControls.Player.TogglePause.performed += TogglePause;
+        pControls.Player.TogglePause.performed += TogglePause;   
 
         pControls.Player.TogglePause.Enable();
     }
 
     private void OnDisable()
     {
-        pControls.Player.AutoTravel.performed -= TogglePause;
+        pControls.Player.TogglePause.performed -= TogglePause;
 
-        pControls.Player.AutoTravel.Disable();
+        pControls.Player.TogglePause.Disable();
     }
     #endregion
 
@@ -152,6 +156,8 @@ public class gameManager : MonoBehaviour
         {
             ChangeState(STATE.PAUSED);
             Time.timeScale = 0;
+
+            pInput.currentActionMap = pControls.UI;
         }
     }
 
@@ -161,6 +167,8 @@ public class gameManager : MonoBehaviour
         {
             ChangeState(prevState);
             Time.timeScale = 1;
+
+            pInput.SwitchCurrentActionMap("Player");
         }
     }
 

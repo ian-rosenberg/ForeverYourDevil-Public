@@ -65,4 +65,9 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
     {
         GetComponentInChildren<TextMeshProUGUI>().text = quantity.ToString();
     }
+
+    public bool Selected()
+    {
+        return selected;
+    }
 }

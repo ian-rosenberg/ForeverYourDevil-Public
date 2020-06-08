@@ -11,6 +11,8 @@ public class Inventory : MonoBehaviour
     private int slotIndices;
 
     public Dictionary<object, GameObject> inventorySlots;
+    public int selectedIndex;
+    public int totalSlots;
     public int totalItems;
 
     public GameObject elementOwnerPrefab;//The grid space in which an item can reside
@@ -30,6 +32,8 @@ public class Inventory : MonoBehaviour
         GameObject slotClone = Instantiate(elementOwnerPrefab, transform);
 
         inventorySlots.Add(slotIndices++, slotClone);
+
+        selectedIndex = 0;
     }
 
     public void AddSlotWithItem(ItemBase item)

@@ -62,13 +62,13 @@ public class PlayerController : PartyMember
     {
         pControls = new PlayerControls();
         
-        pControls.Player.AutoTravel.performed += AutoTravel;
+        pControls.Player.LeftClick.performed += AutoTravel;
+        pControls.Player.LeftClick.performed += CombatTravel;
         pControls.Player.Sprint.performed += Sprint;
-
         pControls.Player.ManualTravel.performed += context => axes = context.ReadValue<Vector2>();
         
 
-        pControls.Player.AutoTravel.Enable();
+        pControls.Player.LeftClick.Enable();
         pControls.Player.Sprint.Enable();
         pControls.Player.ManualTravel.Enable();
     }
@@ -76,11 +76,12 @@ public class PlayerController : PartyMember
 
     private void OnDisable()
     {
-        pControls.Player.AutoTravel.performed -= AutoTravel;
+        pControls.Player.LeftClick.performed -= AutoTravel;
+        pControls.Player.LeftClick.performed -= CombatTravel;
         pControls.Player.Sprint.started -= Sprint;
         pControls.Player.ManualTravel.performed -= context => axes = context.ReadValue<Vector2>();
 
-        pControls.Player.AutoTravel.Disable();
+        pControls.Player.LeftClick.Disable();
         pControls.Player.Sprint.Disable();
         pControls.Player.ManualTravel.Disable();
     }
@@ -92,6 +93,7 @@ public class PlayerController : PartyMember
 
         combatMoving = false;
 
+        prevPath = null;
         prevPath = path;
 
         gameManager = gameManager.Instance;
@@ -160,6 +162,9 @@ public class PlayerController : PartyMember
 
     public void AutoTravel(InputAction.CallbackContext context)
     {
+        if (gameManager.gameState != gameManager.STATE.TRAVELING)
+            return;
+        
         if (sprint)
             agent.speed = sprintSpeed;
         else
@@ -194,10 +199,14 @@ public class PlayerController : PartyMember
         }
     }
 
-    public void Player_Combat()
+    public void CombatTravel(InputAction.CallbackContext context)
     {
+        //If click, show indicator and move character (accounting for stamina)
+        if (gameManager.gameState != gameManager.STATE.COMBAT)
+            return;
+
         //Determine if walkable
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); //create ray obj from camera to click point
+        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue()); //create ray obj from camera to click point
         RaycastHit hit;
 
         //If ray hit walkable area
@@ -206,6 +215,43 @@ public class PlayerController : PartyMember
             //Check hit layer
             if (hit.transform.gameObject.layer == 9) //If click ground
             {
+                GameObject clickIndicator = gameManager.Instance.clickIndicator;
+
+                //Show indicator
+                clickIndicator.SetActive(true);
+                gameManager.Instance.clickIndicAnim.SetTrigger("On");
+
+                Vector3 gridPoint = grid.NearestGridNode(hit.point).worldPosition;
+                clickIndicator.transform.position = gridPoint + new Vector3(0, 2f, 0);
+
+                //Move character along path
+                if (!combatMoving)
+                {
+                    lockedPath = path;
+                    combatMoving = true;
+                    StartCoroutine(CombatMove());
+                }               
+            }
+        }
+
+        agent.speed = normalSpeed;
+        //Set if anim is in run or idle (set by number in blend tree)
+        anim.SetFloat("Speed", (agent.velocity.magnitude / agent.speed));
+    }
+
+    public void Player_Combat()
+    {
+        //Determine if walkable
+        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue()); //create ray obj from camera to click point
+        RaycastHit hit;
+
+        //If ray hit walkable area
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask)) //cast ray. if hit land, move
+        {
+            //Check hit layer
+            if (hit.transform.gameObject.layer == 9) //If click ground
+            {
+
                 //if (selected == null || selected != grid.NearestGridNode(hit.point))
                 //{
                 prevPath = path;
@@ -218,27 +264,6 @@ public class PlayerController : PartyMember
                     grid.HighlightPath(path, stamina);
 
                     selected = grid.NearestGridNode(hit.point);
-                }
-
-                //If click, show indicator and move character (accounting for stamina)
-                if (Input.GetMouseButtonDown(0))
-                {
-                    GameObject clickIndicator = gameManager.Instance.clickIndicator;
-
-                    //Show indicator
-                    clickIndicator.SetActive(true);
-                    gameManager.Instance.clickIndicAnim.SetTrigger("On");
-
-                    Vector3 gridPoint = grid.NearestGridNode(hit.point).worldPosition;
-                    clickIndicator.transform.position = gridPoint + new Vector3(0, 2f, 0);
-
-                    //Move character along path
-                    if (!combatMoving)
-                    {
-                        lockedPath = path;
-                        combatMoving = true;
-                        StartCoroutine(CombatMove());
-                    }
                 }
             }
         }

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using Newtonsoft.Json;
 using System;
+using UnityEngine.InputSystem;
 
 #region Item JSON Deserialization
 
@@ -76,6 +77,7 @@ public class InventoryManagement : MonoBehaviour
 
     private List<GameObject> inventoryObjs;//The inventories in use;
     private GameObject sharedInventory;
+    private GameObject currentInventory;
 
     public GameObject blurShader;
     public GameObject sharedInventoryPrefab;
@@ -84,6 +86,26 @@ public class InventoryManagement : MonoBehaviour
 
     public int numInventories;
 
+
+    #region Player Actions
+    private PlayerControls pControls;
+
+    private void OnEnable()
+    {
+        pControls = new PlayerControls();
+
+        pControls.UI.Navigate.performed += HandleUIKeypress;
+
+        pControls.UI.Navigate.Enable();
+    }
+
+    private void OnDisable()
+    {
+        pControls.UI.Navigate.performed -= HandleUIKeypress;
+
+        pControls.UI.Navigate.Disable();
+    }
+    #endregion
 
     // Start is called before the first frame update
     void Start()
@@ -99,7 +121,58 @@ public class InventoryManagement : MonoBehaviour
 
         CreateSharedInventory();
 
+        currentInventory = sharedInventory;
+
         SetInventoriesInactive();
+    }
+
+    public void HandleUIKeypress(InputAction.CallbackContext context)
+    {
+        Debug.Log("UI navigation callback");
+
+        if (gameManager.Instance.pauseMenu)
+            return;
+
+        Inventory inv = currentInventory.GetComponent<Inventory>();
+        int oldIndex = inv.selectedIndex;
+
+        Vector2 movement = context.ReadValue<Vector2>().normalized;
+
+        if (movement.x == 1)
+        {
+            if (!(inv.selectedIndex < inv.totalSlots))
+                inv.selectedIndex += 1;
+        }
+        else if (movement.x == -1)
+        {
+            if (!(inv.selectedIndex >= 1))
+                inv.selectedIndex -= 1;
+        }
+        else if (movement.y == 1)
+        {
+            if (!(inv.selectedIndex + 4 < inv.totalSlots))
+                inv.selectedIndex += 4;
+        }
+        else if (movement.y == -1)
+        {
+            if (!(inv.selectedIndex - 4 > 1))
+                inv.selectedIndex -= 4;
+        }
+
+        if (inv.inventorySlots[oldIndex])
+        {
+            InventorySlot slot = inv.inventorySlots[inv.selectedIndex].GetComponent<InventorySlot>();
+            InventorySlot oldSlot = inv.inventorySlots[oldIndex].GetComponent<InventorySlot>();
+
+            if (oldSlot.Selected())
+            {
+                oldSlot.UnSelect();
+            }
+
+            slot.GetComponentInChildren<HighlightSelf>().Highlight(Color.green);
+
+            slot.detailsObj.SetDetails(slot.child);
+        }
     }
 
     public void AddPorridge()
