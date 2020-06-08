@@ -38,14 +38,8 @@ public class gameManager : MonoBehaviour
     public GameObject clickIndicator; //Has 2 particle effects, one for normal and one for turning off.
     public Animator clickIndicAnim;
 
-
-    [Header("Player Input")]
-    private PlayerInput pInput;
-
-
     //Singleton creation
     private static gameManager instance;
-
     public static gameManager Instance
     {
         get
@@ -176,14 +170,9 @@ public class gameManager : MonoBehaviour
     {
         pauseMenu.SetActive(false);
 
-        InventoryManagement.Instance.SetSharedInventoryActive(true);
-    }
+        SetCanPause(false);
 
-    public void CloseInventory()
-    {
-        InventoryManagement.Instance.SetSharedInventoryActive(false);
-        
-        pauseMenu.SetActive(true);
+        InventoryManagement.Instance.SetSharedInventoryActive(true);
     }
 
     public void SetCanPause(bool pause)
