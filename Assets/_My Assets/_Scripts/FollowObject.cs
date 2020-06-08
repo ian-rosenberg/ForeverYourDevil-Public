@@ -10,8 +10,8 @@
 
 public class FollowObject : MonoBehaviour
 {
-    [Tooltip("Gameobject to follow")]
-    public GameObject target;
+    [Tooltip("Transform of the gameobject to follow")]
+    public Transform target;
 
     [Tooltip("Does this follow obj's x position?")]
     public bool x_pos;
@@ -25,6 +25,10 @@ public class FollowObject : MonoBehaviour
     public Vector3 offset;
 
     private Vector3 new_pos; /**New position for this obj*/
+    private Vector3 dampVelocity = Vector3.zero;
+
+    [Header("DEBUG")]
+    public float lagTimer = 0.9f; //Camera lagging. 1 = no lag, 0 = stationary
 
     // Start is called before the first frame update
     private void Start()
@@ -33,7 +37,7 @@ public class FollowObject : MonoBehaviour
     }
 
     // Update is called once per frame
-    private void Update()
+    private void FixedUpdate()
     {
         //Position
         if (x_pos) new_pos += new Vector3(target.transform.position.x, 0, 0);
@@ -41,7 +45,7 @@ public class FollowObject : MonoBehaviour
         if (z_pos) new_pos += new Vector3(0, 0, target.transform.position.z);
 
         //Apply final vectors
-        transform.position = Vector3.Lerp(transform.position, new_pos + offset, 0.9f);
+        transform.position = Vector3.SmoothDamp(transform.position, new_pos+offset, ref dampVelocity, lagTimer);
 
         //Reset new_pos
         new_pos = Vector3.zero;

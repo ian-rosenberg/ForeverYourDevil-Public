@@ -24,7 +24,7 @@ Shader "Sun_Temple/Decal" {
 
         sampler2D _MainTex, _DetailAlbedo;
         half4 _Color;
-        half _Cutoff, _DetailTiling ;
+        half _Cutoff, _DetailTiling;
 
         struct Input {
             half2 uv_MainTex;
