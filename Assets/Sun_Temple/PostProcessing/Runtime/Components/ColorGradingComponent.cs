@@ -69,7 +69,7 @@ namespace UnityEngine.PostProcessing
 
         Vector3 CalculateColorBalance(float temperature, float tint)
         {
-            // Range ~[-1.8;1.8] ; using higher ranges is unsafe
+            // Range ~[-1.8;1.8]; using higher ranges is unsafe
             float t1 = temperature / 55f;
             float t2 = tint / 55f;
 

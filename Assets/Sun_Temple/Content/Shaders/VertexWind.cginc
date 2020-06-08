@@ -38,7 +38,7 @@ half3 do_wind(half3 vertex_xyz, half2 color, half _WaveFreq, half _WaveHeight){
 	            half sin2 = sin(phase_med + offset2);  
 	            half sin3 = sin(phase_fast + offset3);        
 	 
-	            half sin_combined = (sin1 * 4) + sin2 + (sin3 * 0.5) ;
+	            half sin_combined = (sin1 * 4) + sin2 + (sin3 * 0.5);
 
 
 	           

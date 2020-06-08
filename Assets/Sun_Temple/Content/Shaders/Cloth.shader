@@ -46,7 +46,7 @@ Shader "Sun_Temple/Cloth" {
 	            half sin1 = sin(phase_slow + offset);
 	            half sin2 = sin(phase_med + offset2);          
 	 
-	            half sin_combined = (sin1 * 4) + sin2 ;
+	            half sin_combined = (sin1 * 4) + sin2;
 	           
 	            half wind_x =  sin_combined * _WaveHeight * 0.1;
 	            half3 wind_xyz = half3(wind_x, wind_x * 2, wind_x);
