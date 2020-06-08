@@ -24,6 +24,8 @@ public class NPCController : MonoBehaviour
 
         pControls.UI.Interact.performed += context => interact = !interact;
 
+        pControls.UI.Interact.Enable();
+
         pControls.Player.ManualTravel.Enable();
     }
 
@@ -31,6 +33,8 @@ public class NPCController : MonoBehaviour
     private void OnDisable()
     {
         pControls.UI.Interact.performed -= context => interact = !interact;
+
+        pControls.UI.Interact.Disable();
 
         pControls.Player.ManualTravel.Disable();
     }
@@ -43,6 +47,7 @@ public class NPCController : MonoBehaviour
 
             if (interact)
             {
+                Debug.Log("Pressing interact...");
                 diagManager.TriggerDialogue(conversationID);
                 talkIndicator.SetActive(false);
             }
@@ -55,5 +60,10 @@ public class NPCController : MonoBehaviour
         {
             talkIndicator.SetActive(false);
         }
+    }
+
+    private void Update()
+    {
+        Debug.Log("interact"+interact);
     }
 }
