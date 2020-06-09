@@ -1875,6 +1875,7 @@ MonoBehaviour:
   sprintSpeed: 21.97
   rb: {fileID: 591512268}
   gameManager: {fileID: 0}
+  shared: {fileID: 0}
   grid: {fileID: 1539110194}
   nodeBattlePos: {x: 0, y: 0, z: 0}
   pathfinder: {fileID: 591512274}

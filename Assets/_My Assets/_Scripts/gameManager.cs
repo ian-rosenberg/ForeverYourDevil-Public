@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
@@ -174,6 +175,7 @@ public class gameManager : MonoBehaviour
     {
         canPause = pause;
     }
+
 
     #endregion Pausing
 

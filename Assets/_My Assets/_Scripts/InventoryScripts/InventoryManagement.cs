@@ -75,16 +75,17 @@ public class InventoryManagement : MonoBehaviour
     private Dictionary<object, Sprite> itemImages;
     #endregion
 
-    private List<GameObject> inventoryObjs;//The inventories in use;
-    private GameObject sharedInventory;
-    private GameObject currentInventory;
+    public List<GameObject> inventoryObjs;//The inventories in use;
+    public GameObject sharedInventory;
 
     public GameObject blurShader;
     public GameObject sharedInventoryPrefab;
     public GameObject personalInventoryPrefab;
 
-
+    public SharedInventory sInvScript;
     public int numInventories;
+
+    private GameObject currentInventory;
 
 
     #region Player Actions
@@ -256,11 +257,8 @@ public class InventoryManagement : MonoBehaviour
     private void CreateSharedInventory()
     {
         sharedInventory = Instantiate(sharedInventoryPrefab, transform);
-    }
-    
-    public Inventory GetSharedInventory()
-    {
-        return sharedInventory.GetComponent<Inventory>();
+
+        sInvScript = sharedInventory.GetComponent<SharedInventory>();
     }
 
     public void SetInventoriesInactive()
