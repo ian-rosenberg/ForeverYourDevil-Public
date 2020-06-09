@@ -58,8 +58,6 @@ public class CameraController : MonoBehaviour
     private bool camReset = false;
     private bool camLockState = false;
     private PlayerControls pControls;
-    private Vector3 camOffsetReset;
-
 
     private void OnEnable()
     {

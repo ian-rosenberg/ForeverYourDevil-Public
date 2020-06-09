@@ -203,7 +203,9 @@ public class InventoryManagement : MonoBehaviour
         {
             foreach (ItemBase item in itemList.Abilities)
             {
-                itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
+                
+                if(item.Name != "" && item.Name != null)
+                    itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
             } 
         }
 
@@ -211,7 +213,8 @@ public class InventoryManagement : MonoBehaviour
         {
             foreach (ItemBase item in itemList.Concoctions)
             {
-                itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
+                if (item.Name != "" && item.Name != null) 
+                    itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
             }
         }
 
@@ -219,7 +222,8 @@ public class InventoryManagement : MonoBehaviour
         {
             foreach (ItemBase item in itemList.Consumables)
             {
-                itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
+                if (item.Name != "" && item.Name != null) 
+                    itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
             }
         }
 
@@ -227,7 +231,8 @@ public class InventoryManagement : MonoBehaviour
         {
             foreach (ItemBase item in itemList.Equipment)
             {
-                itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
+                if (item.Name != "" && item.Name != null) 
+                    itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
             }
         }
 
@@ -235,7 +240,8 @@ public class InventoryManagement : MonoBehaviour
         {
             foreach (ItemBase item in itemList.Ingredients)
             {
-                itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
+                if (item.Name != "" && item.Name != null) 
+                    itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
             }
         }
     }
@@ -250,6 +256,11 @@ public class InventoryManagement : MonoBehaviour
     private void CreateSharedInventory()
     {
         sharedInventory = Instantiate(sharedInventoryPrefab, transform);
+    }
+    
+    public Inventory GetSharedInventory()
+    {
+        return sharedInventory.GetComponent<Inventory>();
     }
 
     public void SetInventoriesInactive()

@@ -36,9 +36,10 @@ public class PlayerController : PartyMember
     private AStarNode selected;
 
     [Header("Behavior")]
-    public Action currentBehavior; //Function pointer for player behavior (changed by gameManager)
-    
+    private bool canPickup = false;
     private bool autoMove = false;
+    public Action currentBehavior; //Function pointer for player behavior (changed by gameManager)
+
     [SerializeField]
     private bool sprint = false;
 
@@ -64,6 +65,8 @@ public class PlayerController : PartyMember
         
         pControls.Player.LeftClick.performed += AutoTravel;
         pControls.Player.LeftClick.performed += CombatTravel;
+        pControls.Player.Use.started += context => canPickup = true;
+        pControls.Player.Use.performed += context => canPickup = false;
         pControls.Player.Sprint.performed += Sprint;
         pControls.Player.ManualTravel.performed += context => axes = context.ReadValue<Vector2>();
         
@@ -71,6 +74,7 @@ public class PlayerController : PartyMember
         pControls.Player.LeftClick.Enable();
         pControls.Player.Sprint.Enable();
         pControls.Player.ManualTravel.Enable();
+        pControls.Player.Use.Enable();
     }
 
 
@@ -78,12 +82,16 @@ public class PlayerController : PartyMember
     {
         pControls.Player.LeftClick.performed -= AutoTravel;
         pControls.Player.LeftClick.performed -= CombatTravel;
+        pControls.Player.Use.started += context => canPickup = true;
+        pControls.Player.Use.performed -= context => canPickup = false;
         pControls.Player.Sprint.started -= Sprint;
         pControls.Player.ManualTravel.performed -= context => axes = context.ReadValue<Vector2>();
+
 
         pControls.Player.LeftClick.Disable();
         pControls.Player.Sprint.Disable();
         pControls.Player.ManualTravel.Disable();
+        pControls.Player.Use.Disable();
     }
 
     // Awake is called before start
@@ -129,7 +137,37 @@ public class PlayerController : PartyMember
             agent.ResetPath(); //Stop agent if it hits indicator
             StartCoroutine(gameManager.Instance.ClickOff());
         }
+
+        if((other.gameObject.GetComponent<ItemDropped>() as ItemDropped) != null)
+        {
+            canPickup = true;
+        }
     }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if ((other.gameObject.GetComponent<ItemDropped>() as ItemDropped) != null && canPickup)
+        {
+            Inventory inv = InventoryManagement.Instance.GetSharedInventory();
+
+            ItemBase item = other.GetComponent<ItemDropped>().GetItem();
+
+            Debug.Log(inv);
+
+            inv.AddSingleItem(item);
+
+            Destroy(other.gameObject);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if ((other.gameObject.GetComponent<ItemDropped>() as ItemDropped) != null)
+        {
+            canPickup = false;
+        }
+    }
+
     private void Sprint(InputAction.CallbackContext context)
     {
         sprint = !sprint;

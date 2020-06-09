@@ -39,7 +39,6 @@ public class PartyManager : MonoBehaviour
     private void Awake()
     {
         gameManager = gameManager.Instance;
-        currentPlayer = gameManager.player;
     }
 
     // Start is called before the first frame update
@@ -50,5 +49,12 @@ public class PartyManager : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+    }
+
+    private void SetInventories(SharedInventory shared, PersonalInventory[] personals)
+    {
+        sharedInventory = shared;
+
+        personalInventories = personals;
     }
 }

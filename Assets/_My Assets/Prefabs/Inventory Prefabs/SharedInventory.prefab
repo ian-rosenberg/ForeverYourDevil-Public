@@ -915,7 +915,7 @@ MonoBehaviour:
   totalItems: 0
   elementOwnerPrefab: {fileID: 3293102853292309666, guid: 11b7e823e6cadd6428cdfc48fc91c229,
     type: 3}
-  itemDropTest: {fileID: 1945281049587397387, guid: 9313a51bc11066c4ebc4e25d39d53020,
+  itemDropTest: {fileID: 1346943424416636222, guid: bf66e03d4efdb5849b04066712099987,
     type: 3}
 --- !u!1 &4841857055427218926
 GameObject:

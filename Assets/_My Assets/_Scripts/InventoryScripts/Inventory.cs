@@ -136,7 +136,7 @@ public class Inventory : MonoBehaviour
         if (curSlot == null)
             return;
 
-        if (curSlot.child.Name.Length == 0)
+        if (curSlot.child == null)
             return;
 
         if (curSlot.quantity < 1)
@@ -149,6 +149,8 @@ public class Inventory : MonoBehaviour
         GameObject item = Instantiate(itemDropTest, pT);
 
         item.transform.SetParent(gameManager.Instance.gameObject.transform);
+        item.GetComponent<ItemDropped>().SetItem(curSlot.child);
+        item.transform.position = new Vector3(pT.position.x, pT.position.y + item.GetComponent<SpriteRenderer>().bounds.size.y/2, pT.position.z);
     }
 
     public void SetIndex(int val)
