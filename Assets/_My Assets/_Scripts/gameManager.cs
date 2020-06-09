@@ -63,7 +63,6 @@ public class gameManager : MonoBehaviour
     #region Player Actions
     private void OnEnable()
     {
-        pInput = GetComponentInChildren<PlayerInput>();
         pControls = new PlayerControls();
 
         pControls.Player.TogglePause.performed += TogglePause;   

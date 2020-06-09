@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Newtonsoft.Json;
 using TMPro;
@@ -17,6 +19,27 @@ public class Inventory : MonoBehaviour
     public int totalItems;
 
     public GameObject elementOwnerPrefab;//The grid space in which an item can reside
+    public GameObject itemDropTest; //test for dropping items in world
+
+    #region Player Actions
+    private PlayerControls pControls;
+
+    private void OnEnable()
+    {
+        pControls = new PlayerControls();
+
+        pControls.UI.Cancel.performed += DropItem;
+
+        pControls.UI.Cancel.Enable();
+    }
+
+    private void OnDisable()
+    {
+        pControls.UI.Cancel.performed -= DropItem;
+
+        pControls.UI.Cancel.Disable();
+    }
+    #endregion
 
     public void AddSlot()
     {
@@ -105,9 +128,27 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    public void DropItem()
+    public void DropItem(InputAction.CallbackContext context)
     {
+        InventorySlot curSlot = inventorySlots[selectedIndex].GetComponent<InventorySlot>();
+        Transform pT = gameManager.Instance.player.transform;
 
+        if (curSlot == null)
+            return;
+
+        if (curSlot.child.Name.Length == 0)
+            return;
+
+        if (curSlot.quantity < 1)
+            return;
+
+        curSlot.quantity--;
+
+        curSlot.SetQuantityText();
+
+        GameObject item = Instantiate(itemDropTest, pT);
+
+        item.transform.SetParent(gameManager.Instance.gameObject.transform);
     }
 
     public void SetIndex(int val)

@@ -910,8 +910,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99fb3c1b22ebb084aa3442c060b0c25b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectedIndex: 0
+  totalSlots: 0
   totalItems: 0
   elementOwnerPrefab: {fileID: 3293102853292309666, guid: 11b7e823e6cadd6428cdfc48fc91c229,
+    type: 3}
+  itemDropTest: {fileID: 1945281049587397387, guid: 9313a51bc11066c4ebc4e25d39d53020,
     type: 3}
 --- !u!1 &4841857055427218926
 GameObject:

@@ -39,6 +39,7 @@ public class PartyManager : MonoBehaviour
     private void Awake()
     {
         gameManager = gameManager.Instance;
+        currentPlayer = gameManager.player;
     }
 
     // Start is called before the first frame update

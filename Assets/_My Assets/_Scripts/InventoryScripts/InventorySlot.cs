@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using TMPro;
 
 public class InventorySlot : MonoBehaviour, IPointerClickHandler
@@ -35,6 +36,10 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
     {
         if (selected)
             return;
+
+        //Set up for right click to instantiate a shortcut menu
+        //if(Mouse.current.rightButton.ReadValue() != 0)
+
         
         Dictionary<object, GameObject> itemDict = ownerInventory.GetComponent<Inventory>().inventorySlots;
 
