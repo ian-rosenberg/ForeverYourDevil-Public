@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using TMPro;
+using System;
 
 public class InventorySlot : MonoBehaviour, IPointerClickHandler
 {
@@ -34,8 +35,10 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData pointerEventData)
     {
-        if (selected)
-            return;
+        InventorySlot slot = ownerInventory.GetComponent<Inventory>().GetLastSelected();
+
+        if (slot != null)
+            slot.UnSelect();
 
         //Set up for right click to instantiate a shortcut menu
         //if(Mouse.current.rightButton.ReadValue() != 0)
@@ -56,7 +59,14 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
 
         selected = true;
 
-        detailsObj.SetDetails(child);
+        if(child == null)
+        {
+            detailsObj.Clear();
+        }
+        else
+        {
+            detailsObj.SetDetails(child);
+        }
     }
 
     public void UnSelect()
@@ -75,13 +85,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
         if (child != null)
             detailsObj.SetDetails(child);
         else
-        {
-            detailsObj.effectDescription.text = "Effect Description:";
-            detailsObj.effects.text = "Effects:";
-            detailsObj.itemDescription.text = "Description:";
-            detailsObj.itemImage.sprite = null;
-            detailsObj.itemName.text = "";
-        }
+            EmptyDetails();
     }
     
 
@@ -93,5 +97,25 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
     public bool Selected()
     {
         return selected;
+    }
+
+    public void EmptySlot()
+    {
+        GetComponentInChildren<TextMeshProUGUI>().text = "";
+
+        child = null;
+
+        EmptyDetails();
+
+        inUse = false;
+    }
+
+    public void EmptyDetails()
+    {
+        detailsObj.effectDescription.text = "Effect Description:\n";
+        detailsObj.effects.text = "Effects:\n";
+        detailsObj.itemDescription.text = "Description:\n";
+        detailsObj.itemImage.sprite = null;
+        detailsObj.itemName.text = "";
     }
 }

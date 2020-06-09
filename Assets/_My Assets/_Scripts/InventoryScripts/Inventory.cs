@@ -19,7 +19,7 @@ public class Inventory : MonoBehaviour
     public int totalItems;
 
     public GameObject elementOwnerPrefab;//The grid space in which an item can reside
-    public GameObject itemDropTest; //test for dropping items in world
+    public GameObject itemDrop;
 
     #region Player Actions
     private PlayerControls pControls;
@@ -69,6 +69,8 @@ public class Inventory : MonoBehaviour
 
         slot.quantity++;
 
+        totalItems++;
+
         slot.SetQuantityText();
     }
 
@@ -80,7 +82,7 @@ public class Inventory : MonoBehaviour
             InventorySlot slot = go.GetComponent<InventorySlot>();
             ItemBase child = slot.child;
 
-            if (child == null || !slot.inUse)
+            if (child == null)
                 continue;
 
             if (child.Name == item.Name)
@@ -105,6 +107,7 @@ public class Inventory : MonoBehaviour
                 slot.img.sprite = Resources.Load<Sprite>(item.Icon);
 
                 slot.quantity++;
+
                 totalItems++;
 
                 slot.SetQuantityText();
@@ -116,8 +119,6 @@ public class Inventory : MonoBehaviour
         }
 
         AddSlotWithItem(item);
-
-        totalItems++;
     }
 
     public void ExpandInventory(int slots)
@@ -126,6 +127,24 @@ public class Inventory : MonoBehaviour
         {
             AddSlot();
         }
+
+        foreach (KeyValuePair<object, GameObject> pair in inventorySlots)
+        {
+            pair.Value.GetComponent<InventorySlot>().ownerInventory = this.gameObject;
+        }
+    }
+
+    public InventorySlot GetLastSelected()
+    {
+        foreach (KeyValuePair<object, GameObject> pair in inventorySlots)
+        {
+            InventorySlot slot = pair.Value.GetComponent<InventorySlot>();
+
+            if (slot.Selected())
+                return slot;
+        }
+
+        return null;
     }
 
     public void DropItem(InputAction.CallbackContext context)
@@ -144,13 +163,21 @@ public class Inventory : MonoBehaviour
 
         curSlot.quantity--;
 
-        curSlot.SetQuantityText();
 
-        GameObject item = Instantiate(itemDropTest, pT);
+        GameObject item = Instantiate(itemDrop, pT);
 
         item.transform.SetParent(gameManager.Instance.gameObject.transform);
         item.GetComponent<ItemDropped>().SetItem(curSlot.child);
-        item.transform.position = new Vector3(pT.position.x, pT.position.y + item.GetComponent<SpriteRenderer>().bounds.size.y/2, pT.position.z);
+        item.transform.position = new Vector3(pT.position.x, pT.position.y + item.GetComponent<SpriteRenderer>().bounds.size.y / 2, pT.position.z);
+
+        if (curSlot.quantity == 0)
+        {
+            curSlot.img.sprite = null;
+
+            curSlot.EmptySlot();
+        }
+        else
+            curSlot.SetQuantityText();
     }
 
     public void SetIndex(int val)

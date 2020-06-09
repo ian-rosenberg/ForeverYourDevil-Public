@@ -36,7 +36,7 @@ public class gameManager : MonoBehaviour
     public Animator CanvasAnimator;
 
     [Header("Click Indicator")]
-    public GameObject clickIndicator; //Has 2 particle effects, one for normal and one for turning off.
+    public GameObject clickIndicator; //Has 2 particles, one for normal and one for turning off.
     public Animator clickIndicAnim;
 
     //Singleton creation
