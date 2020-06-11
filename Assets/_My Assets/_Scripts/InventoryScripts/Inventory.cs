@@ -75,6 +75,7 @@ public class Inventory : MonoBehaviour
                 slot.quantity++;
 
                 slot.SetQuantityText();
+                slot.inUse = true;
 
                 totalItems++;
                 return;
@@ -85,8 +86,9 @@ public class Inventory : MonoBehaviour
         {
             GameObject go = inventorySlots[i];
             InventorySlot slot = go.GetComponent<InventorySlot>();
+            ItemBase child = slot.child;
 
-            if (!slot.inUse)
+            if (child == null || !slot.inUse)
             {
                 slot.child = item;
                 slot.img.sprite = Resources.Load<Sprite>(item.Icon);

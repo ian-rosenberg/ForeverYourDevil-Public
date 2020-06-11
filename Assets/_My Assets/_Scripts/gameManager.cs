@@ -157,6 +157,7 @@ public class gameManager : MonoBehaviour
         {
             ChangeState(prevState);
             Time.timeScale = 1;
+            player.agent.ResetPath();
         }
     }
 

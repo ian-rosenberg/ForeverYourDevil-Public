@@ -129,6 +129,8 @@ public class InventoryManagement : MonoBehaviour
 
         CreateSharedInventory();
 
+        AddPorridge();
+
         SetInventoriesInactive();
     }
 
@@ -193,6 +195,9 @@ public class InventoryManagement : MonoBehaviour
     {
         SharedInventory sI = sharedInventory.GetComponentInChildren<SharedInventory>();
         sI.AddSingleItem(itemList.Consumables[0]);
+        sI.AddSingleItem(itemList.Consumables[0]);
+
+        sI.AddSingleItem(itemList.Consumables[1]);
     }
 
     private void CreateItemDatabase(string path)
