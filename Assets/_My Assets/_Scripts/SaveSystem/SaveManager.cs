@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using TMPro;
@@ -62,7 +63,7 @@ public struct Save
         notNull = 0;
     }
 
-    public Save(int index, string areaID, string sceneName, string chapterName, float playTime, Vector3 playerPosition, int health, int maxHealth, int tolerance, int maxTolerance, int stamina, int maxStamina, string currentLeader, string[] partyMembers,string[] extraMembers)
+    public Save(int index, string areaID, string sceneName, string chapterName, float playTime, Vector3 playerPosition, int health, int maxHealth, int tolerance, int maxTolerance, int stamina, int maxStamina, string currentLeader, string[] partyMembers, string[] extraMembers)
     {
         this.index = index;
         this.areaID = areaID;
@@ -89,6 +90,8 @@ public struct Save
 
 public class SaveManager : MonoBehaviour
 {
+    public GameObject SavingCanvas;
+
     public Save_Slot[] saveSlotList;
 
     private gameManager gm;
@@ -149,8 +152,8 @@ public class SaveManager : MonoBehaviour
         gm.player.stamina,
         gm.player.maxStamina,
         "Penny_Test_Head",
-        new string[] {"","",""},
-        new string[] {"","","",""});
+        new string[] { "Player", "", "" },
+        new string[] { "", "", "", "" });
 
         //Write save to bin file
         export += "/Save (" + num + ")";
@@ -247,5 +250,21 @@ public class SaveManager : MonoBehaviour
         {
             Debug.Log("PartyMember (" + i + "): " + save.partyMembers[i]);
         }
+    }
+
+    public void disableCanvas(float delay)
+    {
+        StartCoroutine(delayedDisable(delay));
+    }
+
+    private IEnumerator delayedDisable(float delay)
+    {
+        //Play animation
+        SavingCanvas.GetComponent<Animator>().SetTrigger("Exit");
+        yield return new WaitForSecondsRealtime(delay);
+       
+        //Turn off canvas
+        SavingCanvas.SetActive(false);
+        gm.UnPauseGame();
     }
 }

@@ -48,11 +48,13 @@ public class Save_Slot : MonoBehaviour
         saveManager.loadingIcon.SetActive(true);
         saveManager.SetAllSaveSlotsInteractable(false);
         //Wait until game is saved before displaying information
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSecondsRealtime(1f);
         saveManager.SetAllSaveSlotsInteractable(true);
         saveManager.loadingIcon.SetActive(false);
         //Display information from save.
         DisplaySaveInfo();
+        //Exit menu
+        saveManager.disableCanvas(0.333f);
     }
     public void LoadSave()
     {
@@ -97,7 +99,8 @@ public class Save_Slot : MonoBehaviour
                     continue;
                 }
                 //Else, add party member to thing
-                else {
+                else
+                {
                     PartyMember[i].gameObject.SetActive(true);
                     PartyMember[i].sprite = Resources.Load<Sprite>("Sprites/" + save.partyMembers[i]);
                 }
