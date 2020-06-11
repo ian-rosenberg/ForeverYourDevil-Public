@@ -87,18 +87,36 @@ public class Save_Slot : MonoBehaviour
             else
                 Leader.gameObject.SetActive(false);
 
-            //Set Party Images
-            for (int i = 0; i < save.partyMembers.Length; i++)
+            //Set Party Member Images
+            for (int i = 0; i < PartyMember.Length; i++)
             {
-                if (i < 3)
+                //If member is a blank string, set it active to false
+                if (save.partyMembers[i].Equals(""))
                 {
+                    PartyMember[i].gameObject.SetActive(false);
+                    continue;
+                }
+                //Else, add party member to thing
+                else {
                     PartyMember[i].gameObject.SetActive(true);
                     PartyMember[i].sprite = Resources.Load<Sprite>("Sprites/" + save.partyMembers[i]);
                 }
+            }
+
+            //Set Extra Member Images
+            for (int i = 0; i < ExtraMember.Length; i++)
+            {
+                //If member is a blank string, set it active to false
+                if (save.extraMembers[i].Equals(""))
+                {
+                    ExtraMember[i].gameObject.SetActive(false);
+                    continue;
+                }
+                //Else, add party member to thing
                 else
                 {
                     ExtraMember[i].gameObject.SetActive(true);
-                    ExtraMember[i].sprite = Resources.Load<Sprite>("Sprites/" + save.partyMembers[i]);
+                    ExtraMember[i].sprite = Resources.Load<Sprite>("Sprites/" + save.extraMembers[i]);
                 }
             }
         }

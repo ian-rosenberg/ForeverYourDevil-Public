@@ -34,6 +34,7 @@ public struct Save
     public string currentLeader;
 
     public string[] partyMembers;
+    public string[] extraMembers;
 
     /**
      * @brief create a blank save that has a notNull value of 0;
@@ -55,12 +56,13 @@ public struct Save
         playerMaxStamina = 0;
         currentLeader = null;
         partyMembers = null;
+        extraMembers = null;
 
         //If not successful, set notNull flag
         notNull = 0;
     }
 
-    public Save(int index, string areaID, string sceneName, string chapterName, float playTime, Vector3 playerPosition, int health, int maxHealth, int tolerance, int maxTolerance, int stamina, int maxStamina, string currentLeader, string[] partyMembers)
+    public Save(int index, string areaID, string sceneName, string chapterName, float playTime, Vector3 playerPosition, int health, int maxHealth, int tolerance, int maxTolerance, int stamina, int maxStamina, string currentLeader, string[] partyMembers,string[] extraMembers)
     {
         this.index = index;
         this.areaID = areaID;
@@ -78,6 +80,7 @@ public struct Save
         this.playerMaxStamina = maxStamina;
         this.currentLeader = currentLeader;
         this.partyMembers = partyMembers;
+        this.extraMembers = extraMembers;
 
         //If successful, set notNull flag
         notNull = 1;
@@ -146,14 +149,12 @@ public class SaveManager : MonoBehaviour
         gm.player.stamina,
         gm.player.maxStamina,
         "Penny_Test_Head",
-        new string[] { "Player" });
+        new string[] {"","",""},
+        new string[] {"","","",""});
 
         //Write save to bin file
         export += "/Save (" + num + ")";
-        if (!File.Exists(export))
-        {
-            File.Create(export);
-        }
+
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file = new FileStream(export, FileMode.Create);
         bf.Serialize(file, save);
