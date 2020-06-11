@@ -30,12 +30,16 @@ public class PartyMember : MonoBehaviour
     public gameManager gameManager;
 
 
+    [Header("Inventory")]
+    [SerializeField]
+    protected Inventory shared;
+    protected Inventory personal;
+
+
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
-
-
     }
 
     // Start is called before the first frame update

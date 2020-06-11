@@ -65,7 +65,7 @@ public class Dialogue : MonoBehaviour
     private bool skip = false;                      /**Display all characters at once if true, one at a time if false*/
 
     [Header("Player Controls")]
-    private PlayerControls pControls;
+    public PlayerControls pControls;
 
 
     private void OnEnable()

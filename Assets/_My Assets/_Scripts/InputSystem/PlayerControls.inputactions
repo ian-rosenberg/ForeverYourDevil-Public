@@ -25,7 +25,7 @@
                     "name": "ManualTravel",
                     "type": "PassThrough",
                     "id": "ed077dfc-df69-4877-b2cb-7e5455abfc8f",
-                    "expectedControlType": "Vector2",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
                 },
@@ -49,6 +49,14 @@
                     "name": "LockTarget",
                     "type": "Button",
                     "id": "ebd54fb4-1e32-40c8-a540-404ef5c27222",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press(behavior=2)"
+                },
+                {
+                    "name": "Use",
+                    "type": "Button",
+                    "id": "87ae3d39-87df-4eee-8e9b-c811e6243ddc",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "Press(behavior=2)"
@@ -133,8 +141,8 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "Arrow Keys",
-                    "id": "a568e621-28c8-42e9-b18f-96f1ef36a5d6",
+                    "name": "ArrowKeys",
+                    "id": "86fd39d7-dbc6-4491-aa30-4dd1983d504d",
                     "path": "2DVector",
                     "interactions": "",
                     "processors": "",
@@ -145,7 +153,7 @@
                 },
                 {
                     "name": "up",
-                    "id": "832db1c4-f24c-4fde-be17-dcf96800f3c1",
+                    "id": "d4bbab61-d933-4ec9-9fb4-d61bcb4669fd",
                     "path": "<Keyboard>/upArrow",
                     "interactions": "",
                     "processors": "",
@@ -156,33 +164,33 @@
                 },
                 {
                     "name": "down",
-                    "id": "7ca0232e-7ac7-4ff8-9d72-53333b5043fd",
+                    "id": "61ef83e4-cb3c-4dd5-8fe9-2fc8bb4c6c60",
                     "path": "<Keyboard>/downArrow",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard&Mouse",
+                    "groups": "",
                     "action": "ManualTravel",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
                     "name": "left",
-                    "id": "8c983f2b-3172-4459-99a2-6eac8cc392e2",
+                    "id": "eba4dc22-b752-4b37-bb8a-8f9909b87757",
                     "path": "<Keyboard>/leftArrow",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard&Mouse",
+                    "groups": "",
                     "action": "ManualTravel",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
                     "name": "right",
-                    "id": "d1c26b6d-70fa-429d-a65b-62ad8a8ec608",
+                    "id": "af1ae47c-e024-4319-8e0d-879dad059b21",
                     "path": "<Keyboard>/rightArrow",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard&Mouse",
+                    "groups": "",
                     "action": "ManualTravel",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -219,6 +227,17 @@
                     "action": "LockTarget",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d44bf188-568a-483a-a944-43f00b976f4f",
+                    "path": "<Keyboard>/e",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Use",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -232,7 +251,7 @@
                     "id": "ba7f699d-397a-4a24-880a-9fe898ebc144",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Press"
+                    "interactions": ""
                 },
                 {
                     "name": "Interact",
@@ -324,7 +343,7 @@
                     "path": "<Keyboard>/upArrow",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Touch",
                     "action": "Navigate",
                     "isComposite": false,
                     "isPartOfComposite": true

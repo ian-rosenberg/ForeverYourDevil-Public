@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
@@ -35,17 +36,11 @@ public class gameManager : MonoBehaviour
     public Animator CanvasAnimator;
 
     [Header("Click Indicator")]
-    public GameObject clickIndicator; //Has 2 particle effects, one for normal and one for turning off.
+    public GameObject clickIndicator; //Has 2 particles, one for normal and one for turning off.
     public Animator clickIndicAnim;
-
-
-    [Header("Player Input")]
-    private PlayerInput pInput;
-
 
     //Singleton creation
     private static gameManager instance;
-
     public static gameManager Instance
     {
         get
@@ -61,15 +56,17 @@ public class gameManager : MonoBehaviour
     public STATE gameState; //Current State of the game
     private STATE prevState; //Previous State of the game (before pausing)
 
-    private PlayerControls pControls;
-
     #endregion Main Variables
 
-
+    [Header("Player Controls For Game")]
+    public PlayerControls pControls;
+    
     #region Player Actions
     private void OnEnable()
     {
-        pInput = GetComponentInChildren<PlayerInput>();
+        player = PlayerController.Instance;
+        mainCamera = CameraController.Instance;
+
         pControls = new PlayerControls();
 
         pControls.Player.TogglePause.performed += TogglePause;   
@@ -85,11 +82,6 @@ public class gameManager : MonoBehaviour
     }
     #endregion
 
-    private void Awake()
-    {
-        player = PlayerController.Instance;
-        mainCamera = CameraController.Instance;
-    }
     private void Start()
     {
         ChangeState(STATE.TRAVELING);
@@ -165,6 +157,7 @@ public class gameManager : MonoBehaviour
         {
             ChangeState(prevState);
             Time.timeScale = 1;
+            player.agent.ResetPath();
         }
     }
 
@@ -172,20 +165,16 @@ public class gameManager : MonoBehaviour
     {
         pauseMenu.SetActive(false);
 
-        InventoryManagement.Instance.SetSharedInventoryActive(true);
-    }
+        SetCanPause(false);
 
-    public void CloseInventory()
-    {
-        InventoryManagement.Instance.SetSharedInventoryActive(false);
-        
-        pauseMenu.SetActive(true);
+        InventoryManagement.Instance.SetSharedInventoryActive(true);
     }
 
     public void SetCanPause(bool pause)
     {
         canPause = pause;
     }
+
 
     #endregion Pausing
 

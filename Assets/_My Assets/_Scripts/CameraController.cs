@@ -57,9 +57,7 @@ public class CameraController : MonoBehaviour
     [Header("Player Input")]
     private bool camReset = false;
     private bool camLockState = false;
-    private PlayerControls pControls;
-    private Vector3 camOffsetReset;
-
+    public PlayerControls pControls;
 
     private void OnEnable()
     {
@@ -173,6 +171,7 @@ public class CameraController : MonoBehaviour
         mouseY = orig_rot_y.x;
         isCameraReseting = false;
 
+        followScript.target = gm.player.transform;
         cameraBehavior = Camera_Following;
         cameraMode = MODE.FOLLOWING;
         prevMode = MODE.START;

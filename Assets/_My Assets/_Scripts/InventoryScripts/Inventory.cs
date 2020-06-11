@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Newtonsoft.Json;
 using TMPro;
@@ -10,6 +12,8 @@ public class Inventory : MonoBehaviour
 {
     [Header("Inventory Base Class")]
     private int slotIndices;
+    private InventorySlot selectedItem;
+
 
     public Dictionary<object, GameObject> inventorySlots;
     public int selectedIndex = 0;
@@ -17,6 +21,10 @@ public class Inventory : MonoBehaviour
     public int totalItems;
 
     public GameObject elementOwnerPrefab;//The grid space in which an item can reside
+    public GameObject itemDrop;
+
+
+    public bool canSelect = true;
 
     public void AddSlot()
     {
@@ -46,6 +54,8 @@ public class Inventory : MonoBehaviour
 
         slot.quantity++;
 
+        totalItems++;
+
         slot.SetQuantityText();
     }
 
@@ -57,7 +67,7 @@ public class Inventory : MonoBehaviour
             InventorySlot slot = go.GetComponent<InventorySlot>();
             ItemBase child = slot.child;
 
-            if (child == null || !slot.inUse)
+            if (child == null)
                 continue;
 
             if (child.Name == item.Name)
@@ -65,6 +75,7 @@ public class Inventory : MonoBehaviour
                 slot.quantity++;
 
                 slot.SetQuantityText();
+                slot.inUse = true;
 
                 totalItems++;
                 return;
@@ -75,13 +86,15 @@ public class Inventory : MonoBehaviour
         {
             GameObject go = inventorySlots[i];
             InventorySlot slot = go.GetComponent<InventorySlot>();
+            ItemBase child = slot.child;
 
-            if (!slot.inUse)
+            if (child == null || !slot.inUse)
             {
                 slot.child = item;
                 slot.img.sprite = Resources.Load<Sprite>(item.Icon);
 
                 slot.quantity++;
+
                 totalItems++;
 
                 slot.SetQuantityText();
@@ -93,8 +106,6 @@ public class Inventory : MonoBehaviour
         }
 
         AddSlotWithItem(item);
-
-        totalItems++;
     }
 
     public void ExpandInventory(int slots)
@@ -103,15 +114,81 @@ public class Inventory : MonoBehaviour
         {
             AddSlot();
         }
+
+        foreach (KeyValuePair<object, GameObject> pair in inventorySlots)
+        {
+            pair.Value.GetComponent<InventorySlot>().ownerInventory = this.gameObject;
+        }
     }
 
-    public void DropItem()
+    public InventorySlot GetLastSelected()
     {
+        foreach (KeyValuePair<object, GameObject> pair in inventorySlots)
+        {
+            InventorySlot slot = pair.Value.GetComponent<InventorySlot>();
 
+            if (slot.Selected())
+                return slot;
+        }
+
+        return null;
+    }
+    
+    public InventorySlot GetSelected()
+    {
+        return inventorySlots[selectedIndex].GetComponent<InventorySlot>();
+    }
+
+    public void DropItem(InputAction.CallbackContext context)
+    {
+        InventorySlot curSlot = inventorySlots[selectedIndex].GetComponent<InventorySlot>();
+        Transform pT = gameManager.Instance.player.transform;
+
+        if (curSlot == null)
+            return;
+
+        if (curSlot.child == null)
+            return;
+
+        if (curSlot.quantity < 1)
+            return;
+
+        curSlot.quantity--;
+
+
+        GameObject item = Instantiate(itemDrop, pT);
+
+        item.transform.SetParent(gameManager.Instance.gameObject.transform);
+        item.GetComponent<ItemDropped>().SetItem(curSlot.child);
+        item.transform.position = new Vector3(pT.position.x, pT.position.y + item.GetComponent<SpriteRenderer>().bounds.size.y / 4, pT.position.z);
+
+        if (curSlot.quantity == 0)
+        {
+            curSlot.img.sprite = null;
+
+            curSlot.EmptySlot();
+        }
+        else
+            curSlot.SetQuantityText();
     }
 
     public void SetIndex(int val)
     {
         selectedIndex += val;
+    }
+
+    public void DisableSelection()
+    {
+        canSelect = false;
+    }
+
+    public void SelectItemByIndex(int index)
+    {
+        if (index <= inventorySlots.Count && index >= 0)
+            selectedIndex = 0;
+        else
+            selectedIndex = index;
+
+        selectedItem = inventorySlots[index].GetComponent<InventorySlot>();
     }
 }

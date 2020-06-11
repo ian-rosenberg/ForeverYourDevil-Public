@@ -22,21 +22,18 @@ public class NPCController : MonoBehaviour
     {
         pControls = new PlayerControls();
 
-        pControls.UI.Interact.performed += context => interact = !interact;
+        pControls.Player.Use.performed += context => interact = true;
 
-        pControls.UI.Interact.Enable();
-
-        pControls.Player.ManualTravel.Enable();
+        pControls.Player.ManualTravel.Disable();
     }
 
 
     private void OnDisable()
     {
-        pControls.UI.Interact.performed -= context => interact = !interact;
+        pControls.Player.Use.performed -= context => interact = true;
 
-        pControls.UI.Interact.Disable();
-
-        pControls.Player.ManualTravel.Disable();
+        pControls.Player.Use.Disable();
+        pControls.Player.ManualTravel.Enable();
     }
 
     private void OnTriggerStay(Collider other)
@@ -47,7 +44,8 @@ public class NPCController : MonoBehaviour
 
             if (interact)
             {
-                Debug.Log("Pressing interact...");
+                pControls.Player.Use.performed -= context => interact = true;
+
                 diagManager.TriggerDialogue(conversationID);
                 talkIndicator.SetActive(false);
             }

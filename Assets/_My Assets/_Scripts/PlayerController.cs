@@ -2,9 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Interactions;
 
 /**
  * PlayerController - Script for player movement out-ofcombat and within combat
@@ -21,6 +19,10 @@ public class PlayerController : PartyMember
     
     private bool combatMoving;
 
+
+    [Header("Inventory Management")]
+    private InventoryManagement invManager;
+
     //Pathfinding
     [Header("AStar Pathfinding")]
     public AStarNode combatPosition; // node representing the grid position of the player
@@ -36,14 +38,15 @@ public class PlayerController : PartyMember
     private AStarNode selected;
 
     [Header("Behavior")]
-    public Action currentBehavior; //Function pointer for player behavior (changed by gameManager)
-    
-    private bool autoMove = false;
     [SerializeField]
+    private bool canPickup = false;
+    public Action currentBehavior; //Function pointer for player behavior (changed by gameManager)
+
+
     private bool sprint = false;
 
     [Header("Player Actions")]
-    private PlayerControls pControls;
+    public PlayerControls pControls;
     private Vector2 axes;
 
     //Singleton creation
@@ -60,10 +63,11 @@ public class PlayerController : PartyMember
 
     private void OnEnable()
     {
-        pControls = new PlayerControls();
+       pControls = new PlayerControls();
         
         pControls.Player.LeftClick.performed += AutoTravel;
         pControls.Player.LeftClick.performed += CombatTravel;
+        pControls.Player.Use.performed += Pickup;
         pControls.Player.Sprint.performed += Sprint;
         pControls.Player.ManualTravel.performed += context => axes = context.ReadValue<Vector2>();
         
@@ -71,19 +75,27 @@ public class PlayerController : PartyMember
         pControls.Player.LeftClick.Enable();
         pControls.Player.Sprint.Enable();
         pControls.Player.ManualTravel.Enable();
+        pControls.Player.Use.Enable();
     }
 
+    public void Pickup(InputAction.CallbackContext obj)
+    {
+        StartCoroutine(PickupItem());
+    }
 
     private void OnDisable()
     {
         pControls.Player.LeftClick.performed -= AutoTravel;
         pControls.Player.LeftClick.performed -= CombatTravel;
+        pControls.Player.Use.performed -= Pickup;
         pControls.Player.Sprint.started -= Sprint;
         pControls.Player.ManualTravel.performed -= context => axes = context.ReadValue<Vector2>();
+
 
         pControls.Player.LeftClick.Disable();
         pControls.Player.Sprint.Disable();
         pControls.Player.ManualTravel.Disable();
+        pControls.Player.Use.Disable();
     }
 
     // Awake is called before start
@@ -97,6 +109,7 @@ public class PlayerController : PartyMember
         prevPath = path;
 
         gameManager = gameManager.Instance;
+        invManager = InventoryManagement.Instance;
         
         currentBehavior = Player_Travelling;
     }
@@ -130,6 +143,33 @@ public class PlayerController : PartyMember
             StartCoroutine(gameManager.Instance.ClickOff());
         }
     }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if ((other.gameObject.GetComponent<ItemDropped>() as ItemDropped) != null && canPickup)
+        {
+            ItemBase item = other.GetComponent<ItemDropped>().GetItem();
+
+            Debug.Log("Picked up " + item.Name);
+
+            invManager.sharedInventory.SetActive(true);
+            invManager.GetComponentInChildren<SharedInventory>().AddSingleItem(item);
+            invManager.sharedInventory.SetActive(false);
+
+            Destroy(other.gameObject);
+
+            canPickup = false;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if ((other.gameObject.GetComponent<ItemDropped>() as ItemDropped) != null)
+        {
+            canPickup = false;
+        }
+    }
+
     private void Sprint(InputAction.CallbackContext context)
     {
         sprint = !sprint;
@@ -326,6 +366,33 @@ public class PlayerController : PartyMember
                 currentBehavior = Player_Talking;
                 break;
         }
+
+        if (newState != gameManager.STATE.TRAVELING)
+        { 
+            pControls.Player.Use.performed -= Pickup;
+
+            if (newState == gameManager.STATE.COMBAT)
+            {
+                pControls.Player.Sprint.started -= Sprint;
+                pControls.Player.ManualTravel.performed -= context => axes = context.ReadValue<Vector2>();
+            }
+        } 
+        else
+        {
+            pControls.Player.Use.performed += Pickup;
+            pControls.Player.Sprint.started += Sprint;
+            pControls.Player.ManualTravel.performed += context => axes = context.ReadValue<Vector2>();
+        }
+        
+    }
+
+    IEnumerator PickupItem()
+    {
+        canPickup = true;
+
+        yield return new WaitForSeconds(1f);
+
+        canPickup = false;
     }
 
     public void Player_Talking()
