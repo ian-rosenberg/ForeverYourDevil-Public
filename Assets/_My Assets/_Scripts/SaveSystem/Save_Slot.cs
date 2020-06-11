@@ -1,68 +1,129 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
+using System.Collections;
+using System.Runtime.InteropServices.ComTypes;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
-using System;
 
 public class Save_Slot : MonoBehaviour
 {
     [Tooltip("The number of the save. CRUCIAL")]
     public int index = 0;
-    public SaveManager saveManager;
 
-    public bool saveMode; //true = Save, false = load;
+    public SaveManager saveManager;
+    public Button button;
 
     public TextMeshProUGUI GameTime, AreaID, ChapterName, SaveName;
     public Image Leader;
     public Image[] PartyMember, ExtraMember;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         saveManager = SaveManager.Instance;
+        button = GetComponent<Button>();
+        button.onClick.AddListener(OnClick);
+
+        DisplaySaveInfo();
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
+    }
+
+    public void OnClick()
+    {
+
+        if (saveManager.saveMode)
+            StartCoroutine(SaveAndDisplay());
+        else
+            LoadSave();
 
     }
 
+    public IEnumerator SaveAndDisplay()
+    {
+        saveManager.SaveGame(index);
+        saveManager.loadingIcon.SetActive(true);
+        saveManager.SetAllSaveSlotsInteractable(false);
+        //Wait until game is saved before displaying information
+        yield return new WaitForSeconds(1f);
+        saveManager.SetAllSaveSlotsInteractable(true);
+        saveManager.loadingIcon.SetActive(false);
+        //Display information from save.
+        DisplaySaveInfo();
+    }
+    public void LoadSave()
+    {
+        saveManager.LoadSave(index);
+    }
     public void DisplaySaveInfo()
     {
-        //Set all parameters
+        //Read save.
+        Debug.Log("<color=green>Local Save Slot index: " + index + "</color>");
         Save save = saveManager.ReadSave(index);
-        GameTime.text = timeToString(save.playTime);
-        AreaID.text = save.areaID;
-        //  ChapterName.text = save.chapterName;
-        
-        //Set Save name - 0 = autosave
-        if (index == 0) SaveName.text = "Autosave";
-        else SaveName.text = "Save " + index;
-       
-        //Set Leader Image
-        if (!save.currentLeader.Equals(null))
+
+        //saveManager.DebugLogSaveProperties(save);
+
+        //If Save is populated, set all parameters
+        if (save.notNull != 0)
         {
-            Leader.gameObject.SetActive(true);
-            Leader.sprite = Resources.Load<Sprite>("Sprites/" + save.currentLeader);
+            //Set all parameters
+            GameTime.text = timeToString(save.playTime);
+            AreaID.text = save.areaID;
+            ChapterName.text = save.chapterName;
+
+            //Set Save name - 0 = autosave
+            if (index == 0) SaveName.text = "Autosave";
+            else SaveName.text = "Save " + index;
+
+            //Set Leader Image
+            if (!save.currentLeader.Equals(null))
+            {
+                Leader.gameObject.SetActive(true);
+                Leader.sprite = Resources.Load<Sprite>("Sprites/" + save.currentLeader);
+            }
+            else
+                Leader.gameObject.SetActive(false);
+
+            //Set Party Images
+            for (int i = 0; i < save.partyMembers.Length; i++)
+            {
+                if (i < 3)
+                {
+                    PartyMember[i].gameObject.SetActive(true);
+                    PartyMember[i].sprite = Resources.Load<Sprite>("Sprites/" + save.partyMembers[i]);
+                }
+                else
+                {
+                    ExtraMember[i].gameObject.SetActive(true);
+                    ExtraMember[i].sprite = Resources.Load<Sprite>("Sprites/" + save.partyMembers[i]);
+                }
+            }
         }
+        //If null save file, or save not found, use default values
         else
-            Leader.gameObject.SetActive(false);
-
-        //Set Party Images
-        for(int i = 0; i < save.partyMembers.Length; i++) {
-            PartyMember[i].gameObject.SetActive(true);
-            PartyMember[i].sprite = Resources.Load<Sprite>("Sprites/" + save.partyMembers[i]);
-        }
-
-        //Set Extra Members
-        for (int i = 4; i < save.partyMembers.Length+4; i++)
         {
-            ExtraMember[i].gameObject.SetActive(true);
-            ExtraMember[i].sprite = Resources.Load<Sprite>("Sprites/" + save.partyMembers[i]);
+            GameTime.text = "___:__:__";
+            AreaID.text = "...";
+            ChapterName.text = "...";
+            SaveName.text = "NO DATA";
+            Leader.gameObject.SetActive(false);
+            //Set Party Images
+            for (int i = 0; i < PartyMember.Length; i++)
+            {
+                PartyMember[i].gameObject.SetActive(false);
+            }
+            //Set Extra Members
+            for (int i = 0; i < ExtraMember.Length; i++)
+            {
+                ExtraMember[i].gameObject.SetActive(false);
+            }
         }
     }
+
+
     public string timeToString(float time)
     {
         //Separate time into readable numbers

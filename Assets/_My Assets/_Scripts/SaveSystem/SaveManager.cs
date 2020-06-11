@@ -1,11 +1,14 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using TMPro;
 using UnityEngine;
 
 /**
  * @brief A structure that defines what a Save File is.
  */
 
+[Serializable]
 public struct Save
 {
     //General properties
@@ -14,10 +17,11 @@ public struct Save
     public int index; /**Name/number of the save file*/
     public string areaID; /**Name of the area that the player was in last*/
     public string sceneName; /**Name of the scene where the player will load/spawn*/
+    public string chapterName; /**Name of the scene where the player will load/spawn*/
     public float playTime; /**How long the player has been playing total.*/
 
     //Player properties
-    public Vector3 playerPosition;
+    public float[] playerPosition; /**Convert Vector3 to floats for serializability*/
 
     public int playerHealth; /**Current Health of the player; 0 kills player*/
     public int playerMaxHealth; /**Max Health the player is allowed to heal to*/
@@ -37,11 +41,12 @@ public struct Save
 
     public Save(int index)
     {
-        this.index = 0;
+        this.index = index;
         areaID = null;
         sceneName = null;
+        chapterName = null;
         playTime = 0;
-        playerPosition = Vector3.zero;
+        playerPosition = new float[0];
         playerHealth = 0;
         playerMaxHealth = 0;
         playerTolerance = 0;
@@ -55,13 +60,16 @@ public struct Save
         notNull = 0;
     }
 
-    public Save(int index, string sceneName, string areaID, float playTime, Vector3 playerPosition, int health, int maxHealth, int tolerance, int maxTolerance, int stamina, int maxStamina, string currentLeader, string[] partyMembers) : this()
+    public Save(int index, string areaID, string sceneName, string chapterName, float playTime, Vector3 playerPosition, int health, int maxHealth, int tolerance, int maxTolerance, int stamina, int maxStamina, string currentLeader, string[] partyMembers)
     {
         this.index = index;
         this.areaID = areaID;
         this.sceneName = sceneName;
+        this.chapterName = chapterName;
         this.playTime = playTime;
-        this.playerPosition = playerPosition;
+
+        this.playerPosition = new float[] { playerPosition.x, playerPosition.y, playerPosition.z };
+
         this.playerHealth = health;
         this.playerMaxHealth = maxHealth;
         this.playerTolerance = tolerance;
@@ -82,6 +90,11 @@ public class SaveManager : MonoBehaviour
 
     private gameManager gm;
     private StatManager stat;
+    public bool saveMode = true; //true = Save, false = load;
+
+    //Display stuff
+    public TextMeshProUGUI Title;
+    public GameObject loadingIcon;
 
     //Singleton creation
     private static SaveManager instance;
@@ -98,8 +111,6 @@ public class SaveManager : MonoBehaviour
 
     [SerializeField]
     private string OutputDirectory; /**Output directory to save files in*/
-
-    private string OutputFilename; /**Output filename to save file*/
 
     private void Awake()
     {
@@ -125,6 +136,7 @@ public class SaveManager : MonoBehaviour
         num,
         gm.areaId,
         gm.sceneName,
+        "Chapter _: The Antithesis of Graphic Design",
         stat.GetTimeInSeconds(),
         gm.player.transform.position,
         gm.player.health,
@@ -134,7 +146,7 @@ public class SaveManager : MonoBehaviour
         gm.player.stamina,
         gm.player.maxStamina,
         "Penny_Test_Head",
-        null);
+        new string[] { "Player" });
 
         //Write save to bin file
         export += "/Save (" + num + ")";
@@ -148,20 +160,26 @@ public class SaveManager : MonoBehaviour
         file.Close();
 
         Debug.Log("File Saved!");
+        DebugLogSaveProperties(save);
+        Debug.Log("EXPORT: " + export);
     }
 
     public Save ReadSave(int num)
     {
         string import = Application.streamingAssetsPath + "/" + OutputDirectory + "/Save (" + num + ")";
-        if (!Directory.Exists(import))
+        Debug.Log("IMPORT: " + import);
+
+        if (!File.Exists(import))
         {
-            Debug.LogError("Cannot load! Directory/Save doesn't exist.");
-            return new Save(0);
+            Debug.LogWarning("Save at " + import + "does not exist.");
+            return new Save(num);
         }
 
         FileStream file = new FileStream(import, FileMode.Open);
         BinaryFormatter br = new BinaryFormatter();
-        return (Save)br.Deserialize(file);
+        Save save = (Save)br.Deserialize(file);
+        file.Close();
+        return save;
     }
 
     public void LoadSave(int num)
@@ -178,16 +196,55 @@ public class SaveManager : MonoBehaviour
         gm.player.maxTolerance = save.playerMaxTolerance;
         gm.player.stamina = save.playerStamina;
         gm.player.maxStamina = save.playerMaxStamina;
-        gm.player.transform.position = save.playerPosition; //May have to make gameManager start position for sceneName
+        gm.player.transform.position = new Vector3(save.playerPosition[0], save.playerPosition[1], save.playerPosition[2]); //May have to make gameManager start position for sceneName
         //current leader
         //party Members
     }
 
-    public void UpdateSaveSlots()
+    public void UpdateSaveSlot(int index)
+    {
+        saveSlotList[index].DisplaySaveInfo();
+    }
+
+    public void SetAllSaveSlotsInteractable(bool active)
+    {
+        foreach (Save_Slot slot in saveSlotList)
+        {
+            slot.button.interactable = active;
+        }
+    }
+
+    public void UpdateAllSaveSlots()
     {
         foreach (Save_Slot slot in saveSlotList)
         {
             slot.DisplaySaveInfo();
+        }
+    }
+
+    public void DebugLogSaveProperties(Save save)
+    {
+        Debug.Log("<color=blue>Save Properties:</color>");
+        Debug.Log("<color=blue>Save Name/ Index: " + save.index + "</color>");
+
+        Debug.Log("notNull: " + save.notNull);
+        Debug.Log("areaID: " + save.areaID);
+        Debug.Log("sceneName: " + save.sceneName);
+        Debug.Log("chapterName: " + save.chapterName);
+        Debug.Log("playTime: " + stat.timeToString(save.playTime));
+        Debug.Log("playerPosition: " + save.playerPosition[0] + ", " + save.playerPosition[1] + ", " + save.playerPosition[2]);
+        Debug.Log("playerHealth: " + save.playerHealth);
+        Debug.Log("playerMaxHealth: " + save.playerMaxHealth);
+        Debug.Log("playerTolerance: " + save.playerTolerance);
+        Debug.Log("playerMaxTolerance: " + save.playerMaxTolerance);
+        Debug.Log("playerStamina: " + save.playerStamina);
+        Debug.Log("playerMaxStamina: " + save.playerMaxStamina);
+
+        Debug.Log("Party:");
+        Debug.Log("currentLeader: " + save.currentLeader);
+        for (int i = 0; i < save.partyMembers.Length; i++)
+        {
+            Debug.Log("PartyMember (" + i + "): " + save.partyMembers[i]);
         }
     }
 }
