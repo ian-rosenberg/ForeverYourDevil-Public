@@ -35,6 +35,13 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData pointerEventData)
     {
+        if(!ownerInventory.GetComponent<Inventory>().canSelect)
+        {
+            if (selected)
+                UnSelect();
+
+            return;
+        }
         InventorySlot slot = ownerInventory.GetComponent<Inventory>().GetLastSelected();
 
         if (slot != null)

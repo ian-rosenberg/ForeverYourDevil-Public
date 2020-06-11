@@ -12,6 +12,8 @@ public class Inventory : MonoBehaviour
 {
     [Header("Inventory Base Class")]
     private int slotIndices;
+    private InventorySlot selectedItem;
+
 
     public Dictionary<object, GameObject> inventorySlots;
     public int selectedIndex = 0;
@@ -21,25 +23,8 @@ public class Inventory : MonoBehaviour
     public GameObject elementOwnerPrefab;//The grid space in which an item can reside
     public GameObject itemDrop;
 
-    #region Player Actions
-    private PlayerControls pControls;
 
-    private void OnEnable()
-    {
-        pControls = new PlayerControls();
-
-        pControls.UI.Cancel.performed += DropItem;
-
-        pControls.UI.Cancel.Enable();
-    }
-
-    private void OnDisable()
-    {
-        pControls.UI.Cancel.performed -= DropItem;
-
-        pControls.UI.Cancel.Disable();
-    }
-    #endregion
+    public bool canSelect = true;
 
     public void AddSlot()
     {
@@ -146,6 +131,11 @@ public class Inventory : MonoBehaviour
 
         return null;
     }
+    
+    public InventorySlot GetSelected()
+    {
+        return inventorySlots[selectedIndex].GetComponent<InventorySlot>();
+    }
 
     public void DropItem(InputAction.CallbackContext context)
     {
@@ -168,7 +158,7 @@ public class Inventory : MonoBehaviour
 
         item.transform.SetParent(gameManager.Instance.gameObject.transform);
         item.GetComponent<ItemDropped>().SetItem(curSlot.child);
-        item.transform.position = new Vector3(pT.position.x, pT.position.y + item.GetComponent<SpriteRenderer>().bounds.size.y / 2, pT.position.z);
+        item.transform.position = new Vector3(pT.position.x, pT.position.y + item.GetComponent<SpriteRenderer>().bounds.size.y / 4, pT.position.z);
 
         if (curSlot.quantity == 0)
         {
@@ -183,5 +173,20 @@ public class Inventory : MonoBehaviour
     public void SetIndex(int val)
     {
         selectedIndex += val;
+    }
+
+    public void DisableSelection()
+    {
+        canSelect = false;
+    }
+
+    public void SelectItemByIndex(int index)
+    {
+        if (index <= inventorySlots.Count && index >= 0)
+            selectedIndex = 0;
+        else
+            selectedIndex = index;
+
+        selectedItem = inventorySlots[index].GetComponent<InventorySlot>();
     }
 }

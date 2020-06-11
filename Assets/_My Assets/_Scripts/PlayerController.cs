@@ -46,7 +46,7 @@ public class PlayerController : PartyMember
     private bool sprint = false;
 
     [Header("Player Actions")]
-    private PlayerControls pControls;
+    public PlayerControls pControls;
     private Vector2 axes;
 
     //Singleton creation
@@ -63,13 +63,11 @@ public class PlayerController : PartyMember
 
     private void OnEnable()
     {
-        pControls = new PlayerControls();
+       pControls = new PlayerControls();
         
         pControls.Player.LeftClick.performed += AutoTravel;
         pControls.Player.LeftClick.performed += CombatTravel;
-        pControls.Player.Use.performed += context => {
-            StartCoroutine("PickupItem");
-        };
+        pControls.Player.Use.performed += Pickup;
         pControls.Player.Sprint.performed += Sprint;
         pControls.Player.ManualTravel.performed += context => axes = context.ReadValue<Vector2>();
         
@@ -80,14 +78,16 @@ public class PlayerController : PartyMember
         pControls.Player.Use.Enable();
     }
 
+    public void Pickup(InputAction.CallbackContext obj)
+    {
+        StartCoroutine(PickupItem());
+    }
 
     private void OnDisable()
     {
         pControls.Player.LeftClick.performed -= AutoTravel;
         pControls.Player.LeftClick.performed -= CombatTravel;
-        pControls.Player.Use.performed -= context => {
-            StartCoroutine("PickupItem");
-        };
+        pControls.Player.Use.performed -= Pickup;
         pControls.Player.Sprint.started -= Sprint;
         pControls.Player.ManualTravel.performed -= context => axes = context.ReadValue<Vector2>();
 
@@ -366,6 +366,24 @@ public class PlayerController : PartyMember
                 currentBehavior = Player_Talking;
                 break;
         }
+
+        if (newState != gameManager.STATE.TRAVELING)
+        { 
+            pControls.Player.Use.performed -= Pickup;
+
+            if (newState == gameManager.STATE.COMBAT)
+            {
+                pControls.Player.Sprint.started -= Sprint;
+                pControls.Player.ManualTravel.performed -= context => axes = context.ReadValue<Vector2>();
+            }
+        } 
+        else
+        {
+            pControls.Player.Use.performed += Pickup;
+            pControls.Player.Sprint.started += Sprint;
+            pControls.Player.ManualTravel.performed += context => axes = context.ReadValue<Vector2>();
+        }
+        
     }
 
     IEnumerator PickupItem()

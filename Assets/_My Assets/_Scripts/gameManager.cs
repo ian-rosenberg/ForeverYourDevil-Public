@@ -56,14 +56,17 @@ public class gameManager : MonoBehaviour
     public STATE gameState; //Current State of the game
     private STATE prevState; //Previous State of the game (before pausing)
 
-    private PlayerControls pControls;
-
     #endregion Main Variables
 
-
+    [Header("Player Controls For Game")]
+    public PlayerControls pControls;
+    
     #region Player Actions
     private void OnEnable()
     {
+        player = PlayerController.Instance;
+        mainCamera = CameraController.Instance;
+
         pControls = new PlayerControls();
 
         pControls.Player.TogglePause.performed += TogglePause;   
@@ -79,11 +82,6 @@ public class gameManager : MonoBehaviour
     }
     #endregion
 
-    private void Awake()
-    {
-        player = PlayerController.Instance;
-        mainCamera = CameraController.Instance;
-    }
     private void Start()
     {
         ChangeState(STATE.TRAVELING);

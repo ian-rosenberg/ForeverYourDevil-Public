@@ -5,11 +5,12 @@ using UnityEngine;
 
 public class ItemDropped : MonoBehaviour
 {
+    public GameObject pickupIndicator;
+
     public float itemScale = 3f;
 
     private SpriteRenderer sRen = null;
     private ItemBase item = null;
-    private bool pickupFlag = false;
 
     private void Awake()
     {
@@ -22,6 +23,25 @@ public class ItemDropped : MonoBehaviour
         item = i;
 
         transform.localScale *= itemScale;
+
+        pickupIndicator = GetComponentInChildren<MeshRenderer>().gameObject;
+        pickupIndicator.SetActive(false);
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
+        {
+            pickupIndicator.SetActive(true);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
+        {
+            pickupIndicator.SetActive(false);
+        }
     }
 
     // Update is called once per frame

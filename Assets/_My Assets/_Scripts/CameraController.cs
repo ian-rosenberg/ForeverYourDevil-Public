@@ -57,7 +57,7 @@ public class CameraController : MonoBehaviour
     [Header("Player Input")]
     private bool camReset = false;
     private bool camLockState = false;
-    private PlayerControls pControls;
+    public PlayerControls pControls;
 
     private void OnEnable()
     {
