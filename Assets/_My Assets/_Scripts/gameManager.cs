@@ -8,6 +8,9 @@ public class gameManager : MonoBehaviour
 
     private bool canPause = true; //Allow pausing?
 
+    public Light skyBoxDirectionalLight;
+    public float skyBoxDirectionalLerpValue = 1f;
+
     #region SOME VARIABLES IN THIS REGION MAY BE REMOVED ONCE COMBAT TRANSITION SYSTEM IS IMPROVED
 
     [Header("Common")]
@@ -23,11 +26,12 @@ public class gameManager : MonoBehaviour
 
     [Header("Level-Specific")]
     public GameObject normalWorld; //Represents overworld
+
     public string areaId = "Level1";
     public string sceneName;
     public GameObject battleWorld; //Represents battlefield
 
-    #endregion VARIABLES IN THIS REGION WILL BE REMOVED ONCE COMBAT TRANSITION SYSTEM IS IMPROVED
+    #endregion SOME VARIABLES IN THIS REGION MAY BE REMOVED ONCE COMBAT TRANSITION SYSTEM IS IMPROVED
 
     [Header("Menus")]
     public GameObject pauseMenu;
@@ -36,10 +40,12 @@ public class gameManager : MonoBehaviour
 
     [Header("Click Indicator")]
     public GameObject clickIndicator; //Has 2 particle effects, one for normal and one for turning off.
+
     public Animator clickIndicAnim;
 
     //Singleton creation
     private static gameManager instance;
+
     public static gameManager Instance
     {
         get
@@ -61,7 +67,9 @@ public class gameManager : MonoBehaviour
     {
         player = PlayerController.Instance;
         mainCamera = CameraController.Instance;
+        skyBoxDirectionalLerpValue = 1f;
     }
+
     private void Start()
     {
         ChangeState(STATE.TRAVELING);
@@ -94,6 +102,11 @@ public class gameManager : MonoBehaviour
                 PauseGame();
             }
         }
+    }
+
+    private void FixedUpdate()
+    {
+        skyBoxDirectionalLightLerp();
     }
 
     /**
@@ -201,4 +214,13 @@ public class gameManager : MonoBehaviour
     }
 
     #endregion Entering Combat
+
+    /**
+     * @brief Decrease/increase skybox light to specified value
+     */
+
+    private void skyBoxDirectionalLightLerp()
+    {
+        skyBoxDirectionalLight.intensity = Mathf.Lerp(skyBoxDirectionalLight.intensity, skyBoxDirectionalLerpValue, 0.05f);
+    }
 }

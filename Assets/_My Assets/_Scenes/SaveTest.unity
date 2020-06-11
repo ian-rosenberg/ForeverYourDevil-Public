@@ -3196,6 +3196,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e78ac0e7d47c80049ad690a34901681b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  skyBoxDirectionalLight: {fileID: 897098451}
   mainCamera: {fileID: 0}
   player: {fileID: 591512267}
   playerSpawn:
@@ -9212,6 +9213,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1045097246}
     m_Modifications:
+    - target: {fileID: 8474254745578211, guid: 77290fd84cfca6045bcf33702f80485b, type: 3}
+      propertyPath: m_Intensity
+      value: 4.69
+      objectReference: {fileID: 0}
     - target: {fileID: 8474254763222089, guid: 77290fd84cfca6045bcf33702f80485b, type: 3}
       propertyPath: m_IsActive
       value: 0

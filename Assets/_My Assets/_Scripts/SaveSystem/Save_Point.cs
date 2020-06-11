@@ -36,6 +36,7 @@ public class Save_Point : MonoBehaviour
         {
             talkIndicator.SetActive(true);
             canActivate = true;
+            gm.skyBoxDirectionalLerpValue=0.62f;
         }
     }
 
@@ -45,6 +46,8 @@ public class Save_Point : MonoBehaviour
         {
             talkIndicator.SetActive(false);
             canActivate = false;
+            gm.skyBoxDirectionalLerpValue = 1f;
+
         }
     }
 
