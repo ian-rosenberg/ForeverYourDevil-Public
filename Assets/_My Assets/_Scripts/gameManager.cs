@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class gameManager : MonoBehaviour
 {
@@ -22,7 +23,8 @@ public class gameManager : MonoBehaviour
 
     [Header("Level-Specific")]
     public GameObject normalWorld; //Represents overworld
-
+    public string areaId = "Level1";
+    public string sceneName;
     public GameObject battleWorld; //Represents battlefield
 
     #endregion VARIABLES IN THIS REGION WILL BE REMOVED ONCE COMBAT TRANSITION SYSTEM IS IMPROVED
@@ -65,6 +67,7 @@ public class gameManager : MonoBehaviour
         ChangeState(STATE.TRAVELING);
         prevState = STATE.START; //Start out of combat\
         clickIndicator.SetActive(false);
+        sceneName = SceneManager.GetActiveScene().name;
     }
 
     public IEnumerator ClickOff()
