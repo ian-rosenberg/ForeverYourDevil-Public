@@ -17,7 +17,7 @@ xsi:schemaLocation="https://www.w3schools.com/xml VN_Schema.xsd">
       <line emotion_L="Mad">Mad.</line>
     </character>
     <character name="Beautiful Friend">
-      <line AC_L="Default_AC" AC_R="Test_AC" emotion_R="Sad">Sad. Oh, look, tan pill.</line>
+      <line AC_L="Default_AC" emotion_R="Sad">Sad. Oh, look, tan pill.</line>
       <line>Still sad.</line>
       <line emotion_R="Surprised">Surprised.</line>
     </character> 
