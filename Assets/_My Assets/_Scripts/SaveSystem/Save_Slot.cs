@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Runtime.InteropServices.ComTypes;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,19 +26,12 @@ public class Save_Slot : MonoBehaviour
         DisplaySaveInfo();
     }
 
-    // Update is called once per frame
-    private void Update()
-    {
-    }
-
     public void OnClick()
     {
-
         if (saveManager.saveMode)
             StartCoroutine(SaveAndDisplay());
         else
             LoadSave();
-
     }
 
     public IEnumerator SaveAndDisplay()
@@ -56,14 +48,16 @@ public class Save_Slot : MonoBehaviour
         //Exit menu
         saveManager.disableCanvas(0.333f);
     }
+
     public void LoadSave()
     {
-        saveManager.LoadSave(index);
+        StartCoroutine(saveManager.LoadSave(index));
     }
+
     public void DisplaySaveInfo()
     {
         //Read save.
-        Debug.Log("<color=green>Local Save Slot index: " + index + "</color>");
+        //Debug.Log("<color=green>Local Save Slot index: " + index + "</color>");
         Save save = saveManager.ReadSave(index);
 
         //saveManager.DebugLogSaveProperties(save);
@@ -122,6 +116,8 @@ public class Save_Slot : MonoBehaviour
                     ExtraMember[i].sprite = Resources.Load<Sprite>("Sprites/" + save.extraMembers[i]);
                 }
             }
+            //If all checks out, make button interactable
+            button.interactable = true;
         }
         //If null save file, or save not found, use default values
         else
@@ -141,9 +137,14 @@ public class Save_Slot : MonoBehaviour
             {
                 ExtraMember[i].gameObject.SetActive(false);
             }
+
+            //If loading, do not allow player to load blank save files
+            if (!saveManager.saveMode)
+            {
+                button.interactable = false;
+            }
         }
     }
-
 
     public string timeToString(float time)
     {

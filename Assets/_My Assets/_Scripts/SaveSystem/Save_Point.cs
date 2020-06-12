@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Save_Point : MonoBehaviour
 {
-    public GameObject SaveCanvas;
     gameManager gm;
     SaveManager sm;
 
@@ -24,9 +23,7 @@ public class Save_Point : MonoBehaviour
             //WILL CHANGE WITH NEW INPUT SYSTEM
             if (Input.GetButtonDown("Interact"))
             {
-                SaveCanvas.SetActive(true);
-                gm.PauseGame();
-                sm.UpdateAllSaveSlots();
+                sm.ShowSaveMenu();
             }
         }
     }

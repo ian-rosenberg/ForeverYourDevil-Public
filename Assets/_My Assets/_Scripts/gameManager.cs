@@ -10,6 +10,7 @@ public class gameManager : MonoBehaviour
 
     public Light skyBoxDirectionalLight;
     public float skyBoxDirectionalLerpValue = 1f;
+    public GameObject fade;
 
     #region SOME VARIABLES IN THIS REGION MAY BE REMOVED ONCE COMBAT TRANSITION SYSTEM IS IMPROVED
 
@@ -34,7 +35,7 @@ public class gameManager : MonoBehaviour
     #endregion SOME VARIABLES IN THIS REGION MAY BE REMOVED ONCE COMBAT TRANSITION SYSTEM IS IMPROVED
 
     [Header("Menus")]
-    public GameObject pauseMenu;
+    public Animator pauseMenu;
 
     public Animator CanvasAnimator;
 
@@ -68,6 +69,7 @@ public class gameManager : MonoBehaviour
         player = PlayerController.Instance;
         mainCamera = CameraController.Instance;
         skyBoxDirectionalLerpValue = 1f;
+
     }
 
     private void Start()
@@ -88,17 +90,17 @@ public class gameManager : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        //Pause Game
+        //Pause Game (WILL CHANGE DUE TO INPUT SYSTEM)
         if (Input.GetButtonDown("Pause") && canPause)
         {
             if (gameState == STATE.PAUSED)
             {
-                pauseMenu.SetActive(false);
-                UnPauseGame();
+                StartCoroutine(ExitPauseMenu());
             }
             else
             {
-                pauseMenu.SetActive(true);
+                pauseMenu.gameObject.SetActive(true);
+                fade.SetActive(true);
                 PauseGame();
             }
         }
@@ -149,7 +151,7 @@ public class gameManager : MonoBehaviour
 
     public void OpenInventory()
     {
-        pauseMenu.SetActive(false);
+        pauseMenu.gameObject.SetActive(false);
 
         SetCanPause(false);
 
@@ -222,5 +224,22 @@ public class gameManager : MonoBehaviour
     private void skyBoxDirectionalLightLerp()
     {
         skyBoxDirectionalLight.intensity = Mathf.Lerp(skyBoxDirectionalLight.intensity, skyBoxDirectionalLerpValue, 0.05f);
+    }
+
+    public void ExitPauseMenuFunction() {
+        StartCoroutine(ExitPauseMenu());
+    }
+
+    public IEnumerator ExitPauseMenu() {
+        //Play animation
+        pauseMenu.SetTrigger("Exit");
+        SetCanPause(false);
+        yield return new WaitForSecondsRealtime(0.283f);
+        pauseMenu.gameObject.SetActive(false);
+        fade.SetActive(false);
+
+        //Unpause
+        UnPauseGame();
+        SetCanPause(true);
     }
 }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /**
  * @brief A structure that defines what a Save File is.
@@ -24,6 +25,8 @@ public struct Save
     //Player properties
     public float[] playerPosition; /**Convert Vector3 to floats for serializability*/
 
+    public float[] playerRotation; /**Convert Quaternion to floats for serializability*/
+
     public int playerHealth; /**Current Health of the player; 0 kills player*/
     public int playerMaxHealth; /**Max Health the player is allowed to heal to*/
     public int playerTolerance; /**Current Tolerance. Max will kill the player*/
@@ -37,6 +40,18 @@ public struct Save
     public string[] partyMembers;
     public string[] extraMembers;
 
+    //Camera Properties (Assuming player always saves at save point)
+    public int cameraMode;
+    //public float[] cameraTarget; //Necessary for stationary camera saving
+
+    //World Properties
+    public string skybox; //String name of the current skybox in use
+
+    //Enemies alive in area
+    //Quest status
+    //Quests completed
+    //Health/tolerance/maxes of every party member
+
     /**
      * @brief create a blank save that has a notNull value of 0;
      */
@@ -49,6 +64,7 @@ public struct Save
         chapterName = null;
         playTime = 0;
         playerPosition = new float[0];
+        playerRotation = new float[0];
         playerHealth = 0;
         playerMaxHealth = 0;
         playerTolerance = 0;
@@ -58,12 +74,14 @@ public struct Save
         currentLeader = null;
         partyMembers = null;
         extraMembers = null;
+        cameraMode = 0;
+        skybox = null;
 
         //If not successful, set notNull flag
         notNull = 0;
     }
 
-    public Save(int index, string areaID, string sceneName, string chapterName, float playTime, Vector3 playerPosition, int health, int maxHealth, int tolerance, int maxTolerance, int stamina, int maxStamina, string currentLeader, string[] partyMembers, string[] extraMembers)
+    public Save(int index, string areaID, string sceneName, string chapterName, float playTime, Vector3 playerPosition, Quaternion playerRotation, int health, int maxHealth, int tolerance, int maxTolerance, int stamina, int maxStamina, string currentLeader, string[] partyMembers, string[] extraMembers, CameraController.MODE cameraMode, Material skybox)
     {
         this.index = index;
         this.areaID = areaID;
@@ -72,6 +90,7 @@ public struct Save
         this.playTime = playTime;
 
         this.playerPosition = new float[] { playerPosition.x, playerPosition.y, playerPosition.z };
+        this.playerRotation = new float[] { playerRotation.x, playerRotation.y, playerRotation.z, playerRotation.w };
 
         this.playerHealth = health;
         this.playerMaxHealth = maxHealth;
@@ -83,6 +102,9 @@ public struct Save
         this.partyMembers = partyMembers;
         this.extraMembers = extraMembers;
 
+        this.cameraMode = (int)cameraMode;
+
+        this.skybox = skybox.name;
         //If successful, set notNull flag
         notNull = 1;
     }
@@ -90,17 +112,19 @@ public struct Save
 
 public class SaveManager : MonoBehaviour
 {
-    public GameObject SavingCanvas;
+    //NOTE TO SELF: Add a warning to protect saving/loading corrupt or non working saves.
+
+    //Display
+    public Animator SavingCanvas;
+
+    public TextMeshProUGUI Title;
+    public GameObject loadingIcon;
 
     public Save_Slot[] saveSlotList;
 
     private gameManager gm;
     private StatManager stat;
     public bool saveMode = true; //true = Save, false = load;
-
-    //Display stuff
-    public TextMeshProUGUI Title;
-    public GameObject loadingIcon;
 
     //Singleton creation
     private static SaveManager instance;
@@ -124,6 +148,8 @@ public class SaveManager : MonoBehaviour
         stat = StatManager.Instance;
     }
 
+    #region Saving/Loading
+
     /**
      * @brief Saves the game status to a bin file
      * @param num the current save file index to save to (0 = autosave)
@@ -145,6 +171,7 @@ public class SaveManager : MonoBehaviour
         "Chapter _: The Antithesis of Graphic Design",
         stat.GetTimeInSeconds(),
         gm.player.transform.position,
+        gm.player.transform.rotation,
         gm.player.health,
         gm.player.maxHealth,
         gm.player.tolerance,
@@ -153,7 +180,9 @@ public class SaveManager : MonoBehaviour
         gm.player.maxStamina,
         "Penny_Test_Head",
         new string[] { "Player", "", "" },
-        new string[] { "", "", "", "" });
+        new string[] { "", "", "", "" },
+        gm.mainCamera.prevMode, //Camera will be paused, so previous state is what we're after
+        RenderSettings.skybox);
 
         //Write save to bin file
         export += "/Save (" + num + ")";
@@ -164,14 +193,14 @@ public class SaveManager : MonoBehaviour
         file.Close();
 
         Debug.Log("File Saved!");
-        DebugLogSaveProperties(save);
-        Debug.Log("EXPORT: " + export);
+        // DebugLogSaveProperties(save);
+        //Debug.Log("EXPORT: " + export);
     }
 
     public Save ReadSave(int num)
     {
         string import = Application.streamingAssetsPath + "/" + OutputDirectory + "/Save (" + num + ")";
-        Debug.Log("IMPORT: " + import);
+        //Debug.Log("IMPORT: " + import);
 
         if (!File.Exists(import))
         {
@@ -186,24 +215,90 @@ public class SaveManager : MonoBehaviour
         return save;
     }
 
-    public void LoadSave(int num)
+    public IEnumerator LoadSave(int num)
     {
+        SetAllSaveSlotsInteractable(false);
         //Play transition animation
         //Load level
         Save save = ReadSave(num);
-        gm.areaId = save.areaID;
-        gm.sceneName = save.sceneName;
-        stat.startTime = save.playTime;
-        gm.player.health = save.playerHealth;
-        gm.player.maxHealth = save.playerMaxHealth;
-        gm.player.tolerance = save.playerTolerance;
-        gm.player.maxTolerance = save.playerMaxTolerance;
-        gm.player.stamina = save.playerStamina;
-        gm.player.maxStamina = save.playerMaxStamina;
-        gm.player.transform.position = new Vector3(save.playerPosition[0], save.playerPosition[1], save.playerPosition[2]); //May have to make gameManager start position for sceneName
-        //current leader
-        //party Members
+
+        DebugLogSaveProperties(save);
+        //If scene has NO errors, load as normal. Otherwise, prompt message saying that save is corrupt.
+
+        //Change scene if it is not the same as the current scene.
+        if (!save.sceneName.Equals(gm.sceneName))
+        {
+            //Play fade animation followed by scene transition
+            SceneManager.LoadScene(save.sceneName);
+        }
+        //If same scene, reload player position, properties, etc.
+        else
+        {
+            //Play fade animation followed by transition and loading icon
+            SavingCanvas.SetBool("isLoading", true);
+            yield return new WaitForSecondsRealtime(.25f);
+            gm.fade.SetActive(false);
+            loadingIcon.SetActive(true);
+            gm.SetCanPause(false);
+            gm.ExitPauseMenuFunction();
+
+            gm.areaId = save.areaID;
+            stat.startTime = save.playTime;
+
+            //Adjust player properties
+            gm.player.health = save.playerHealth;
+            gm.player.maxHealth = save.playerMaxHealth;
+            gm.player.tolerance = save.playerTolerance;
+            gm.player.maxTolerance = save.playerMaxTolerance;
+            gm.player.stamina = save.playerStamina;
+            gm.player.maxStamina = save.playerMaxStamina;
+
+            //Adjust player position
+            gm.player.agent.isStopped = true;
+            gm.player.agent.ResetPath();
+            gm.player.agent.enabled = false;
+            gm.player.anim.SetBool("StayIdle", true);
+            gm.player.transform.position = new Vector3(save.playerPosition[0], save.playerPosition[1], save.playerPosition[2]); //May have to make gameManager start position for sceneName
+            gm.player.transform.rotation = new Quaternion(save.playerRotation[0], save.playerRotation[1], save.playerRotation[2], save.playerRotation[3]);
+           
+            //Adjust camera (Assuming camera is traveling and following player)
+            gm.mainCamera.ChangeCameraState((CameraController.MODE)save.cameraMode, gm.player.transform);
+            gm.mainCamera.QuickResetCamera();
+
+            //Adjust world settings
+            RenderSettings.skybox = Resources.Load<Material>("/Skyboxes/SkySerie Freebie/" + save.skybox);
+            DynamicGI.UpdateEnvironment();
+
+            //Wait a bit
+            yield return new WaitForSecondsRealtime(3f);
+
+            //Play unfade animation and unpause
+            loadingIcon.SetActive(false);
+            gm.UnPauseGame();
+            gm.SetCanPause(true);
+            SetAllSaveSlotsInteractable(true);
+
+            //Show unfade and resume (NEED TO BLOCK PLAYER INPUT TILL FADE IS DONE.)
+            yield return new WaitForSecondsRealtime(1f);
+            SavingCanvas.SetBool("isLoading", false);
+            yield return new WaitForSecondsRealtime(0.183f);
+            
+            //Unpause Player
+            gm.player.agent.enabled = true;
+            gm.player.agent.isStopped = false;
+            gm.player.anim.SetBool("StayIdle", false);
+            //Turn off Canvas
+            SavingCanvas.gameObject.SetActive(false);
+
+            //current leader
+
+            //party Members
+        }
     }
+
+    #endregion Saving/Loading
+
+    #region Displaying Save Slots
 
     public void UpdateSaveSlot(int index)
     {
@@ -226,6 +321,57 @@ public class SaveManager : MonoBehaviour
         }
     }
 
+    #endregion Displaying Save Slots
+
+    #region Displaying Menu
+
+    public void ShowSaveMenu()
+    {
+        SavingCanvas.gameObject.SetActive(true);
+        gm.fade.SetActive(true);
+        Title.text = "SAVE GAME";
+        saveMode = true;
+        gm.PauseGame();
+        gm.SetCanPause(false);
+        UpdateAllSaveSlots();
+    }
+
+    public void ShowLoadMenu()
+    {
+        SavingCanvas.gameObject.SetActive(true);
+        gm.fade.SetActive(true);
+        Title.text = "LOAD GAME";
+        saveMode = false;
+        gm.PauseGame();
+        UpdateAllSaveSlots();
+    }
+
+    public void disableCanvas(float delay)
+    {
+        StartCoroutine(delayedDisable(delay));
+    }
+
+    private IEnumerator delayedDisable(float delay)
+    {
+        //Exit menu
+        //Play animation
+        SavingCanvas.SetTrigger("Exit");
+        yield return new WaitForSecondsRealtime(delay);
+
+        //Turn off canvas
+        SavingCanvas.gameObject.SetActive(false);
+
+        //Unpause if exiting save menu, not if exiting load menu
+        if (saveMode)
+        {
+            gm.fade.SetActive(false);
+            gm.UnPauseGame();
+            gm.SetCanPause(true);
+        }
+    }
+
+    #endregion Displaying Menu
+
     public void DebugLogSaveProperties(Save save)
     {
         Debug.Log("<color=blue>Save Properties:</color>");
@@ -237,6 +383,7 @@ public class SaveManager : MonoBehaviour
         Debug.Log("chapterName: " + save.chapterName);
         Debug.Log("playTime: " + stat.timeToString(save.playTime));
         Debug.Log("playerPosition: " + save.playerPosition[0] + ", " + save.playerPosition[1] + ", " + save.playerPosition[2]);
+        Debug.Log("playerRotation: " + save.playerRotation[0] + ", " + save.playerRotation[1] + ", " + save.playerRotation[2] + ", " + save.playerRotation[3]);
         Debug.Log("playerHealth: " + save.playerHealth);
         Debug.Log("playerMaxHealth: " + save.playerMaxHealth);
         Debug.Log("playerTolerance: " + save.playerTolerance);
@@ -250,21 +397,6 @@ public class SaveManager : MonoBehaviour
         {
             Debug.Log("PartyMember (" + i + "): " + save.partyMembers[i]);
         }
-    }
-
-    public void disableCanvas(float delay)
-    {
-        StartCoroutine(delayedDisable(delay));
-    }
-
-    private IEnumerator delayedDisable(float delay)
-    {
-        //Play animation
-        SavingCanvas.GetComponent<Animator>().SetTrigger("Exit");
-        yield return new WaitForSecondsRealtime(delay);
-       
-        //Turn off canvas
-        SavingCanvas.SetActive(false);
-        gm.UnPauseGame();
+        Debug.Log("Current skybox: " + save.skybox);
     }
 }

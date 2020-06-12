@@ -4846,7 +4846,7 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 3.35
+  m_Intensity: 4.69
   m_Range: 6.7
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -4912,7 +4912,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 8
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8474254763222088
 Transform:
   m_ObjectHideFlags: 0
@@ -5134,4 +5134,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ead4ae9695d79d4b86620b340a06897, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SaveCanvas: {fileID: 0}
   talkIndicator: {fileID: 8474254763222089}
