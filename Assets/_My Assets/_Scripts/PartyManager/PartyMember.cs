@@ -159,7 +159,10 @@ public class PartyMember : MonoBehaviour
         if (Mathf.Abs(vertical) > 0 || Mathf.Abs(horizontal) > 0)
         {
             agent.ResetPath();
-            agent.velocity = new Vector3(horizontal, 0, vertical) * agent.speed;
+
+            ////Set Global Direction With Camera
+            agent.destination = transform.position + ((Camera.main.transform.forward*vertical)+(Camera.main.transform.right*horizontal)) * agent.speed;
+            //agent.velocity = new Vector3(horizontal, 0, vertical) * agent.speed;
             gameManager.clickIndicator.SetActive(false);
         }
     }
@@ -203,7 +206,7 @@ public class PartyMember : MonoBehaviour
                 if (Input.GetMouseButtonDown(0))
                 {
                     GameObject clickIndicator = gameManager.Instance.clickIndicator;
-                    
+
                     //Show indicator
                     clickIndicator.SetActive(true);
                     gameManager.Instance.clickIndicAnim.SetTrigger("On");

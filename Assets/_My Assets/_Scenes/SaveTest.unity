@@ -1740,6 +1740,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e78ac0e7d47c80049ad690a34901681b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Leader: Penny_Test_Head
+  partyMembers:
+  - 
+  - 
+  - 
+  extraMembers:
+  - 
+  - 
+  - 
+  - 
   skyBoxDirectionalLight: {fileID: 897098451}
   skyBoxDirectionalLerpValue: 1
   fade: {fileID: 226855869}
@@ -6581,6 +6591,10 @@ PrefabInstance:
     - target: {fileID: 8474255099143420, guid: 77290fd84cfca6045bcf33702f80485b, type: 3}
       propertyPath: m_Name
       value: SavePoint
+      objectReference: {fileID: 0}
+    - target: {fileID: 8474255099143420, guid: 77290fd84cfca6045bcf33702f80485b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8474255099143423, guid: 77290fd84cfca6045bcf33702f80485b, type: 3}
       propertyPath: m_LocalPosition.x
