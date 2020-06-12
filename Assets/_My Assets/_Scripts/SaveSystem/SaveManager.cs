@@ -99,8 +99,17 @@ public struct Save
         this.playerStamina = stamina;
         this.playerMaxStamina = maxStamina;
         this.currentLeader = currentLeader;
-        this.partyMembers = partyMembers;
-        this.extraMembers = extraMembers;
+
+        this.partyMembers = new string[3];
+        for (int i = 0; i < partyMembers.Length; i++)
+        {
+            this.partyMembers[i] = partyMembers[i];
+        }
+        this.extraMembers = new string[4];
+        for (int i = 0; i < extraMembers.Length; i++)
+        {
+            this.extraMembers[i] = extraMembers[i];
+        }            //party Members
 
         this.cameraMode = (int)cameraMode;
 
@@ -178,9 +187,9 @@ public class SaveManager : MonoBehaviour
         gm.player.maxTolerance,
         gm.player.stamina,
         gm.player.maxStamina,
-        "Penny_Test_Head",
-        new string[] { "Player", "", "" },
-        new string[] { "", "", "", "" },
+        gm.Leader,
+        gm.partyMembers,
+        gm.extraMembers,
         gm.mainCamera.prevMode, //Camera will be paused, so previous state is what we're after
         RenderSettings.skybox);
 
@@ -260,7 +269,18 @@ public class SaveManager : MonoBehaviour
             gm.player.anim.SetBool("StayIdle", true);
             gm.player.transform.position = new Vector3(save.playerPosition[0], save.playerPosition[1], save.playerPosition[2]); //May have to make gameManager start position for sceneName
             gm.player.transform.rotation = new Quaternion(save.playerRotation[0], save.playerRotation[1], save.playerRotation[2], save.playerRotation[3]);
-           
+
+            //current leader
+            gm.Leader = save.currentLeader;
+            for (int i = 0; i < gm.partyMembers.Length; i++)
+            {
+                gm.partyMembers[i] = save.partyMembers[i];
+            }
+            for (int i = 0; i < gm.extraMembers.Length; i++)
+            {
+                gm.extraMembers[i] = save.extraMembers[i];
+            }            //party Members
+
             //Adjust camera (Assuming camera is traveling and following player)
             gm.mainCamera.ChangeCameraState((CameraController.MODE)save.cameraMode, gm.player.transform);
             gm.mainCamera.QuickResetCamera();
@@ -290,9 +310,7 @@ public class SaveManager : MonoBehaviour
             //Turn off Canvas
             SavingCanvas.gameObject.SetActive(false);
 
-            //current leader
-
-            //party Members
+            
         }
     }
 

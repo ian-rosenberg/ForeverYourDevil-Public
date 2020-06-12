@@ -6,6 +6,11 @@ public class gameManager : MonoBehaviour
 {
     #region Main Variables
 
+    //Party Infotmation
+    public string Leader = "Penny_Test_Head";
+    public string[] partyMembers = new string[] { "", "", "" };
+    public string[] extraMembers = new string[] { "", "", "", "" };
+
     private bool canPause = true; //Allow pausing?
 
     public Light skyBoxDirectionalLight;
@@ -74,6 +79,10 @@ public class gameManager : MonoBehaviour
 
     private void Start()
     {
+        Leader = "Penny_Test_Head";
+        partyMembers = new string[] { "Player", "", "" };
+        extraMembers = new string[] { "", "", "", "" };
+
         ChangeState(STATE.TRAVELING);
         prevState = STATE.START; //Start out of combat\
         clickIndicator.SetActive(false);
@@ -226,11 +235,13 @@ public class gameManager : MonoBehaviour
         skyBoxDirectionalLight.intensity = Mathf.Lerp(skyBoxDirectionalLight.intensity, skyBoxDirectionalLerpValue, 0.05f);
     }
 
-    public void ExitPauseMenuFunction() {
+    public void ExitPauseMenuFunction()
+    {
         StartCoroutine(ExitPauseMenu());
     }
 
-    public IEnumerator ExitPauseMenu() {
+    public IEnumerator ExitPauseMenu()
+    {
         //Play animation
         pauseMenu.SetTrigger("Exit");
         SetCanPause(false);
