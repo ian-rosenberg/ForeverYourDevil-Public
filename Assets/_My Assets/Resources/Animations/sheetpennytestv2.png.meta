@@ -272,7 +272,7 @@ TextureImporter:
       name: sheetpennytestv2_1
       rect:
         serializedVersion: 2
-        x: 826
+        x: 827
         y: 5837
         width: 540
         height: 758
@@ -293,7 +293,7 @@ TextureImporter:
       name: sheetpennytestv2_2
       rect:
         serializedVersion: 2
-        x: 1512
+        x: 1514
         y: 5837
         width: 540
         height: 758
@@ -419,7 +419,7 @@ TextureImporter:
       name: sheetpennytestv2_8
       rect:
         serializedVersion: 2
-        x: 2185
+        x: 2186
         y: 5074
         width: 540
         height: 758
@@ -440,7 +440,7 @@ TextureImporter:
       name: sheetpennytestv2_9
       rect:
         serializedVersion: 2
-        x: 2874
+        x: 2873
         y: 5074
         width: 540
         height: 758
@@ -692,7 +692,7 @@ TextureImporter:
       name: sheetpennytestv2_21
       rect:
         serializedVersion: 2
-        x: 829
+        x: 830
         y: 2800
         width: 540
         height: 758
@@ -713,7 +713,7 @@ TextureImporter:
       name: sheetpennytestv2_22
       rect:
         serializedVersion: 2
-        x: 1516
+        x: 1517
         y: 2800
         width: 540
         height: 758
@@ -734,7 +734,7 @@ TextureImporter:
       name: sheetpennytestv2_23
       rect:
         serializedVersion: 2
-        x: 2205
+        x: 2204
         y: 2800
         width: 540
         height: 758
@@ -776,8 +776,8 @@ TextureImporter:
       name: sheetpennytestv2_25
       rect:
         serializedVersion: 2
-        x: 3577
-        y: 2811
+        x: 3578
+        y: 2800
         width: 540
         height: 758
       alignment: 0
@@ -818,7 +818,7 @@ TextureImporter:
       name: sheetpennytestv2_27
       rect:
         serializedVersion: 2
-        x: 829
+        x: 830
         y: 2040
         width: 540
         height: 758
@@ -839,7 +839,7 @@ TextureImporter:
       name: sheetpennytestv2_28
       rect:
         serializedVersion: 2
-        x: 1515
+        x: 1517
         y: 2040
         width: 540
         height: 758
@@ -860,7 +860,7 @@ TextureImporter:
       name: sheetpennytestv2_29
       rect:
         serializedVersion: 2
-        x: 2205
+        x: 2204
         y: 2040
         width: 540
         height: 758
@@ -881,7 +881,7 @@ TextureImporter:
       name: sheetpennytestv2_30
       rect:
         serializedVersion: 2
-        x: 2895
+        x: 2891
         y: 2040
         width: 540
         height: 758
@@ -902,7 +902,7 @@ TextureImporter:
       name: sheetpennytestv2_31
       rect:
         serializedVersion: 2
-        x: 3577
+        x: 3578
         y: 2040
         width: 540
         height: 758
@@ -944,7 +944,7 @@ TextureImporter:
       name: sheetpennytestv2_33
       rect:
         serializedVersion: 2
-        x: 791
+        x: 792
         y: 1280
         width: 540
         height: 758
@@ -965,7 +965,7 @@ TextureImporter:
       name: sheetpennytestv2_34
       rect:
         serializedVersion: 2
-        x: 1480
+        x: 1479
         y: 1280
         width: 540
         height: 758
@@ -1007,7 +1007,7 @@ TextureImporter:
       name: sheetpennytestv2_36
       rect:
         serializedVersion: 2
-        x: 2852
+        x: 2853
         y: 1280
         width: 540
         height: 758
@@ -1028,7 +1028,7 @@ TextureImporter:
       name: sheetpennytestv2_37
       rect:
         serializedVersion: 2
-        x: 3541
+        x: 3540
         y: 1280
         width: 540
         height: 758
@@ -1050,7 +1050,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 105
-        y: 514
+        y: 519
         width: 540
         height: 758
       alignment: 0
@@ -1070,8 +1070,8 @@ TextureImporter:
       name: sheetpennytestv2_39
       rect:
         serializedVersion: 2
-        x: 791
-        y: 514
+        x: 792
+        y: 519
         width: 540
         height: 758
       alignment: 0
@@ -1092,7 +1092,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 1480
-        y: 514
+        y: 519
         width: 540
         height: 758
       alignment: 0
@@ -1133,8 +1133,8 @@ TextureImporter:
       name: sheetpennytestv2_42
       rect:
         serializedVersion: 2
-        x: 2166
-        y: 514
+        x: 2167
+        y: 519
         width: 540
         height: 758
       alignment: 0
@@ -1154,8 +1154,8 @@ TextureImporter:
       name: sheetpennytestv2_43
       rect:
         serializedVersion: 2
-        x: 2852
-        y: 514
+        x: 2854
+        y: 519
         width: 540
         height: 758
       alignment: 0
@@ -1175,8 +1175,8 @@ TextureImporter:
       name: sheetpennytestv2_44
       rect:
         serializedVersion: 2
-        x: 3539
-        y: 514
+        x: 3541
+        y: 519
         width: 540
         height: 758
       alignment: 0
