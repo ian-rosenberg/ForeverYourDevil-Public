@@ -44,7 +44,7 @@ public class Save_Slot : MonoBehaviour
         saveManager.SetAllSaveSlotsInteractable(true);
         saveManager.loadingIcon.SetActive(false);
         //Display information from save.
-        DisplaySaveInfo();
+        saveManager.UpdateAllSaveSlots();
         //Exit menu
         saveManager.disableCanvas(0.333f);
     }
