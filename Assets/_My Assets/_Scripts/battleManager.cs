@@ -9,10 +9,16 @@ public class battleManager : MonoBehaviour
     public EnemyController enemy; //Reference to enemy script
     public PlayerController player; //Reference to player script
     public gameManager gm; //reference to gameManager for player states
+    public PartyMember pm;
     private bool playerTurn=false;
+    public GameObject respawn;
     public battleState currentState;
     battleState prevState;
-    
+    public List<AStarNode> path; //current path - x == x, y == z
+    public List<AStarNode> prevPath; //The last path to un-highlight - x == x, y == z
+    private float elapsedTime=0;
+    private float waitTime=0.25f;
+    public Vector3 offset = Vector3.one/2;
     private static battleManager instance;
     public static battleManager Instance
     {
@@ -98,13 +104,14 @@ public class battleManager : MonoBehaviour
             currentState = state;
 
             //Send message to dependant components within GameManager
-            BroadcastMessage("ChangedStateTo", state);
+            BroadcastMessage("ChangedBattleStateTo", state);
             Debug.Log("new combat state: "+currentState);
         }
     }
 
     public IEnumerator player_turn()
     {
+
         Debug.Log("player");
         ChangeBattleState(battleState.PLAYER_TURN);
         while (player.stamina >= 1)
@@ -115,7 +122,10 @@ public class battleManager : MonoBehaviour
                 StartCoroutine(enemy_turn());
                 yield return null;
             }
-
+            if(Input.GetKeyDown(KeyCode.F))
+            {
+                end_combat();
+            }
             
             yield return null;
 
@@ -128,19 +138,79 @@ public class battleManager : MonoBehaviour
         yield return null;
 
     }
-    
-    
+
+
     /*if player turn && keycode space; start enemy coroutine*/
     IEnumerator enemy_turn()
     {
+        enemy.agent.enabled = true;
         Debug.Log("enemy");
         ChangeBattleState(battleState.ENEMY_TURN);
-        yield return new WaitForSecondsRealtime(10f);
+        
+       
+        //enemy.transform.position = new Vector3(10, 0, 0);
+        prevPath = path;
+        path = enemy.enemyPathfinder.AStarSearch(enemy.enemyPathfinder.grid.NearestGridNode(enemy.transform.position), player.pathfinder.grid.NearestGridNode(player.GetComponent<Transform>().position));
+        Debug.Log("path count="+path.Count);
+        Debug.Log("player position = " + player.transform.position);
+        Vector2Int newGridPos = new Vector2Int(path[path.Count-1].gridZ+ (int)Random.Range(-1f, 1f), path[path.Count - 1].gridX+ (int)Random.Range(-1f, 1f));
+        Vector3 goalPos = Vector3.one;
+        foreach (AStarNode node in path)
+        {
+            Debug.Log("path"+node.gridX+","+node.gridZ);
+        }
+        bool flag = false;
+        for (int i=1;i<path.Count;i++)
+        {
+
+            Debug.Log("node=" + path[i].worldPosition);
+            Debug.Log(path);
+            //enemy.agent.ResetPath();
+            enemy.agent.SetDestination(path[i].worldPosition);
+            if(i==path.Count-1)
+            {
+                goalPos = player.pathfinder.grid.nodeGrid[newGridPos.x, newGridPos.y].worldPosition;
+                flag = true;
+                
+            }
+            if(flag)
+            {
+                while (elapsedTime < waitTime)
+                {
+                    transform.position = Vector3.Lerp(enemy.transform.position, path[1].worldPosition - offset, (elapsedTime / waitTime));
+                    elapsedTime += Time.deltaTime;
+
+                    // Yield here
+                    yield return null;
+                }
+            }
+           
+        }
+        yield return new WaitForSecondsRealtime(2f);
+        enemy.agent.enabled = false;
         player.ChangeStamina(3, 9);
         StartCoroutine(player_turn());
         
 
         //Debug.Log("enemy turn");
+    }
+
+    public void end_combat()
+    {
+        
+        gm.normalWorld.SetActive(true);
+        gm.battleWorld.SetActive(false);
+       
+        player.agent.ResetPath();
+        player.agent.enabled = false;
+        player.transform.position = respawn.transform.position;
+        gm.ChangeState(gameManager.STATE.TRAVELING);
+        gm.mainCamera.followScript.TravelOffset(gm.mainCamera.followScript.startOffset); 
+        ///player.currentBehavior = player.Player_Travelling;
+        player.transform.position = respawn.transform.position;
+        player.agent.enabled = true;
+
+        
     }
 }
 /*while not playerturn
