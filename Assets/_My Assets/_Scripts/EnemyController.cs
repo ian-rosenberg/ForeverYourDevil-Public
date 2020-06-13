@@ -1,18 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.AI;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
     gameManager gameManager;
-
+    battleManager battleManager;
     public float enemySpeed;
     public GameObject encounter;
     Animator anim;
     public FieldOfView fov;
-
+    public CharacterPathfinding enemyPathfinder;
+    public NavMeshAgent agent;
     public enum enemyState { IDLE, SPOTTED, RUNNING, COMBAT }
     public enemyState state;
+
+    private void Awake()
+    {
+        agent = GetComponent<NavMeshAgent>();
+        agent.ResetPath();
+        agent.enabled = false;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -58,6 +67,10 @@ public class EnemyController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if(other==null)
+        {
+            return;
+        }
         if (other.gameObject.layer == 10 && gameManager.gameState != gameManager.STATE.COMBAT) //Player
         {
             Debug.Log("Call Combat Trigger");
@@ -75,4 +88,7 @@ public class EnemyController : MonoBehaviour
         if (desiredState == 2) state = enemyState.RUNNING;
         if (desiredState == 3) state = enemyState.COMBAT;
     }
+
+    
+
 }

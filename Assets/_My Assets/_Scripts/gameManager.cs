@@ -189,13 +189,16 @@ public class gameManager : MonoBehaviour
 
         //Teleport Camera to the battlefield
         mainCamera.followScript.transform.position = cameraSpawn.transform.position;
-        mainCamera.followScript.SetOffset(cameraSpawn.transform.position);
+        mainCamera.followScript.BattleOffset(cameraSpawn.transform.position);
 
         //Change the GameState to Combat
         ChangeState(STATE.COMBAT);
         CanvasAnimator.SetTrigger("Loaded");
         SetCanPause(true);
     }
+
+
+   
 
     #endregion Entering Combat
 }
