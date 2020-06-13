@@ -81,7 +81,7 @@ public class TooltipMenu : MonoBehaviour
 
     private void ReturnToPreviousMenu(InputAction.CallbackContext obj)
     {
-        
+        SendMessageUpwards("CloseTooltip");
     }
     #endregion
 
@@ -139,5 +139,34 @@ public class TooltipMenu : MonoBehaviour
             
         prevSelected.GetComponent<Image>().color = unSelectColor;
         
+    }
+    
+    public void HandleTooltipNavigation(GameObject tooltipItem)
+    {
+        if (gameManager.Instance.gameState != gameManager.STATE.PAUSED)
+            return;
+
+        if (tooltipItem == null)
+            return;
+
+        prevSelected = selected;
+
+        if (tooltipItem == use || tooltipItem == drop || tooltipItem == move)
+            selected = tooltipItem;
+
+
+        if(prevSelected == selected)
+        {
+            InputAction.CallbackContext o = new InputAction.CallbackContext();
+
+            AcceptMenuItem(o);
+        }
+
+
+        if (selected != null)
+           selected.GetComponent<Image>().color = selectColor;
+            
+        if(prevSelected != null && prevSelected != selected)
+            prevSelected.GetComponent<Image>().color = unSelectColor;        
     }
 }
