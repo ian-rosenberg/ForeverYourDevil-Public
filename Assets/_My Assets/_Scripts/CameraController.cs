@@ -30,7 +30,7 @@ public class CameraController : MonoBehaviour
     [Header("Camera Controls")]
     public MODE cameraMode; //The current state of the camera
 
-    private MODE prevMode; //The previous mode that the camera was in.
+    public MODE prevMode; //The previous mode that the camera was in.
     public FollowObject followScript;
     public Transform FollowY, FollowX, CameraResetPoint;
 
