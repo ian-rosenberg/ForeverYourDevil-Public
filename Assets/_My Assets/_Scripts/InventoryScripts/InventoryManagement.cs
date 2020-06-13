@@ -90,6 +90,7 @@ public class InventoryManagement : MonoBehaviour
 
     private bool secondFire = false;
 
+    private bool tooltipOpen = false;
 
     #region Player Actions
     public PlayerControls pControls;
@@ -301,16 +302,17 @@ public class InventoryManagement : MonoBehaviour
 
     public void AcceptSelection(InputAction.CallbackContext obj)
     {
-
         Inventory i = currentInventory.GetComponent<Inventory>();
         InventorySlot selected = i.GetSelected();
 
         if (!selected.Selected())
             return;
 
-        tooltipMenu.SetActive(true);
+        tooltipMenu.SetActive(true); 
 
-        DisableInventoryInput();
+        tooltipOpen = true;
+
+        pControls.UI.Interact.performed -= AcceptSelection;
 
         tooltipMenu.transform.SetAsLastSibling();
 
@@ -325,28 +327,9 @@ public class InventoryManagement : MonoBehaviour
     public void CloseTooltip()
     {
         tooltipMenu.SetActive(false);
-    }
+        tooltipOpen = false;
 
-    public void ChangedStateTo(gameManager.STATE newState)
-    {
-        switch (newState)
-        {
-            case gameManager.STATE.START:
-                Debug.LogError("Cannot switch GM State to START. This should not happen.");
-                break;
-            case gameManager.STATE.TRAVELING:
-                DisableInventoryInput();
-                break;
-            case gameManager.STATE.COMBAT:
-                //open personal inventory
-                break;
-            case gameManager.STATE.PAUSED:
-                EnableInventoryInput();
-                break;
-            case gameManager.STATE.TALKING:
-                DisableInventoryInput();
-                break;
-        }
+        pControls.UI.Interact.performed += AcceptSelection;
     }
 
     public void EnableInventoryInput()

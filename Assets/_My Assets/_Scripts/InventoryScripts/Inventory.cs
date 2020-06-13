@@ -91,7 +91,7 @@ public class Inventory : MonoBehaviour
             if (child == null || !slot.inUse)
             {
                 slot.child = item;
-                slot.img.sprite = Resources.Load<Sprite>(item.Icon);
+                slot.currentImg.sprite = Resources.Load<Sprite>(item.Icon);
 
                 slot.quantity++;
 
@@ -164,7 +164,7 @@ public class Inventory : MonoBehaviour
 
         if (curSlot.quantity == 0)
         {
-            curSlot.img.sprite = null;
+            curSlot.currentImg.sprite = null;
 
             curSlot.EmptySlot();
         }

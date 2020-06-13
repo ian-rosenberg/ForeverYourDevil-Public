@@ -39,6 +39,9 @@ public class gameManager : MonoBehaviour
     public GameObject clickIndicator; //Has 2 particles, one for normal and one for turning off.
     public Animator clickIndicAnim;
 
+    [Header("Inventory Management")]
+    private InventoryManagement invMan;
+
     //Singleton creation
     private static gameManager instance;
     public static gameManager Instance
@@ -87,6 +90,7 @@ public class gameManager : MonoBehaviour
         ChangeState(STATE.TRAVELING);
         prevState = STATE.START; //Start out of combat\
         clickIndicator.SetActive(false);
+        invMan = GetComponentInChildren<InventoryManagement>();
     }
 
     public IEnumerator ClickOff()
@@ -148,6 +152,7 @@ public class gameManager : MonoBehaviour
         {
             ChangeState(STATE.PAUSED);
             Time.timeScale = 0;
+            invMan.EnableInventoryInput();
         }
     }
 
@@ -158,6 +163,8 @@ public class gameManager : MonoBehaviour
             ChangeState(prevState);
             Time.timeScale = 1;
             player.agent.ResetPath();
+
+            invMan.DisableInventoryInput();
         }
     }
 
