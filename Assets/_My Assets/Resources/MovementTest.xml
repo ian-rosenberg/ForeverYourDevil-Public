@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Schema must be removed before gameplay
+<game
+xmlns="https://www.w3schools.com"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="https://www.w3schools.com/xml VN_Schema.xsd">
+  -->
+<game>
+  <!--Testing sprites-->
+  <conversation id="3">
+    <character name="Chibi">
+      <line sprite1="01" sprite2="mermaid">Alright, Adult me, be honest.</line>
+    </character>
+    <character name="Adult">
+      <line>What's up, Chibi me? Honest about what?</line>
+    </character>
+    <character name="Chibi">
+      <line>Who do the people really want to see here?</line>
+      <options>
+        <choice id="Tan Pill">Tan Pill!</choice>
+        <choice id="Mermaids">Mermaids!</choice>
+        <choice id="No one">Neither!</choice>
+      </options>
+    </character>
+  </conversation>
+
+  <conversation id="Tan Pill">
+    <character name="Tan Pill">
+      <line sprite1="Player" sprite2="NPC">Aha!!! Tan Pill returns!!!!</line>
+      <line>I'm glad to be back in the flesh!</line>
+      <line>Guess that's settled!</line>
+    </character>
+  </conversation>
+
+  <conversation id="Mermaids">
+    <character name="Chibi">
+      <line sprite1="01" sprite2="mermaid">Oh thank the stars...</line>
+      <line>I'm really glad that the player picked us.</line>
+    </character>
+    <character name="Adult">
+      <line>Now doesn't that feel better?</line>
+      <line>Hope that helps with your insecurity!</line>
+    </character>
+    <character name="Chibi">
+      <line>...</line>
+      <line>didYouReallyHaveToBeThatBluntAboutIt??? 0_0</line>
+    </character>
+  </conversation>
+
+  <conversation id="No one">
+    <character name="Chibi">
+      <line sprite1="01" sprite2="mermaid">...</line>
+      <line>Guess that's settled...</line>
+      <line>Ughhhhh...</line>
+    </character>
+  </conversation>
+
+  <conversation id="Penny Test">
+    <character name="Penny">
+      <line sprite1="Penny_Normal" sprite2="Player">Is that who I think it is???</line>
+      <line sprite1="Penny_Wow" sprite2="Player">GASPPPPP. IT IS!!!!</line>
+      <line>IT'S TAN PILL, THE INSIDE JOKE!</line>
+    </character>
+    <character name="Tan Pill">
+      <line>In the flesh! Or uh, in the Hypromellose Gelletin Alternative...</line>
+      <line sprite1="Penny_Normal" sprite2="Player">So, how goes there??? I heard you're pretty popular on Discord.</line>
+    </character>
+    <character name="Penny">
+      <line sprite1="Penny_Sweat" sprite2="Player">Well, we haven't exactly introduced many others yet...</line>
+      <line sprite1="Penny_Sad" sprite2="Player">It's kinda sad, because I wanna see my friends in 3D too...</line>
+      <line sprite1="Penny_Normal" sprite2="Player">But I'm gonna be patient! I can't wait for more progress!</line>
+    </character>
+    <character name="Tan Pill">
+      <line>I'm really excited myself!</line>
+      <line>Say, got any questions for the all mighty power that is TAN PILL?!!</line>
+      <options>
+        <choice id="Why">Why are you a pill..?</choice>
+        <choice id="How">How can you talk..?</choice>
+        <choice id="Nope">Nope!</choice>
+      </options>
+    </character>
+  </conversation>
+
+  <conversation id="Nope">
+    <character name="Penny">
+      <line sprite1="Penny_Sweat" sprite2="Player">Nope, not a one...</line>
+      <line>Sorry, I must be drawing a blank...</line>
+      <line sprite1="Penny_Normal" sprite2="Player">But I really appreciate the talk, Tan Pill!</line>
+    </character>
+    <character name="Tan Pill">
+      <line>Eyyyyyy, that's ok! See ya in the next time space compendiummmmm!</line>
+    </character>
+    <character name="Penny">
+      <line>Byeeeee!</line>
+    </character>
+  </conversation>
+
+</game>
