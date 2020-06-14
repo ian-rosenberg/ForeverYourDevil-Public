@@ -358,6 +358,9 @@ public class ParseXML : MonoBehaviour
         {
             ac_array[0] = Resources.Load<RuntimeAnimatorController>("Animations/" + line.Attributes["AC_L"].Value);
 
+            // reset emotion for new AC
+            emotion_array[0] = DialogueLine.Emotion.MakeDefault;
+
             if (ac_array[0])
             {
                 UnityEngine.Debug.Log(ac_array[0].name);
@@ -372,6 +375,9 @@ public class ParseXML : MonoBehaviour
         if (HasAttributes(line, "AC_R"))
         {
             ac_array[1] = Resources.Load<RuntimeAnimatorController>("Animations/" + line.Attributes["AC_R"].Value);
+
+            // reset emotion for new AC
+            emotion_array[1] = DialogueLine.Emotion.MakeDefault;
 
             if (ac_array[1])
             {
