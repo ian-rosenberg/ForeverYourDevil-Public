@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.00.00">
 	<object class="AudioFile" id="{fa805126-7b34-436a-9387-4516ba0cd13d}">
 		<property name="assetPath">
-			<value>Voice Lines/Penny Talks To Herself/tan pill crap.wav</value>
+			<value>Voice Lines/MovementTest/Penny_Test/vo_TanPill_MovementTest_PennyTest[Missing Line].wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>44.0999985</value>

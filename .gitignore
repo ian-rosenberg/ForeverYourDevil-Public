@@ -74,6 +74,9 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
+#Allow fspro
+!*.fspro
+
 # Fmod Files
 /Assets/FMODStudioCache.asset
 /Assets/FMODStudioCache.asset.meta

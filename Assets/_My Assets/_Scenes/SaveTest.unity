@@ -1189,6 +1189,17 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 581841719660581258, guid: 114c601f7a4e1304f8c3c639e0cad86d,
+        type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee,
+        type: 2}
+    - target: {fileID: 581841719660581258, guid: 114c601f7a4e1304f8c3c639e0cad86d,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 581841720205048349, guid: 114c601f7a4e1304f8c3c639e0cad86d,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -1354,9 +1365,11 @@ MonoBehaviour:
   sprintSpeed: 21.97
   rb: {fileID: 591512268}
   gameManager: {fileID: 0}
+  shared: {fileID: 0}
+  grid: {fileID: 1539110194}
   nodeBattlePos: {x: 0, y: 0, z: 0}
   pathfinder: {fileID: 591512274}
-  grid: {fileID: 1539110194}
+  canPickup: 0
 --- !u!54 &591512268 stripped
 Rigidbody:
   m_CorrespondingSourceObject: {fileID: 4934818583679702468, guid: 456ea23be283ff443a9d3cda45f13747,
@@ -6594,7 +6607,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8474255099143420, guid: 77290fd84cfca6045bcf33702f80485b, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8474255099143423, guid: 77290fd84cfca6045bcf33702f80485b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7112,6 +7125,8 @@ MonoBehaviour:
   enemySpeed: 0.05
   encounter: {fileID: 326640116}
   fov: {fileID: 1151998108}
+  enemyPathfinder: {fileID: 0}
+  agent: {fileID: 0}
   state: 0
 --- !u!95 &5837732189340474129
 Animator:

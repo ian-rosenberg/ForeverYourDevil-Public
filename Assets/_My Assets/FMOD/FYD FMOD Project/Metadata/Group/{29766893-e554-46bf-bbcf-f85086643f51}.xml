@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.00.00">
+	<object class="MixerGroup" id="{29766893-e554-46bf-bbcf-f85086643f51}">
+		<property name="name">
+			<value>SFX Diagetic</value>
+		</property>
+		<relationship name="effectChain">
+			<destination>{b43668ca-5544-4672-b021-4b721efd1399}</destination>
+		</relationship>
+		<relationship name="panner">
+			<destination>{4cef3ed0-aa1e-4936-b82e-6aa1ea3684da}</destination>
+		</relationship>
+		<relationship name="output">
+			<destination>{b915be80-18fa-4eb4-92bc-1a47bd589189}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusEffectChain" id="{b43668ca-5544-4672-b021-4b721efd1399}">
+		<relationship name="effects">
+			<destination>{f4f57dc7-861e-4cb5-8360-129016a345fa}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusPanner" id="{4cef3ed0-aa1e-4936-b82e-6aa1ea3684da}" />
+	<object class="MixerBusFader" id="{f4f57dc7-861e-4cb5-8360-129016a345fa}" />
+</objects>
