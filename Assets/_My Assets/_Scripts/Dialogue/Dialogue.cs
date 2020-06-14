@@ -334,6 +334,9 @@ public class Dialogue : MonoBehaviour
         {
             if (ContainsParam(LeftmostChar, dialog[index].Emotion_Array[0].ToString()))
             {
+                // reset triggers
+                ClearTriggers(LeftmostChar);
+
                 LeftmostChar.SetTrigger(dialog[index].Emotion_Array[0].ToString());
                 isTalking[0] = dialog[index].isTalking[0];
             }
@@ -359,6 +362,9 @@ public class Dialogue : MonoBehaviour
         {
             if (ContainsParam(RightmostChar, dialog[index].Emotion_Array[1].ToString()))
             {
+                // reset triggers
+                ClearTriggers(RightmostChar);
+
                 RightmostChar.SetTrigger(dialog[index].Emotion_Array[1].ToString());
                 isTalking[1] = dialog[index].isTalking[1];
             }
@@ -373,6 +379,17 @@ public class Dialogue : MonoBehaviour
         else if (isTalking[1])
         {
             RightmostChar.SetTrigger("StartTalk");
+        }
+    }
+
+    void ClearTriggers(Animator anim)
+    {
+        foreach(AnimatorControllerParameter p in anim.parameters)
+        {
+            if (p.type == AnimatorControllerParameterType.Trigger)
+            {
+                anim.ResetTrigger(p.name);
+            }
         }
     }
 
