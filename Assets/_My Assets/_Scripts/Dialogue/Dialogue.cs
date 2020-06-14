@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using System.Linq;
 
 /**
  * @brief Manager for displaying images, text, etc from parsed dialogue from ParseXML
@@ -69,21 +70,21 @@ public class Dialogue : MonoBehaviour
     public PlayerControls pControls;
 
 
-    private void OnEnable()
-    {
-        pControls = new PlayerControls();
+    //private void OnEnable()
+    //{
+    //    pControls = new PlayerControls();
 
-        pControls.UI.Interact.performed += AdvanceSkipDialogue;
-        
-        pControls.UI.Interact.Enable();
-    }
-    
-    private void OnDisable()
-    {
-        pControls.UI.Interact.performed -= AdvanceSkipDialogue;
+    //    pControls.UI.Interact.performed += AdvanceSkipDialogue;
 
-        pControls.UI.Interact.Disable();
-    }
+    //    pControls.UI.Interact.Enable();
+    //}
+
+    //private void OnDisable()
+    //{
+    //    pControls.UI.Interact.performed -= AdvanceSkipDialogue;
+
+    //    pControls.UI.Interact.Disable();
+    //}
 
     /**
         * @brief Initialize dialogue manager and get parsed dialogue from ParseXML
@@ -99,6 +100,25 @@ public class Dialogue : MonoBehaviour
         InitializeDialogue();
     }
 
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.E)) {
+            //Advance/Skip Dialogue on KeyPress
+            if (gm.gameState == gameManager.STATE.TALKING) //Return = enter key
+            {
+                if (canPress)
+                {
+                    AdvanceLine(); //Display line of text
+                }
+                else if (textDisplay.text.Length > 5)
+                {
+                    skip = true;
+                    Debug.Log("Skip = true");
+                }
+            }
+        }
+    }
+
     /**
      * @brief Main game loop. Advance line of text or skip it depending on input.
      */
@@ -112,7 +132,7 @@ public class Dialogue : MonoBehaviour
             {
                 AdvanceLine(); //Display line of text
             }
-            else if (!textDisplay.text.Equals(""))
+            else if (textDisplay.text.Length>5)
             {
                 skip = true;
                 Debug.Log("Skip = true");
@@ -297,7 +317,6 @@ public class Dialogue : MonoBehaviour
             //Display line to read from conversationlist
             StartCoroutine(TypeText(dialog[sentenceIndex].Content));
             sentenceIndex++;
-            Debug.Log("Sentence Index: " + sentenceIndex);
         }
     }
 
@@ -360,7 +379,7 @@ public class Dialogue : MonoBehaviour
      */
     bool ContainsParam(Animator anim, string param)
     {
-        foreach(AnimatorControllerParameter acp in anim.parameters)
+        foreach (AnimatorControllerParameter acp in anim.parameters)
         {
             if (acp.name == param)
             {
@@ -411,13 +430,13 @@ public class Dialogue : MonoBehaviour
             else
             {
                 textDisplay.text += chars[i];
-                //Add delay for certain punctuation
-                if (new Regex(@"^[,.;:]*$").IsMatch(chars[i].ToString()))
-                    yield return new WaitForSeconds(textDelay + 0.37f);
-                else if (new Regex(@"^[?!]*$").IsMatch(chars[i].ToString()))
-                    yield return new WaitForSeconds(textDelay + 0.16f);
-                else
-                    yield return new WaitForSeconds(textDelay);
+                ////Add delay for certain punctuation
+                //if (new Regex(@"^[,.;:]*$").IsMatch(chars[i].ToString()))
+                //    yield return new WaitForSeconds(textDelay + 0.37f);
+                //else if (new Regex(@"^[?!]*$").IsMatch(chars[i].ToString()))
+                //    yield return new WaitForSeconds(textDelay + 0.16f);
+                // else
+                yield return new WaitForSeconds(textDelay);
             }
         }
 

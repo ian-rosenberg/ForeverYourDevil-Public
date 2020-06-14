@@ -557,6 +557,7 @@ MonoBehaviour:
   pm: {fileID: 0}
   respawn: {fileID: 282278396}
   currentState: 0
+  offset: {x: 0.5, y: 0.5, z: 0.5}
 --- !u!4 &120215906
 Transform:
   m_ObjectHideFlags: 0
@@ -2754,6 +2755,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e78ac0e7d47c80049ad690a34901681b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Leader: Penny_Test_Head
+  partyMembers:
+  - 
+  - 
+  - 
+  extraMembers:
+  - 
+  - 
+  - 
+  - 
+  skyBoxDirectionalLight: {fileID: 0}
+  skyBoxDirectionalLerpValue: 1
+  fade: {fileID: 0}
   mainCamera: {fileID: 0}
   player: {fileID: 1957407122}
   playerSpawn:
@@ -2762,6 +2776,8 @@ MonoBehaviour:
   - {fileID: 208230155}
   cameraSpawn: {fileID: 253835725}
   normalWorld: {fileID: 81750403}
+  areaId: Level1
+  sceneName: 
   battleWorld: {fileID: 1624661013}
   pauseMenu: {fileID: 1291242769}
   CanvasAnimator: {fileID: 1694975765}
@@ -8287,7 +8303,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 18
+  m_fontSize: 72
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -8304,7 +8320,7 @@ MonoBehaviour:
   m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
-  m_firstOverflowCharacterIndex: 0
+  m_firstOverflowCharacterIndex: -1
   m_linkedTextComponent: {fileID: 0}
   m_isLinkedTextComponent: 0
   m_isTextTruncated: 0
