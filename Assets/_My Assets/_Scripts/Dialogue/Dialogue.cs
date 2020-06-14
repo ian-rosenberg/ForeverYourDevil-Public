@@ -340,6 +340,7 @@ public class Dialogue : MonoBehaviour
             else
             {
                 LeftmostChar.SetTrigger("MakeDefault");
+                isTalking[0] = false;
             }
         }
 
@@ -364,6 +365,7 @@ public class Dialogue : MonoBehaviour
             else
             {
                 RightmostChar.SetTrigger("MakeDefault");
+                isTalking[1] = false;
             }
         }
 
