@@ -345,10 +345,10 @@ public class SaveManager : MonoBehaviour
 
     public void ShowSaveMenu()
     {
+        saveMode = true;
         SavingCanvas.gameObject.SetActive(true);
         gm.fade.SetActive(true);
         Title.text = "SAVE GAME";
-        saveMode = true;
         gm.PauseGame();
         gm.SetCanPause(false);
         UpdateAllSaveSlots();
@@ -356,10 +356,10 @@ public class SaveManager : MonoBehaviour
 
     public void ShowLoadMenu()
     {
+        saveMode = false;
         SavingCanvas.gameObject.SetActive(true);
         gm.fade.SetActive(true);
         Title.text = "LOAD GAME";
-        saveMode = false;
         gm.PauseGame();
         UpdateAllSaveSlots();
     }

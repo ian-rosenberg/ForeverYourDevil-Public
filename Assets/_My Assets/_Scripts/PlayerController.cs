@@ -19,7 +19,6 @@ public class PlayerController : PartyMember
 
     private bool combatMoving;
 
-
     [Header("Inventory Management")]
     private InventoryManagement invManager;
 
@@ -34,23 +33,24 @@ public class PlayerController : PartyMember
     public List<AStarNode> prevPath; //The last path to un-highlight - x == x, y == z
     public List<AStarNode> lockedPath; //The path to walk along on click - x == x, y == z
 
-
     private AStarNode selected;
 
     [Header("Behavior")]
     [SerializeField]
     private bool canPickup = false;
-    public Action currentBehavior; //Function pointer for player behavior (changed by gameManager)
 
+    public Action currentBehavior; //Function pointer for player behavior (changed by gameManager)
 
     private bool sprint = false;
 
     [Header("Player Actions")]
     public PlayerControls pControls;
+
     private Vector2 axes;
 
     //Singleton creation
     private static PlayerController instance;
+
     public static PlayerController Instance
     {
         get
@@ -71,7 +71,6 @@ public class PlayerController : PartyMember
         pControls.Player.Sprint.performed += Sprint;
         pControls.Player.ManualTravel.performed += context => axes = context.ReadValue<Vector2>();
 
-
         pControls.Player.LeftClick.Enable();
         pControls.Player.Sprint.Enable();
         pControls.Player.ManualTravel.Enable();
@@ -90,7 +89,6 @@ public class PlayerController : PartyMember
         pControls.Player.Use.performed -= Pickup;
         pControls.Player.Sprint.started -= Sprint;
         pControls.Player.ManualTravel.performed -= context => axes = context.ReadValue<Vector2>();
-
 
         pControls.Player.LeftClick.Disable();
         pControls.Player.Sprint.Disable();
@@ -116,6 +114,21 @@ public class PlayerController : PartyMember
 
     private void Update()
     {
+        //Manual WASD/Gamepad Travel
+        float h = axes.x;
+        float v = axes.y;
+
+        if (Mathf.Abs(h) > 0 || Mathf.Abs(v) > 0)
+        {
+            if (!agent.isStopped)
+                agent.ResetPath();
+
+            ////Set Global Direction With Camera
+            agent.destination = transform.position + ((Camera.main.transform.forward * v) + (Camera.main.transform.right * h)) * agent.speed;
+
+            gameManager.clickIndicator.SetActive(false);
+        }
+
         //Apply current behavior
         currentBehavior();
 
@@ -167,7 +180,6 @@ public class PlayerController : PartyMember
             agent.speed = normalSpeed;
     }
 
-
     public Vector3 GetDefaultGridSpawn()
     {
         return grid.defaultSpawn;
@@ -185,21 +197,6 @@ public class PlayerController : PartyMember
             anim.SetBool("Combat", false);
         }
         anim.SetBool("StayIdle", false);
-
-        //Manual WASD/Gamepad Travel
-        float h = axes.x;
-        float v = axes.y;
-
-        if (Mathf.Abs(h) > 0 || Mathf.Abs(v) > 0)
-        {
-            if (!agent.isStopped)
-                agent.ResetPath();
-
-            ////Set Global Direction With Camera
-            agent.destination = transform.position + ((Camera.main.transform.forward * v) + (Camera.main.transform.right * h)) * agent.speed;
-
-            gameManager.clickIndicator.SetActive(false);
-        }
     }
 
     public void AutoTravel(InputAction.CallbackContext context)
@@ -287,7 +284,6 @@ public class PlayerController : PartyMember
             //Check hit layer
             if (hit.transform.gameObject.layer == 9) //If click ground
             {
-
                 //if (selected == null || selected != grid.NearestGridNode(hit.point))
                 //{
                 prevPath = path;
@@ -355,15 +351,19 @@ public class PlayerController : PartyMember
             case gameManager.STATE.START:
                 Debug.LogError("Cannot switch GM State to START. This should not happen.");
                 break;
+
             case gameManager.STATE.TRAVELING:
                 currentBehavior = Player_Travelling;
                 break;
+
             case gameManager.STATE.COMBAT:
                 currentBehavior = Player_Combat;
                 break;
+
             case gameManager.STATE.PAUSED:
                 currentBehavior = Player_Paused;
                 break;
+
             case gameManager.STATE.TALKING:
                 currentBehavior = Player_Talking;
                 break;
@@ -385,10 +385,9 @@ public class PlayerController : PartyMember
             pControls.Player.Sprint.started += Sprint;
             pControls.Player.ManualTravel.performed += context => axes = context.ReadValue<Vector2>();
         }
-
     }
 
-    IEnumerator PickupItem()
+    private IEnumerator PickupItem()
     {
         canPickup = true;
 
@@ -403,10 +402,10 @@ public class PlayerController : PartyMember
         anim.SetBool("StayIdle", true);
     }
 
-
     public void Player_Paused()
     {
         //Disable Colliders, Rigidbodies, etc.
     }
-    #endregion
+
+    #endregion Player Behavior Functions
 }
