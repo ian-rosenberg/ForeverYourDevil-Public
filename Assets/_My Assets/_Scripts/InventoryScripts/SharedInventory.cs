@@ -23,6 +23,6 @@ public class SharedInventory : Inventory
 
         gameManager.Instance.SetCanPause(true);
 
-        gameManager.Instance.pauseMenu.SetActive(true);
+        gameManager.Instance.pauseMenu.gameObject.SetActive(true);
     }
 }

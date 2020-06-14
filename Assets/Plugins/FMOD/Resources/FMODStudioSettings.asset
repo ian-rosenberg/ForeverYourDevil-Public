@@ -16,7 +16,8 @@ MonoBehaviour:
   HasSourceProject: 0
   HasPlatforms: 0
   sourceProjectPath: 
-  sourceBankPath: Assets\_My Assets\FMOD\FYD FMOD Project\FMOD Banks\Desktop
+  sourceBankPath: D:\Unity\Unity Projects\FYD\Assets\_My Assets\FMOD\FYD FMOD Project\FMOD
+    Banks\Desktop
   SourceBankPathUnformatted: 
   AutomaticEventLoading: 1
   BankLoadType: 0

@@ -7,6 +7,10 @@ public class NPCController : MonoBehaviour
     public string conversationID; //Conversation number for communication
     public GameObject talkIndicator;
 
+    [Header("Player Input")]
+    private PlayerControls pControls;
+    private bool interact = false;
+
     // Start is called before the first frame update
     private void Start()
     {
@@ -14,10 +18,23 @@ public class NPCController : MonoBehaviour
         gameManager = gameManager.Instance;
     }
 
-    // Update is called once per frame
-    private void Update()
-    {
-    }
+    //private void OnEnable()
+    //{
+    //    pControls = new PlayerControls();
+
+    //    pControls.Player.Use.performed += context => interact = true;
+
+    //    pControls.Player.ManualTravel.Disable();
+    //}
+
+
+    //private void OnDisable()
+    //{
+    //    pControls.Player.Use.performed -= context => interact = true;
+
+    //    pControls.Player.Use.Disable();
+    //    pControls.Player.ManualTravel.Enable();
+    //}
 
     private void OnTriggerStay(Collider other)
     {
@@ -25,11 +42,19 @@ public class NPCController : MonoBehaviour
         {
             talkIndicator.SetActive(true);
 
-            if (Input.GetButtonDown("Interact"))
-            {
+            //if (interact)
+            //{
+            //    pControls.Player.Use.performed -= context => interact = true;
+
+            //    diagManager.TriggerDialogue(conversationID);
+            //    talkIndicator.SetActive(false);
+            //}
+
+            if (Input.GetKeyDown(KeyCode.E)){
                 diagManager.TriggerDialogue(conversationID);
                 talkIndicator.SetActive(false);
             }
+
         }
     }
 
@@ -40,4 +65,10 @@ public class NPCController : MonoBehaviour
             talkIndicator.SetActive(false);
         }
     }
+
+
+    //private void Update()
+    //{
+    //    Debug.Log("interact" + interact);
+    //}
 }

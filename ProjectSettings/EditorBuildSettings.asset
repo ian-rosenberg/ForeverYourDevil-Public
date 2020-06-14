@@ -14,4 +14,6 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/_My Assets/_Scenes/MessagingTest.unity
     guid: e6afd4499efb89340bc3cbf646457917
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: 795a07584c8165f499853aba9236fc0f,
+      type: 2}

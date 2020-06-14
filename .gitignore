@@ -51,6 +51,10 @@ ExportedObj/
 *.pidb.meta
 *.pdb.meta
 *.mdb.meta
+*.xml.meta
+
+#ALL META FILES (remove if necessary)
+*.meta
 
 # Unity3D generated file on crash reports
 sysinfo.txt
@@ -70,9 +74,11 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
+#Allow fspro
+!*.fspro
+
 # Fmod Files
 /Assets/FMODStudioCache.asset
 /Assets/FMODStudioCache.asset.meta
 fmod.log
 fmod_editor.log
-

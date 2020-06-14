@@ -1,11 +1,12 @@
 ﻿using FMODUnity;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
+using System.Linq;
 
 /**
  * @brief Manager for displaying images, text, etc from parsed dialogue from ParseXML
@@ -63,9 +64,31 @@ public class Dialogue : MonoBehaviour
     private bool canPress = false;                  /**Is the user allowed to advance the text?*/
     private bool skip = false;                      /**Display all characters at once if true, one at a time if false*/
 
+    private bool[] isTalking = { false, false };    /**Is one of the characters talking?*/
+
+    [Header("Player Controls")]
+    public PlayerControls pControls;
+
+
+    //private void OnEnable()
+    //{
+    //    pControls = new PlayerControls();
+
+    //    pControls.UI.Interact.performed += AdvanceSkipDialogue;
+
+    //    pControls.UI.Interact.Enable();
+    //}
+
+    //private void OnDisable()
+    //{
+    //    pControls.UI.Interact.performed -= AdvanceSkipDialogue;
+
+    //    pControls.UI.Interact.Disable();
+    //}
+
     /**
-     * @brief Initialize dialogue manager and get parsed dialogue from ParseXML
-     */
+        * @brief Initialize dialogue manager and get parsed dialogue from ParseXML
+        */
     private void Start()
     {
         canPress = false;
@@ -77,20 +100,39 @@ public class Dialogue : MonoBehaviour
         InitializeDialogue();
     }
 
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.E)) {
+            //Advance/Skip Dialogue on KeyPress
+            if (gm.gameState == gameManager.STATE.TALKING) //Return = enter key
+            {
+                if (canPress)
+                {
+                    AdvanceLine(); //Display line of text
+                }
+                else if (textDisplay.text.Length > 5)
+                {
+                    skip = true;
+                    Debug.Log("Skip = true");
+                }
+            }
+        }
+    }
+
     /**
      * @brief Main game loop. Advance line of text or skip it depending on input.
      */
 
-    private void Update()
+    private void AdvanceSkipDialogue(InputAction.CallbackContext context)
     {
         //Advance/Skip Dialogue on KeyPress
-        if (Input.GetButtonDown("Interact") && gm.gameState == gameManager.STATE.TALKING) //Return = enter key
+        if (gm.gameState == gameManager.STATE.TALKING) //Return = enter key
         {
             if (canPress)
             {
                 AdvanceLine(); //Display line of text
             }
-            else if (!textDisplay.text.Equals(""))
+            else if (textDisplay.text.Length>5)
             {
                 skip = true;
                 Debug.Log("Skip = true");
@@ -186,7 +228,6 @@ public class Dialogue : MonoBehaviour
     /**
      * @brief Waits for animation to finish before turning off dialogue canvas
      */
-
     private IEnumerator EndDialogue()
     {
         Debug.Log("End Dialogue Called");
@@ -276,7 +317,6 @@ public class Dialogue : MonoBehaviour
             //Display line to read from conversationlist
             StartCoroutine(TypeText(dialog[sentenceIndex].Content));
             sentenceIndex++;
-            Debug.Log("Sentence Index: " + sentenceIndex);
         }
     }
 
@@ -295,11 +335,18 @@ public class Dialogue : MonoBehaviour
             if (ContainsParam(LeftmostChar, dialog[index].Emotion_Array[0].ToString()))
             {
                 LeftmostChar.SetTrigger(dialog[index].Emotion_Array[0].ToString());
+                isTalking[0] = dialog[index].isTalking[0];
             }
             else
             {
                 LeftmostChar.SetTrigger("MakeDefault");
             }
+        }
+
+        // reset talking
+        else if (isTalking[0])
+        {
+            LeftmostChar.SetTrigger("StartTalk");
         }
 
         // set animation for rightmost character
@@ -312,11 +359,18 @@ public class Dialogue : MonoBehaviour
             if (ContainsParam(RightmostChar, dialog[index].Emotion_Array[1].ToString()))
             {
                 RightmostChar.SetTrigger(dialog[index].Emotion_Array[1].ToString());
+                isTalking[1] = dialog[index].isTalking[1];
             }
             else
             {
                 RightmostChar.SetTrigger("MakeDefault");
             }
+        }
+
+        // reset talking
+        else if (isTalking[1])
+        {
+            RightmostChar.SetTrigger("StartTalk");
         }
     }
 
@@ -325,7 +379,7 @@ public class Dialogue : MonoBehaviour
      */
     bool ContainsParam(Animator anim, string param)
     {
-        foreach(AnimatorControllerParameter acp in anim.parameters)
+        foreach (AnimatorControllerParameter acp in anim.parameters)
         {
             if (acp.name == param)
             {
@@ -358,7 +412,6 @@ public class Dialogue : MonoBehaviour
      * @brief Coroutine that displays text char by char until line is exhausted or skipped
      * @param s string to display
      */
-
     private IEnumerator TypeText(string s)
     {
         Debug.Log("Running coroutine.");
@@ -377,15 +430,27 @@ public class Dialogue : MonoBehaviour
             else
             {
                 textDisplay.text += chars[i];
-                //Add delay for certain punctuation
-                if (new Regex(@"^[,.;:]*$").IsMatch(chars[i].ToString()))
-                    yield return new WaitForSeconds(textDelay + 0.37f);
-                else if (new Regex(@"^[?!]*$").IsMatch(chars[i].ToString()))
-                    yield return new WaitForSeconds(textDelay + 0.16f);
-                else
-                    yield return new WaitForSeconds(textDelay);
+                ////Add delay for certain punctuation
+                //if (new Regex(@"^[,.;:]*$").IsMatch(chars[i].ToString()))
+                //    yield return new WaitForSeconds(textDelay + 0.37f);
+                //else if (new Regex(@"^[?!]*$").IsMatch(chars[i].ToString()))
+                //    yield return new WaitForSeconds(textDelay + 0.16f);
+                // else
+                yield return new WaitForSeconds(textDelay);
             }
         }
+
+        // stop talking animations
+        if (isTalking[0])
+        {
+            LeftmostChar.SetTrigger("StopTalk");
+        }
+
+        if (isTalking[1])
+        {
+            RightmostChar.SetTrigger("StopTalk");
+        }
+
         //Allow advancement
         skip = false;
         Debug.Log("skip = false");
