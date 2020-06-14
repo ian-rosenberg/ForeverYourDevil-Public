@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.00.00">
+	<object class="EncodableAsset" id="{98cf2436-76f4-4e69-a7f2-eed4b70f196d}">
+		<property name="assetPath">
+			<value>Voice Lines/MovementTest/Penny_Test/</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{90eccefb-ebf6-42a4-82a9-d479c0771509}</destination>
+		</relationship>
+	</object>
+</objects>

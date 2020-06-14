@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.00.00">
 	<object class="AudioFile" id="{a3e3a8fb-0299-4d4a-899a-9b5d22447527}">
 		<property name="assetPath">
-			<value>Voice Lines/Penny Talks To Herself/5_30_20-PennyTalksToHerself-Mariah-Lines.wav</value>
+			<value>Voice Lines/MovementTest/Penny_Test/vo_Penny_MovementTest_PennyTest.wav</value>
 		</property>
 		<property name="isStreaming">
 			<value>true</value>
