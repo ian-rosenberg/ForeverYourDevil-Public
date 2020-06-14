@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class gameManager : MonoBehaviour
@@ -8,6 +9,7 @@ public class gameManager : MonoBehaviour
 
     //Party Infotmation
     public string Leader = "Penny_Test_Head";
+
     public string[] partyMembers = new string[] { "", "", "" };
     public string[] extraMembers = new string[] { "", "", "", "" };
 
@@ -45,9 +47,12 @@ public class gameManager : MonoBehaviour
     public Animator CanvasAnimator;
 
     [Header("Click Indicator")]
-    public GameObject clickIndicator; //Has 2 particle effects, one for normal and one for turning off.
+    public GameObject clickIndicator; //Has 2 particles, one for normal and one for turning off.
 
     public Animator clickIndicAnim;
+
+    [Header("Inventory Management")]
+    private InventoryManagement invMan;
 
     //Singleton creation
     private static gameManager instance;
@@ -69,16 +74,36 @@ public class gameManager : MonoBehaviour
 
     #endregion Main Variables
 
-    private void Awake()
+    [Header("Player Controls For Game")]
+    public PlayerControls pControls;
+
+    #region Player Actions
+
+    private void OnEnable()
     {
         player = PlayerController.Instance;
         mainCamera = CameraController.Instance;
-        skyBoxDirectionalLerpValue = 1f;
 
+        pControls = new PlayerControls();
+
+        pControls.Player.TogglePause.performed += TogglePause;
+
+        pControls.Player.TogglePause.Enable();
     }
+
+    private void OnDisable()
+    {
+        pControls.Player.TogglePause.performed -= TogglePause;
+
+        pControls.Player.TogglePause.Disable();
+    }
+
+    #endregion Player Actions
 
     private void Start()
     {
+        skyBoxDirectionalLerpValue = 1f;
+
         Leader = "Penny_Test_Head";
         partyMembers = new string[] { "Player", "", "" };
         extraMembers = new string[] { "", "", "", "" };
@@ -87,6 +112,7 @@ public class gameManager : MonoBehaviour
         prevState = STATE.START; //Start out of combat\
         clickIndicator.SetActive(false);
         sceneName = SceneManager.GetActiveScene().name;
+        invMan = GetComponentInChildren<InventoryManagement>();
     }
 
     public IEnumerator ClickOff()
@@ -96,28 +122,34 @@ public class gameManager : MonoBehaviour
         //clickIndicator.SetActive(false);
     }
 
-    // Update is called once per frame
-    private void Update()
-    {
-        //Pause Game (WILL CHANGE DUE TO INPUT SYSTEM)
-        if (Input.GetButtonDown("Pause") && canPause)
-        {
-            if (gameState == STATE.PAUSED)
-            {
-                StartCoroutine(ExitPauseMenu());
-            }
-            else
-            {
-                pauseMenu.gameObject.SetActive(true);
-                fade.SetActive(true);
-                PauseGame();
-            }
-        }
-    }
-
     private void FixedUpdate()
     {
         skyBoxDirectionalLightLerp();
+    }
+
+    public void TogglePause(InputAction.CallbackContext context)
+    {
+        switch (context.phase)
+        {
+            case InputActionPhase.Performed:
+                if (canPause)
+                {
+                    if (gameState == STATE.PAUSED)
+                    {
+                        StartCoroutine(ExitPauseMenu());
+                    }
+                    else
+                    {
+                        pauseMenu.gameObject.SetActive(true);
+                        fade.SetActive(true);
+                        PauseGame();
+                    }
+                }
+                break;
+
+            default:
+                break;
+        }
     }
 
     /**
@@ -146,6 +178,7 @@ public class gameManager : MonoBehaviour
         {
             ChangeState(STATE.PAUSED);
             Time.timeScale = 0;
+            invMan.EnableInventoryInput();
         }
     }
 
@@ -155,6 +188,9 @@ public class gameManager : MonoBehaviour
         {
             ChangeState(prevState);
             Time.timeScale = 1;
+            player.agent.ResetPath();
+
+            invMan.DisableInventoryInput();
         }
     }
 
@@ -223,9 +259,6 @@ public class gameManager : MonoBehaviour
         CanvasAnimator.SetTrigger("Loaded");
         SetCanPause(true);
     }
-
-
-   
 
     #endregion Entering Combat
 
