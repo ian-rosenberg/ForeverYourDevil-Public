@@ -1005,10 +1005,10 @@
 	</object>
 	<object class="ParameterCondition" id="{731f91de-18d4-40b0-aa14-dae125debe6e}">
 		<property name="minimum">
-			<value>6</value>
+			<value>4</value>
 		</property>
 		<property name="maximum">
-			<value>6</value>
+			<value>4</value>
 		</property>
 		<relationship name="parameter">
 			<destination>{80547c8c-b39d-4718-832b-87b8d3fceef8}</destination>
