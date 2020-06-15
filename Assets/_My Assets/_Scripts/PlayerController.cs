@@ -70,6 +70,7 @@ public class PlayerController : PartyMember
         pControls.Player.Use.performed += Pickup;
         pControls.Player.Sprint.performed += Sprint;
         pControls.Player.ManualTravel.performed += context => axes = context.ReadValue<Vector2>();
+        pControls.Player.ManualTravel.canceled += context => axes = Vector2.zero;
 
         pControls.Player.LeftClick.Enable();
         pControls.Player.Sprint.Enable();
@@ -117,6 +118,7 @@ public class PlayerController : PartyMember
         //Manual WASD/Gamepad Travel
         float h = axes.x;
         float v = axes.y;
+        Debug.Log("<color=blue>H: " + h + ", V: " + v + "</color>");
 
         if (Mathf.Abs(h) > 0 || Mathf.Abs(v) > 0)
         {
@@ -124,7 +126,7 @@ public class PlayerController : PartyMember
                 agent.ResetPath();
 
             ////Set Global Direction With Camera
-            agent.destination = transform.position + ((Camera.main.transform.forward * v) + (Camera.main.transform.right * h)) * agent.speed;
+            agent.velocity = ((Camera.main.transform.forward * v) + (Camera.main.transform.right * h)) * agent.speed;
 
             gameManager.clickIndicator.SetActive(false);
         }

@@ -79,5 +79,6 @@ MonoBehaviour:
   - Master
   Banks:
   - Dialogue
+  - Music
   BanksToLoad: []
   LiveUpdatePort: 9264
