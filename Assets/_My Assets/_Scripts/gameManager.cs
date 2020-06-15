@@ -137,6 +137,7 @@ public class gameManager : MonoBehaviour
                     if (gameState == STATE.PAUSED)
                     {
                         StartCoroutine(ExitPauseMenu());
+                        
                     }
                     else
                     {

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5129846904352851783}
   - component: {fileID: 8244310108399664405}
   m_Layer: 12
-  m_Name: Image
+  m_Name: Bar table
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25,17 +25,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 50287677541495021}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.93748, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 6154288393526761280}
-  m_RootOrder: 1
+  m_Father: {fileID: 6355035621591515817}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -12, y: 107}
-  m_SizeDelta: {x: 0, y: 100}
+  m_AnchoredPosition: {x: -27.737, y: 58}
+  m_SizeDelta: {x: -73.2, y: 67}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &5129846904352851783
 CanvasRenderer:
@@ -340,12 +340,12 @@ RectTransform:
   - {fileID: 1615376501947382454}
   - {fileID: 449767751875670546}
   - {fileID: 4291900344869709029}
-  m_Father: {fileID: 6154288393526761280}
-  m_RootOrder: 0
+  m_Father: {fileID: 6355035621591515817}
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 334, y: 105}
+  m_AnchoredPosition: {x: 481.26343, y: 44.357513}
   m_SizeDelta: {x: 450, y: 705}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3562386790116854122
@@ -746,15 +746,9 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 5096731870002146522}
-  - {fileID: 3821922461995541270}
-  - {fileID: 6752919973912799698}
-  - {fileID: 3446794194082766476}
-  - {fileID: 2337972498550094015}
-  - {fileID: 2059356702162456107}
   - {fileID: 7809698264302932152}
   m_Father: {fileID: 6355035621591515817}
-  m_RootOrder: 0
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.31500003}
   m_AnchorMax: {x: 0.5702447, y: 1}
@@ -822,7 +816,7 @@ GameObject:
   - component: {fileID: 987857190617651301}
   - component: {fileID: 3925797347250556307}
   m_Layer: 12
-  m_Name: Image (2)
+  m_Name: Bar Stools (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -835,16 +829,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2900736339302363282}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 6154288393526761280}
-  m_RootOrder: 4
+  m_Father: {fileID: 6355035621591515817}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 125, y: -299}
+  m_AnchoredPosition: {x: 272.26343, y: -359.64246}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &987857190617651301
@@ -987,7 +981,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6355035621591515817}
-  m_RootOrder: 2
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -1119,7 +1113,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.29258156}
   m_AnchorMax: {x: 0.5694424, y: 1}
-  m_AnchoredPosition: {x: -0.000061035156, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &6738608596935087799
@@ -1192,7 +1186,7 @@ GameObject:
   - component: {fileID: 1428818571082796800}
   - component: {fileID: 3388298357126210426}
   m_Layer: 12
-  m_Name: Image (3)
+  m_Name: Bar Stools
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1205,16 +1199,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4371504450215109291}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 6154288393526761280}
-  m_RootOrder: 5
+  m_Father: {fileID: 6355035621591515817}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 374.99994, y: -299}
+  m_AnchoredPosition: {x: 522.26337, y: -359.64246}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1428818571082796800
@@ -1440,6 +1434,12 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 2059356702162456107}
+  - {fileID: 2337972498550094015}
+  - {fileID: 3446794194082766476}
+  - {fileID: 6752919973912799698}
+  - {fileID: 3821922461995541270}
+  - {fileID: 5096731870002146522}
   - {fileID: 6154288393526761280}
   - {fileID: 6941028234414491474}
   - {fileID: 4751999580640160291}
@@ -1521,7 +1521,7 @@ RectTransform:
   m_Children:
   - {fileID: 7972981090521345963}
   m_Father: {fileID: 6154288393526761280}
-  m_RootOrder: 6
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -1589,7 +1589,7 @@ GameObject:
   - component: {fileID: 6363442384896601161}
   - component: {fileID: 3511020470694818232}
   m_Layer: 12
-  m_Name: Image
+  m_Name: Bar Stools (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1602,16 +1602,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6089894054429901846}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 6154288393526761280}
-  m_RootOrder: 2
+  m_Father: {fileID: 6355035621591515817}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -425, y: -299}
+  m_AnchoredPosition: {x: -277.73657, y: -359.64246}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6363442384896601161
@@ -1912,7 +1912,7 @@ RectTransform:
   m_Children:
   - {fileID: 703665992108305086}
   m_Father: {fileID: 6355035621591515817}
-  m_RootOrder: 1
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -2214,7 +2214,7 @@ GameObject:
   - component: {fileID: 7707817250433127767}
   - component: {fileID: 1236471085282031025}
   m_Layer: 12
-  m_Name: Image (1)
+  m_Name: 'Bar Stools (3) '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2227,16 +2227,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8775957828937466673}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 6154288393526761280}
-  m_RootOrder: 3
+  m_Father: {fileID: 6355035621591515817}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -175, y: -299}
+  m_AnchoredPosition: {x: -27.736572, y: -359.64246}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7707817250433127767

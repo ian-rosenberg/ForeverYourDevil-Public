@@ -286,8 +286,8 @@ public class SaveManager : MonoBehaviour
             gm.mainCamera.QuickResetCamera();
 
             //Adjust world settings
-            RenderSettings.skybox = Resources.Load<Material>("/Skyboxes/SkySerie Freebie/" + save.skybox);
-            DynamicGI.UpdateEnvironment();
+            //RenderSettings.skybox = Resources.Load<Material>("/Skyboxes/SkySerie Freebie/" + save.skybox);
+            //DynamicGI.UpdateEnvironment();
 
             //Wait a bit
             yield return new WaitForSecondsRealtime(3f);

@@ -100,34 +100,33 @@ public class CameraController : MonoBehaviour
 
     public void Camera_Following()
     {
+        //Camera Reset
+        if (camReset && !isCameraReseting && gm.gameState != gameManager.STATE.PAUSED)
+        {
+            StartCoroutine(ResetCamera());
+        }
+
+        //Move camera with right click and hold
+        if ((Mathf.Abs(Mouse.current.rightButton.ReadValue()) != 0) && !isCameraReseting) //If hold right click
+        {
+            ResetCameraNotification.SetActive(true);
+            mouseX += Mouse.current.delta.x.ReadValue() * rotateSpeed;
+            mouseY += Mouse.current.delta.y.ReadValue() * rotateSpeed;
+
+            mouseY = Mathf.Clamp(mouseY, -30, 45);
+
+            FollowX.rotation = Quaternion.Euler(0f, mouseX, 0f);
+            FollowY.localRotation = Quaternion.Euler(-mouseY, 0f, 0f);
+        }
+
+        //Debug.Log(Mouse.current.scroll.ReadValue().y);
+
+        //Zoom in and out with mouse wheel.
+        //float z = Mathf.Clamp(Mouse.current.scroll, -.8f, .8f);
+
+        //transform.position += new Vector3(0, 0, z);
         if (gm.gameState != gameManager.STATE.PAUSED)
         {
-            //Camera Reset
-            if (camReset && !isCameraReseting)
-            {
-                StartCoroutine(ResetCamera());
-            }
-
-            //Move camera with right click and hold
-            if ((Mathf.Abs(Mouse.current.rightButton.ReadValue()) != 0) && !isCameraReseting) //If hold right click
-            {
-                ResetCameraNotification.SetActive(true);
-                mouseX += Mouse.current.delta.x.ReadValue() * rotateSpeed;
-                mouseY += Mouse.current.delta.y.ReadValue() * rotateSpeed;
-
-                mouseY = Mathf.Clamp(mouseY, -30, 45);
-
-                FollowX.rotation = Quaternion.Euler(0f, mouseX, 0f);
-                FollowY.localRotation = Quaternion.Euler(-mouseY, 0f, 0f);
-            }
-
-            //Debug.Log(Mouse.current.scroll.ReadValue().y);
-
-            //Zoom in and out with mouse wheel.
-            //float z = Mathf.Clamp(Mouse.current.scroll, -.8f, .8f);
-
-            //transform.position += new Vector3(0, 0, z);
-            
             if (Mouse.current.scroll.ReadValue().y < 0) // back
             {
                 ResetCameraNotification.SetActive(true);
@@ -145,17 +144,18 @@ public class CameraController : MonoBehaviour
                     transform.position += transform.forward;
                 }
             }
-
-            //DEBUG - lock onto specified target with keypress
-            if (!camLockState)
-            {
-                ChangeCameraState(MODE.FOLLOWING, enemyLockOn.transform);
-            }
-            if (camLockState)
-            {
-                ChangeCameraState(MODE.FOLLOWING, gm.player.transform);
-            }
         }
+
+        //DEBUG - lock onto specified target with keypress
+        if (!camLockState)
+        {
+            ChangeCameraState(MODE.FOLLOWING, enemyLockOn.transform);
+        }
+        if (camLockState)
+        {
+            ChangeCameraState(MODE.FOLLOWING, gm.player.transform);
+        }
+
     }
 
 
