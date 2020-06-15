@@ -93,8 +93,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.846038, y: 2.9867175, z: 1.2853895}
-  m_Center: {x: 0.60658664, y: 1.5005565, z: 0.00058979535}
+  m_Size: {x: 3.2008412, y: 2.9867175, z: 2.0398731}
+  m_Center: {x: 0.7067601, y: 1.5005565, z: -0.37665105}
 --- !u!114 &303601427907691864
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,8 +109,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   locked: 0
   areaID: Level 2
+  newCameraMode: 1
+  SpawnPoint: {fileID: 0}
   skybox: {fileID: 2100000, guid: 85cf0b004bc4a654b9e501efcce47902, type: 2}
-  spawnPoint: {fileID: 0}
+  cameraSpawnPoint: {fileID: 0}
 --- !u!1 &4985944455562653286
 GameObject:
   m_ObjectHideFlags: 0
