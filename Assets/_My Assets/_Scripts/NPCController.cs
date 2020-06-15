@@ -18,23 +18,23 @@ public class NPCController : MonoBehaviour
         gameManager = gameManager.Instance;
     }
 
-    //private void OnEnable()
-    //{
-    //    pControls = new PlayerControls();
+    private void OnEnable()
+    {
+        pControls = new PlayerControls();
 
-    //    pControls.Player.Use.performed += context => interact = true;
+        pControls.Player.Use.performed += context => interact = true;
 
-    //    pControls.Player.ManualTravel.Disable();
-    //}
+        pControls.Player.ManualTravel.Disable();
+    }
 
 
-    //private void OnDisable()
-    //{
-    //    pControls.Player.Use.performed -= context => interact = true;
+    private void OnDisable()
+    {
+        pControls.Player.Use.performed -= context => interact = true;
 
-    //    pControls.Player.Use.Disable();
-    //    pControls.Player.ManualTravel.Enable();
-    //}
+        pControls.Player.Use.Disable();
+        pControls.Player.ManualTravel.Enable();
+    }
 
     private void OnTriggerStay(Collider other)
     {
@@ -42,15 +42,16 @@ public class NPCController : MonoBehaviour
         {
             talkIndicator.SetActive(true);
 
-            //if (interact)
-            //{
-            //    pControls.Player.Use.performed -= context => interact = true;
+            if (interact)
+            {
+                pControls.Player.Use.performed -= context => interact = true;
 
-            //    diagManager.TriggerDialogue(conversationID);
-            //    talkIndicator.SetActive(false);
-            //}
+                diagManager.TriggerDialogue(conversationID);
+                talkIndicator.SetActive(false);
+            }
 
-            if (Input.GetKeyDown(KeyCode.E)){
+            if (Input.GetKeyDown(KeyCode.E))
+            {
                 diagManager.TriggerDialogue(conversationID);
                 talkIndicator.SetActive(false);
             }
