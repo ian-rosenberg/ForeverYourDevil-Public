@@ -115,22 +115,7 @@ public class PlayerController : PartyMember
 
     private void Update()
     {
-        //Manual WASD/Gamepad Travel
-        float h = axes.x;
-        float v = axes.y;
-        Debug.Log("<color=blue>H: " + h + ", V: " + v + "</color>");
-
-        if (Mathf.Abs(h) > 0 || Mathf.Abs(v) > 0)
-        {
-            if (!agent.isStopped)
-                agent.ResetPath();
-
-            ////Set Global Direction With Camera
-            agent.velocity = ((Camera.main.transform.forward * v) + (Camera.main.transform.right * h)) * agent.speed;
-
-            gameManager.clickIndicator.SetActive(false);
-        }
-
+        
         //Apply current behavior
         currentBehavior();
 
@@ -199,6 +184,22 @@ public class PlayerController : PartyMember
             anim.SetBool("Combat", false);
         }
         anim.SetBool("StayIdle", false);
+
+        //Manual WASD/Gamepad Travel
+        float h = axes.x;
+        float v = axes.y;
+       // Debug.Log("<color=blue>H: " + h + ", V: " + v + "</color>");
+
+        if (Mathf.Abs(h) > 0 || Mathf.Abs(v) > 0)
+        {
+            if (!agent.isStopped)
+                agent.ResetPath();
+
+            ////Set Global Direction With Camera
+            agent.velocity = ((Camera.main.transform.forward * v) + (Camera.main.transform.right * h)) * agent.speed;
+
+            gameManager.clickIndicator.SetActive(false);
+        }
     }
 
     public void AutoTravel(InputAction.CallbackContext context)
@@ -334,6 +335,7 @@ public class PlayerController : PartyMember
                     Debug.Log("Arrived at node: " + i);
                     i++; //Go to next node
                     stamina--; //Subtract stamina and text update
+                    playerGUI.ChangeStamina(stamina, maxStamina);
 
                     //agent.ResetPath();
                 }

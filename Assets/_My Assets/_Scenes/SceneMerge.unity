@@ -1265,6 +1265,33 @@ PrefabInstance:
       propertyPath: m_hasFontAssetChanged
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 581841719273317052, guid: 114c601f7a4e1304f8c3c639e0cad86d,
+        type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: d6748d9e0352c4a4eb7aa8d17d643b9a,
+        type: 2}
+    - target: {fileID: 581841719273317052, guid: 114c601f7a4e1304f8c3c639e0cad86d,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 37.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 581841719281772595, guid: 114c601f7a4e1304f8c3c639e0cad86d,
+        type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: d6748d9e0352c4a4eb7aa8d17d643b9a,
+        type: 2}
+    - target: {fileID: 581841719281772595, guid: 114c601f7a4e1304f8c3c639e0cad86d,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 37.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 581841719294434264, guid: 114c601f7a4e1304f8c3c639e0cad86d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 581841719493877169, guid: 114c601f7a4e1304f8c3c639e0cad86d,
         type: 3}
       propertyPath: m_Name
@@ -1478,6 +1505,12 @@ PrefabInstance:
       propertyPath: m_hasFontAssetChanged
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 581841720828031805, guid: 114c601f7a4e1304f8c3c639e0cad86d,
+        type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: d6748d9e0352c4a4eb7aa8d17d643b9a,
+        type: 2}
     - target: {fileID: 581841721152964123, guid: 114c601f7a4e1304f8c3c639e0cad86d,
         type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -3071,7 +3104,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   printPath: 0
-  grid: {fileID: 0}
+  grid: {fileID: 1539110194}
 --- !u!95 &1119329352
 Animator:
   serializedVersion: 3
@@ -5835,6 +5868,10 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 591512267, guid: 456ea23be283ff443a9d3cda45f13747, type: 3}
+      propertyPath: grid
+      value: 
+      objectReference: {fileID: 1539110194}
     - target: {fileID: 1568976632183730711, guid: 456ea23be283ff443a9d3cda45f13747,
         type: 3}
       propertyPath: m_RootOrder
@@ -9747,6 +9784,16 @@ PrefabInstance:
       propertyPath: enemyLockOn
       value: 
       objectReference: {fileID: 1758867419}
+    - target: {fileID: 7736120608094991444, guid: 5912e50a99c2e3748adad53e6d7c74c2,
+        type: 3}
+      propertyPath: rotateSpeed
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7736120608094991444, guid: 5912e50a99c2e3748adad53e6d7c74c2,
+        type: 3}
+      propertyPath: cameraResetSpd
+      value: 0.4
+      objectReference: {fileID: 0}
     - target: {fileID: 7736120609396605048, guid: 5912e50a99c2e3748adad53e6d7c74c2,
         type: 3}
       propertyPath: m_LocalPosition.x
