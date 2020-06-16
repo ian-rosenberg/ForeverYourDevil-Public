@@ -146,15 +146,15 @@ public class CameraController : MonoBehaviour
             }
         }
 
-        //DEBUG - lock onto specified target with keypress
-        if (!camLockState)
-        {
-            ChangeCameraState(MODE.FOLLOWING, enemyLockOn.transform);
-        }
-        if (camLockState)
-        {
-            ChangeCameraState(MODE.FOLLOWING, gm.player.transform);
-        }
+        ////DEBUG - lock onto specified target with keypress
+        //if (!camLockState)
+        //{
+        //    ChangeCameraState(MODE.FOLLOWING, enemyLockOn.transform);
+        //}
+        //if (camLockState)
+        //{
+        //    ChangeCameraState(MODE.FOLLOWING, gm.player.transform);
+        //}
 
     }
 

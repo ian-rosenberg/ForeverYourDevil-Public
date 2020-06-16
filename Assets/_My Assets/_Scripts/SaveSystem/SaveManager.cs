@@ -282,7 +282,8 @@ public class SaveManager : MonoBehaviour
             }            //party Members
 
             //Adjust camera (Assuming camera is traveling and following player)
-            gm.mainCamera.ChangeCameraState((CameraController.MODE)save.cameraMode, gm.player.transform);
+            //gm.mainCamera.ChangeCameraState((CameraController.MODE)save.cameraMode, gm.player.transform);
+            gm.mainCamera.ChangeCameraState(CameraController.MODE.FOLLOWING, gm.player.transform);
             gm.mainCamera.QuickResetCamera();
 
             //Adjust world settings

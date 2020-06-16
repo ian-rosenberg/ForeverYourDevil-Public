@@ -221,6 +221,7 @@ public class gameManager : MonoBehaviour
         PauseGame();
         SetCanPause(false);
         CanvasAnimator.SetTrigger("Battle");
+        player.anim.SetTrigger("CombatTrigger");
         StartCoroutine(LoadCombatDelay());
     }
 
