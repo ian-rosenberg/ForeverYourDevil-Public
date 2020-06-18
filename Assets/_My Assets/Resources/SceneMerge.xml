@@ -32,11 +32,11 @@ xsi:schemaLocation="https://www.w3schools.com/xml VN_Schema.xsd">
       <line emotion_L="Idle" AC_R="Penny_AC" emotion_R="AmazedTalk">...THAT I COULD TRANSFORRRRRRRRRRRRRRM!!!!!!!!</line>
     </character>
     <character name="Penny">
-      <line emotion_L="AmazedTalk" emotion_R="Amazed">WOAHHHHHHHHHHHHHH!!!!!</line>
+      <line emotion_L="AmazedTalk" emotion_R="Amazed">WOAH!!!</line>
     </character>
     <character name="PENNY! :3">
-      <line emotion_L="Amazed" emotion_R="AmazedTalk">HAHAHAHA!!!!! I AM YOU NOW!</line>
-      <line emotion_R="Talking">What do you think, original, but slightly less handsome Penny?!!!</line>
+      <line emotion_L="Amazed" emotion_R="AmazedTalk">AHAHAHAHA!!!! I AM YOU NOW!</line>
+      <line emotion_L="Confused" emotion_R="Talking">What do you think, original, but slightly less handsome Penny????</line>
       <options>
         <choice id="Cool">THAT'S SO COOL!!!!</choice>
         <choice id="What">What the actual hell???</choice>
@@ -61,22 +61,22 @@ xsi:schemaLocation="https://www.w3schools.com/xml VN_Schema.xsd">
 
   <conversation id="Cool" voice="{295e323b-9df7-445e-8781-fea67c93cb8d}">
     <character name="Penny">
-      <line AC_L="Penny_AC" emotion_L="AmazedTalk" AC_R="Penny_AC" emotion_R="Idle">THAT'S SO COOOOOOOOOOOOOOOL!!!!</line>
+      <line AC_L="Penny_AC" emotion_L="AmazedTalk" AC_R="Penny_AC" emotion_R="Idle">THAT'S SO COOL!!!!</line>
       <line emotion_L="AmazedTalk" emotion_R="Idle">You even got the detail in my hair all flipped and stuff!</line>
     </character>
     <character name="PENNY! :3">
-      <line emotion_L="Amazed" emotion_R="AmazedTalk">I'm proud of all the detail, heck yeah!</line>
+      <line emotion_L="Idle" emotion_R="AmazedTalk">I'm proud of all the detail, heck yeah!</line>
     </character>
     <character name="Penny">
-      <line emotion_L="ConfusedTalk" emotion_R="Idle">Though I will say, the artist who drew you... me?? We?? Yeah we.</line>
-      <line emotion_L="SadTalk">Whoever drew us should have probably made it so that this form lasted a little...</line>
+      <line emotion_L="ConfusedTalk" emotion_R="Amazed">Though I will say, the artist who drew you... me?? We?? Yeah we.</line>
+      <line emotion_L="SadTalk" emotion_R="Idle">Whoever drew us should have probably made it so that this form lasted a little...</line>
     </character>
     <character name="Penny">
       <line AC_L="Default_AC" emotion_R="Idle">...</line>
-      <line >AHHHHHHHHHHHHHHHHHHHHHHHHHHHH!</line>
+      <line >AHHHHHHHHH!</line>
     </character>
     <character name="PENNY! :3">
-      <line emotion_R="AmazedTalk">AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH!</line>
+      <line emotion_R="AmazedTalk">AHHHHHHHHHHHHHHH!</line>
     </character>
   </conversation>
 

@@ -282,12 +282,13 @@ public class SaveManager : MonoBehaviour
             }            //party Members
 
             //Adjust camera (Assuming camera is traveling and following player)
-            gm.mainCamera.ChangeCameraState((CameraController.MODE)save.cameraMode, gm.player.transform);
+            //gm.mainCamera.ChangeCameraState((CameraController.MODE)save.cameraMode, gm.player.transform);
+            gm.mainCamera.ChangeCameraState(CameraController.MODE.FOLLOWING, gm.player.transform);
             gm.mainCamera.QuickResetCamera();
 
             //Adjust world settings
-            RenderSettings.skybox = Resources.Load<Material>("/Skyboxes/SkySerie Freebie/" + save.skybox);
-            DynamicGI.UpdateEnvironment();
+            //RenderSettings.skybox = Resources.Load<Material>("/Skyboxes/SkySerie Freebie/" + save.skybox);
+            //DynamicGI.UpdateEnvironment();
 
             //Wait a bit
             yield return new WaitForSecondsRealtime(3f);
@@ -345,10 +346,10 @@ public class SaveManager : MonoBehaviour
 
     public void ShowSaveMenu()
     {
+        saveMode = true;
         SavingCanvas.gameObject.SetActive(true);
         gm.fade.SetActive(true);
         Title.text = "SAVE GAME";
-        saveMode = true;
         gm.PauseGame();
         gm.SetCanPause(false);
         UpdateAllSaveSlots();
@@ -356,10 +357,10 @@ public class SaveManager : MonoBehaviour
 
     public void ShowLoadMenu()
     {
+        saveMode = false;
         SavingCanvas.gameObject.SetActive(true);
         gm.fade.SetActive(true);
         Title.text = "LOAD GAME";
-        saveMode = false;
         gm.PauseGame();
         UpdateAllSaveSlots();
     }
