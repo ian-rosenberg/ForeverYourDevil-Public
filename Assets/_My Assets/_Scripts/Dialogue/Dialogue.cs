@@ -108,20 +108,24 @@ public class Dialogue : MonoBehaviour
 
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E)) {
-            //Advance/Skip Dialogue on KeyPress
-            if (gm.gameState == gameManager.STATE.TALKING) //Return = enter key
+        // Advance/Skip Dialogue on KeyPress
+        if (gm.gameState == gameManager.STATE.TALKING && Input.GetKeyDown(KeyCode.E))
+        {
+            if (canPress)
             {
-                if (canPress)
-                {
-                    AdvanceLine(); //Display line of text
-                }
-                else if (textDisplay.text.Length > 5)
-                {
-                    skip = true;
-                    Debug.Log("Skip = true");
-                }
+                AdvanceLine(); //Display line of text
             }
+            else if (textDisplay.text.Length > 5)
+            {
+                skip = true;
+                Debug.Log("Skip = true");
+            }
+        }
+
+        // skip entire conversation if non-essential
+        if (!isCurrentlyEssential && gm.gameState == gameManager.STATE.TALKING && Input.GetKeyDown(KeyCode.S))
+        {
+            StartCoroutine(EndDialogue());
         }
     }
 
