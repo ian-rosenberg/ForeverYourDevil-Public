@@ -72,6 +72,9 @@ public class Dialogue : MonoBehaviour
     private bool skip = false;                      /**Display all characters at once if true, one at a time if false*/
 
     private bool[] isTalking = { false, false };    /**Is one of the characters talking?*/
+    private Coroutine lastTypeTextRoutine = null;   /**Keeps track of the last coroutine called for typing text*/
+
+    private bool isEnding = false;                  /**True if EndDialogue has been called*/
 
     [Header("Player Controls")]
     public PlayerControls pControls;
@@ -128,10 +131,31 @@ public class Dialogue : MonoBehaviour
         {
             if (optionIndex == -1)
             {
-                StartCoroutine(EndDialogue());
+                if (!isEnding)
+                {
+                    StartCoroutine(EndDialogue());
+                }
             }
             else
             {
+                if (lastTypeTextRoutine != null)
+                {
+                    // stop typing previous line
+                    StopCoroutine(lastTypeTextRoutine);
+
+                    // stop talking animations
+                    if (isTalking[0])
+                    {
+                        LeftmostChar.SetTrigger("StopTalk");
+                    }
+
+                    if (isTalking[1])
+                    {
+                        RightmostChar.SetTrigger("StopTalk");
+                    }
+                }
+
+                // advance to the option
                 sentenceIndex = optionIndex != 0 ? optionIndex - 1 : 0;
                 AdvanceLine();
             }
@@ -253,6 +277,8 @@ public class Dialogue : MonoBehaviour
      */
     private IEnumerator EndDialogue()
     {
+        isEnding = true;
+
         Debug.Log("End Dialogue Called");
         textDisplay.transform.parent.transform.parent.gameObject.SetActive(false);
         canvasAnim.SetTrigger("Exit");
@@ -260,6 +286,8 @@ public class Dialogue : MonoBehaviour
         Canvas.SetActive(false);
         RuntimeManager.StudioSystem.setParameterByName("DialogueEnd", 1);
         gm.ChangeState(gameManager.STATE.TRAVELING);
+
+        isEnding = false;
     }
 
     /**
@@ -349,7 +377,7 @@ public class Dialogue : MonoBehaviour
             textDisplay.text = ""; //Reset Text to blank
 
             //Display line to read from conversationlist
-            StartCoroutine(TypeText(dialog[sentenceIndex].Content));
+            lastTypeTextRoutine = StartCoroutine(TypeText(dialog[sentenceIndex].Content));
             sentenceIndex++;
         }
     }
