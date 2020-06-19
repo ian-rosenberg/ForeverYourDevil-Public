@@ -1769,6 +1769,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c3e5129141729f4d99126dc11677ec4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &682127955 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7432381530785995688, guid: 6759e93c909b70b4a8bd129be701aaba,
+    type: 3}
+  m_PrefabInstance: {fileID: 7432381530516918003}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &705328950 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7432381530148239813, guid: 6759e93c909b70b4a8bd129be701aaba,
@@ -9055,6 +9061,11 @@ PrefabInstance:
       propertyPath: cerulianBlue.b
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 755819438948372293, guid: d535dedf575f07d4f9eb1aae482f88b6,
+        type: 3}
+      propertyPath: nameRect
+      value: 
+      objectReference: {fileID: 682127955}
     - target: {fileID: 755819438948372296, guid: d535dedf575f07d4f9eb1aae482f88b6,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -9312,6 +9323,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 321.1
       objectReference: {fileID: 0}
+    - target: {fileID: 7432381530148239814, guid: 6759e93c909b70b4a8bd129be701aaba,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -5.399994
+      objectReference: {fileID: 0}
     - target: {fileID: 7432381530438188987, guid: 6759e93c909b70b4a8bd129be701aaba,
         type: 3}
       propertyPath: m_PreserveAspect
@@ -9435,7 +9451,7 @@ PrefabInstance:
     - target: {fileID: 7432381530621341547, guid: 6759e93c909b70b4a8bd129be701aaba,
         type: 3}
       propertyPath: m_AdditionalShaderChannelsFlag
-      value: 1
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 7432381530785995695, guid: 6759e93c909b70b4a8bd129be701aaba,
         type: 3}

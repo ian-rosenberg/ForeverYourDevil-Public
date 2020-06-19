@@ -30,6 +30,8 @@ public class Dialogue : MonoBehaviour
         }
     }
 
+    private const float NAME_BOX_WIDTH = 370.0f;
+
     private string currentId;                       /**Conversation id to choose*/
     private int sentenceIndex;                      /**Index of sentence to go to*/
 
@@ -41,6 +43,7 @@ public class Dialogue : MonoBehaviour
 
     public TextMeshProUGUI nameBox;         /**Display name if given*/
     public TextMeshProUGUI textDisplay;     /**Display for text*/
+    public RectTransform nameRect;          /**NameBox rectangle*/
     public Image nameBoxFrame;              /**Background frame of textbox*/
     public Image textBoxFrame;              /**Background frame of textbox*/
     public Animator LeftmostChar;           /**Leftmost Character*/
@@ -299,13 +302,24 @@ public class Dialogue : MonoBehaviour
             {
                 nameBox.gameObject.transform.parent.gameObject.SetActive(true); //Replace with fade in animation
                 nameBox.text = dialog[sentenceIndex].Name;
+                    
                 //Give special color/frame image to special names
-                if (nameBox.text == "Adult")
-                    SetFrameTextColor(cerulianBlue, cerulianBlue);
-                else if (nameBox.text == "Penny")
-                    SetFrameTextColor(pennyGreen, pennyGreen);
-                else
-                    SetFrameTextColor(tanOrange, tanOrange);
+                switch(nameBox.text)
+                {
+                    case "Adult":
+                        SetFrameTextColor(cerulianBlue, cerulianBlue);
+                        break;
+                    case "Penny":
+                        SetFrameTextColor(pennyGreen, pennyGreen);
+                        break;
+                    default:
+                        SetFrameTextColor(tanOrange, tanOrange);
+                        break;
+                }
+
+                // resize name box according to length of name (sets right bound of name box)
+                float size = nameBox.GetPreferredValues(nameBox.text).x - NAME_BOX_WIDTH;
+                nameRect.offsetMax = new Vector2(size, nameRect.offsetMax.y);
             }
             else //if no name
             {
