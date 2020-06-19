@@ -17,6 +17,8 @@ public class Conversation
     public string VoiceLine { get; set; }                     /**Optional Wav file containing voice line to play with conversation.*/
     public List<DialogueLine> DialogueLines { get; set; }     /**A list of dialogue lines to display*/
 
+    public bool isEssential = true;                           /**False if conversation is skippable*/
+
     public Conversation()
     {
         Id = "";
@@ -200,33 +202,33 @@ public class ParseXML : MonoBehaviour
     {
         UnityEngine.Debug.Log("Started");
 
-        //Initialize Conversation List
+        // Initialize Conversation List
         conversationList = new Dictionary<string, Conversation>();
 
-        //Load XML FILE into script
+        // Load XML FILE into script
         var file = Resources.Load<TextAsset>(SceneManager.GetActiveScene().name);
         XmlDocument xml = new XmlDocument();
         xml.LoadXml(file.text);
         UnityEngine.Debug.Log("LoadXml");
 
-        //Get a list of all conversations
+        // Get a list of all conversations
         XmlNodeList nodelist = xml.SelectSingleNode("/game").SelectNodes("conversation"); // get all <conversation> nodes
         UnityEngine.Debug.Log("/conversations: " + nodelist.Count);
         foreach (XmlNode conv in nodelist) // for each <conversation> node
         {
-            //Create conversation Obj
+            // Create conversation Obj
             Conversation conversation = new Conversation();
             List<DialogueLine> dialogueList = new List<DialogueLine>();
             UnityEngine.Debug.Log("Lists created");
 
-            //Set conversationID
+            // Set conversationID
             if (HasAttributes(conv, "id"))
             {
                 conversation.Id = conv.Attributes["id"].Value;
                 UnityEngine.Debug.Log(conv.Attributes["id"].Value);
             }
 
-            //Set voice line (if present)
+            // Set voice line (if present)
             if (HasAttributes(conv, "voice"))
             {
                 //conversation.VoiceLine = Resources.Load<StudioEventEmitter>("Audio/" + conv.Attributes["voice"].Value);
@@ -234,21 +236,26 @@ public class ParseXML : MonoBehaviour
                 UnityEngine.Debug.Log(conv.Attributes["voice"].Value);
             }
 
-            //Get characters
+            // Set if essential
+            if (HasAttributes(conv, "isEssential"))
+            {
+                conversation.isEssential = conv.Attributes["isEssential"].Value.ToLower() == "true";
+            }
+
+            // Get characters
             XmlNodeList characterList = conv.SelectNodes("character");
             UnityEngine.Debug.Log("characters: " + characterList.Count);
             foreach (XmlNode character in characterList)
             {
-                //Store text from before in case options are specified
+                // Store text from before in case options are specified
                 string previousLine = "";
 
-                //Store Character Name
+                // Store Character Name
                 string characterName = "";
                 if (HasAttributes(character, "name"))
                     characterName = character.Attributes["name"].Value;
-                //UnityEngine.Debug.Log(character.Attributes["name"].Value);
 
-                //Get their lines (could be options or lines)
+                // Get their lines (could be options or lines)
                 XmlNodeList lineList = character.ChildNodes;
                 UnityEngine.Debug.Log("Dialog line nodes created: " + lineList.Count);
                 foreach (XmlNode line in lineList)
@@ -267,7 +274,7 @@ public class ParseXML : MonoBehaviour
                         emotion_array[1] = DialogueLine.Emotion.MakeDefault;
                     }
 
-                    //Parse dialogue lines
+                    // Parse dialogue lines
                     if (line.Name == "line")
                     {
                         previousLine = line.InnerText; // used when dealing with options
@@ -284,41 +291,41 @@ public class ParseXML : MonoBehaviour
                         UnityEngine.Debug.Log("Dialog line stored");
                     }
 
-                    //Parse options and choices
+                    // Parse options and choices
                     else if (line.Name == "options")
                     {
-                        //Create New Options List
+                        // Create New Options List
                         OrderedDictionary optionList = new OrderedDictionary();
 
-                        //Get all choices within option tag
+                        // Get all choices within option tag
                         XmlNodeList choiceList = line.ChildNodes;
                         UnityEngine.Debug.Log("Option nodes created: " + choiceList.Count);
                         foreach (XmlNode choice in choiceList)
                         {
-                            //Parse options into list
+                            // Parse options into list
                             if (HasAttributes(choice, "id"))
                             {
                                 optionList.Add(choice.InnerText, choice.Attributes["id"].Value);
                             }
                         }
 
-                        //Create a new dialogue line
+                        // Create a new dialogue line
                         DialogueLine d = new DialogueLine(characterName, previousLine, optionList);
                         UnityEngine.Debug.Log("Option list created");
 
-                        //Add line to dialogue list
+                        // Add line to dialogue list
                         dialogueList.Add(d);
                         UnityEngine.Debug.Log("Option list stored");
                     }
-                } //end get lines
-            } //end get characters
+                } // end get lines
+            } // end get characters
 
-            //Store local lines into conversation
+            // Store local lines into conversation
             conversation.DialogueLines = dialogueList;
-            //Store conversation in conversationList
+            // Store conversation in conversationList
             conversationList.Add(conversation.Id, conversation);
-        } //end get conversation
-    } //end ParseXML
+        } // end get conversation
+    } // end ParseXML
 
     /**
      * @brief Check if there are attributes within the XMLNode given
@@ -328,10 +335,10 @@ public class ParseXML : MonoBehaviour
      */
     private bool HasAttributes(XmlNode node, string attribute = "")
     {
-        //Check if any attributes at all
+        // Check if any attributes at all
         if (node.Attributes != null)
         {
-            //Check for specific attribute given (if given)
+            // Check for specific attribute given (if given)
             if (attribute != "")
             {
                 var nameAttribute = node.Attributes[attribute];

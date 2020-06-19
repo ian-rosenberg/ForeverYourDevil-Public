@@ -9,7 +9,7 @@ xsi:schemaLocation="https://www.w3schools.com/xml VN_Schema.xsd">
 <game>
  
   <!--Testing Official Animations-->
-  <conversation id="Official_Test">
+  <conversation id="Official_Test" isEssential="false">
     <character name="Penny">
       <line AC_L="Penny_AC" emotion_L="Talking" AC_R="Penny_AC" emotion_R="Idle">'Twas brillig, and the slithy toves</line>
       <line>Did gyre and gimble in the wabe:</line>

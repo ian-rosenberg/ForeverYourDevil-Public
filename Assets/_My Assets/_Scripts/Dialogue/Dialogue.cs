@@ -50,6 +50,9 @@ public class Dialogue : MonoBehaviour
     public Animator RightmostChar;          /**Rightmost Character*/
     public Animator canvasAnim;             /**Animator object to turn on exit animation*/
 
+    public GameObject skipText;             /**Text that displays key to skip conversation*/
+    private bool isCurrentlyEssential;      /**False if the conversation is skippable*/
+
     [Header("Text and choices")]
     public float textDelay = 0.001f;        /**Delay between each character while displaying text*/
 
@@ -202,6 +205,10 @@ public class Dialogue : MonoBehaviour
 
         //Get conversation
         currentId = convID;
+
+        // display skip text if non-essential
+        isCurrentlyEssential = parser.conversationList[currentId].isEssential;
+        skipText.SetActive(!isCurrentlyEssential);
 
         // set animations
         SetAnimations(parser.conversationList[currentId].DialogueLines, 0);
