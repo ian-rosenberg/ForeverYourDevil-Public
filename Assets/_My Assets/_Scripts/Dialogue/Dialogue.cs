@@ -396,7 +396,10 @@ public class Dialogue : MonoBehaviour
         }
     }
 
-    void ClearTriggers(Animator anim)
+    /**
+     * @brief resets the triggers of the given animator
+     */
+    private void ClearTriggers(Animator anim)
     {
         foreach(AnimatorControllerParameter p in anim.parameters)
         {
