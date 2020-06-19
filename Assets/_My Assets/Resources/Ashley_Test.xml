@@ -49,7 +49,7 @@ xsi:schemaLocation="https://www.w3schools.com/xml VN_Schema.xsd">
   </conversation>
     
   <!--Testing Official Animations with Voice Over-->
-  <conversation id="Genovese_Threat" voice="{eb4e9ad8-c6ac-414f-8d5e-c3d012ca6ae6}">
+  <conversation id="Genovese_Threat" voice="{eb4e9ad8-c6ac-414f-8d5e-c3d012ca6ae6}" isEssential="false">
     <character name="Genovese">
         <line AC_L="Default_AC" AC_R="Penny_AC" emotion_R="Talking">Hehehehehehehe.....</line>
         <line>My, you've been a naughty girl..... >:3</line>

@@ -52,6 +52,7 @@ public class Dialogue : MonoBehaviour
 
     public GameObject skipText;             /**Text that displays key to skip conversation*/
     private bool isCurrentlyEssential;      /**False if the conversation is skippable*/
+    private int optionIndex = -1;           /**Index in current conversation that contains options, -1 if none*/
 
     [Header("Text and choices")]
     public float textDelay = 0.001f;        /**Delay between each character while displaying text*/
@@ -122,25 +123,32 @@ public class Dialogue : MonoBehaviour
             }
         }
 
-        // skip entire conversation if non-essential
+        // skip entire conversation if non-essential, or jump to options
         if (!isCurrentlyEssential && gm.gameState == gameManager.STATE.TALKING && Input.GetKeyDown(KeyCode.S))
         {
-            StartCoroutine(EndDialogue());
+            if (optionIndex == -1)
+            {
+                StartCoroutine(EndDialogue());
+            }
+            else
+            {
+                sentenceIndex = optionIndex != 0 ? optionIndex - 1 : 0;
+                AdvanceLine();
+            }
         }
     }
 
     /**
      * @brief Main game loop. Advance line of text or skip it depending on input.
      */
-
     private void AdvanceSkipDialogue(InputAction.CallbackContext context)
     {
-        //Advance/Skip Dialogue on KeyPress
+        // Advance/Skip Dialogue on KeyPress
         if (gm.gameState == gameManager.STATE.TALKING) //Return = enter key
         {
             if (canPress)
             {
-                AdvanceLine(); //Display line of text
+                AdvanceLine(); // Display line of text
             }
             else if (textDisplay.text.Length>5)
             {
@@ -155,11 +163,11 @@ public class Dialogue : MonoBehaviour
      */
     void InitializeDialogue()
     {
-        //Clear and hide Namebox
+        // Clear and hide Namebox
         nameBox.gameObject.transform.parent.gameObject.SetActive(false); //Replace with fade out animation
         nameBox.text = "";
 
-        //Clear dialogue box and reset color
+        // Clear dialogue box and reset color
         textDisplay.text = "";
         SetFrameTextColor(tanOrange, tanOrange);
     }
@@ -184,58 +192,59 @@ public class Dialogue : MonoBehaviour
         canPress = false;
         sentenceIndex = 0;
 
-        //Set gamestate
+        // Set gamestate
         if (start)
         {
             gm.ChangeState(gameManager.STATE.TALKING);
 
-            //Turn on Canvas
+            // Turn on Canvas
             Canvas.SetActive(true);
             textDisplay.transform.parent.transform.parent.gameObject.SetActive(true);
         }
         else
         {
-            //Destroy Buttons
+            // Destroy Buttons
             foreach (Transform button in choiceArea)
             {
                 Debug.Log(button.gameObject.name);
                 button.gameObject.GetComponent<Animator>().SetTrigger("Off");
             }
 
-            //Wait for fadeout animation to end
+            // Wait for fadeout animation to end
             canvasAnim.SetTrigger("Choice");
             yield return new WaitForSeconds(1.533f);
         }
 
-        //Get conversation
+        // Get conversation
         currentId = convID;
 
-        // display skip text if non-essential
+        // be able to skip conversation if non-essential
         isCurrentlyEssential = parser.conversationList[currentId].isEssential;
         skipText.SetActive(!isCurrentlyEssential);
+        optionIndex = !isCurrentlyEssential ? FindOptions() : -1;
 
         // set animations
         SetAnimations(parser.conversationList[currentId].DialogueLines, 0);
 
-        //Wait for animation to end before starting line and voice
+        // Wait for animation to end before starting line and voice
         if (start) yield return new WaitForSeconds(1.717f);
 
         if (parser.conversationList[currentId].VoiceLine != null)
         {
             dialogueAudio = RuntimeManager.CreateInstance(parser.conversationList[currentId].VoiceLine); //Set voiceline
 
-            //Initialise FMOD Parameters
+            // Initialise FMOD Parameters
             RuntimeManager.StudioSystem.setParameterByName("LineNumber", 0);
             RuntimeManager.StudioSystem.setParameterByName("SectionNumber", 0);
             RuntimeManager.StudioSystem.setParameterByName("DialogueEnd", 0);
 
-            //Play Audio
+            // Play Audio
             dialogueAudio.start();
 
             Debug.Log(LeftmostChar.GetCurrentAnimatorClipInfo(0)[0].clip.name);
             Debug.Log(RightmostChar.GetCurrentAnimatorClipInfo(0)[0].clip.name);
         }
-        //Go to next line
+        // Go to next line
         AdvanceLine();
     }
 
@@ -434,6 +443,24 @@ public class Dialogue : MonoBehaviour
             }
         }
         return false;
+    }
+
+    /**
+     * @brief Finds the sentence index of the line containing options
+     */
+    int FindOptions()
+    {
+        int n = 0;
+
+        foreach(DialogueLine DL in parser.conversationList[currentId].DialogueLines)
+        {
+            if (DL.Options != null)
+            {
+                return n;
+            }
+            n++;
+        }
+        return -1;
     }
 
     /**
