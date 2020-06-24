@@ -9020,7 +9020,7 @@ PrefabInstance:
     - target: {fileID: 671503966069844222, guid: badf2e99369a72c459a3c4c0aacb9ad4,
         type: 3}
       propertyPath: conversationID
-      value: Official_Test
+      value: Penny Test
       objectReference: {fileID: 0}
     - target: {fileID: 671503967315770972, guid: badf2e99369a72c459a3c4c0aacb9ad4,
         type: 3}
@@ -9115,7 +9115,7 @@ PrefabInstance:
     - target: {fileID: 755819438948372293, guid: d535dedf575f07d4f9eb1aae482f88b6,
         type: 3}
       propertyPath: textDelay
-      value: 0.04
+      value: 0.02
       objectReference: {fileID: 0}
     - target: {fileID: 755819438948372293, guid: d535dedf575f07d4f9eb1aae482f88b6,
         type: 3}

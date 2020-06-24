@@ -312,10 +312,10 @@ public class Dialogue : MonoBehaviour
         AdvanceSprite.SetActive(false);
 
         //Get current conversation
-        List<DialogueLine> dialog = parser.conversationList[currentId].DialogueLines;
+        List<DialogueLine> dialogue = parser.conversationList[currentId].DialogueLines;
 
         //If there are no more lines
-        if (sentenceIndex >= dialog.Count)
+        if (sentenceIndex >= dialogue.Count)
         {
             Debug.Log("END");
             //Disable conversation box (replace with animation)
@@ -323,10 +323,10 @@ public class Dialogue : MonoBehaviour
         }
 
         //else if the next line is a set of options
-        else if (dialog[sentenceIndex].Options != null)
+        else if (dialogue[sentenceIndex].Options != null)
         {
             float multiplier = 1;
-            foreach (DictionaryEntry option in dialog[sentenceIndex].Options)
+            foreach (DictionaryEntry option in dialogue[sentenceIndex].Options)
             {
                 //Place each subsequent choice higher than the other
                 Vector2 pos = new Vector2(0, choiceDist * multiplier);
@@ -349,16 +349,16 @@ public class Dialogue : MonoBehaviour
             dialogueAudio.start(); // <---DUMB
 
             // set animations
-            SetAnimations(dialog, sentenceIndex);
+            SetAnimations(dialogue, sentenceIndex);
 
             Debug.Log(LeftmostChar.GetCurrentAnimatorClipInfo(0)[0].clip.name);
             Debug.Log(RightmostChar.GetCurrentAnimatorClipInfo(0)[0].clip.name);
 
             //Set name
-            if (!dialog[sentenceIndex].Name.Equals(""))
+            if (!dialogue[sentenceIndex].Name.Equals(""))
             {
                 nameBox.gameObject.transform.parent.gameObject.SetActive(true); //Replace with fade in animation
-                nameBox.text = dialog[sentenceIndex].Name;
+                nameBox.text = dialogue[sentenceIndex].Name;
                     
                 //Give special color/frame image to special names
                 switch(nameBox.text)
@@ -386,7 +386,7 @@ public class Dialogue : MonoBehaviour
             textDisplay.text = ""; //Reset Text to blank
 
             //Display line to read from conversationlist
-            lastTypeTextRoutine = StartCoroutine(TypeText(dialog[sentenceIndex].Content));
+            lastTypeTextRoutine = StartCoroutine(TypeText(dialogue[sentenceIndex].Content));
             sentenceIndex++;
         }
     }
@@ -394,22 +394,22 @@ public class Dialogue : MonoBehaviour
     /**
      * @brief Sets the current left and right animations
      */
-    void SetAnimations(List<DialogueLine> dialog, int index)
+    void SetAnimations(List<DialogueLine> dialogue, int index)
     {
         // set animation for leftmost character
-        if (dialog[index].AC_Array[0])
+        if (dialogue[index].AC_Array[0])
         {
-            LeftmostChar.runtimeAnimatorController = dialog[index].AC_Array[0];
+            LeftmostChar.runtimeAnimatorController = dialogue[index].AC_Array[0];
         }
-        if (dialog[index].Emotion_Array[0] != DialogueLine.Emotion.NONE)
+        if (dialogue[index].Emotion_Array[0] != DialogueLine.Emotion.NONE)
         {
-            if (ContainsParam(LeftmostChar, dialog[index].Emotion_Array[0].ToString()))
+            if (ContainsParam(LeftmostChar, dialogue[index].Emotion_Array[0].ToString()))
             {
                 // reset triggers
                 ClearTriggers(LeftmostChar);
 
-                LeftmostChar.SetTrigger(dialog[index].Emotion_Array[0].ToString());
-                isTalking[0] = dialog[index].isTalking[0];
+                LeftmostChar.SetTrigger(dialogue[index].Emotion_Array[0].ToString());
+                isTalking[0] = dialogue[index].isTalking[0];
             }
             else
             {
@@ -425,19 +425,19 @@ public class Dialogue : MonoBehaviour
         }
 
         // set animation for rightmost character
-        if (dialog[index].AC_Array[1])
+        if (dialogue[index].AC_Array[1])
         {
-            RightmostChar.runtimeAnimatorController = dialog[index].AC_Array[1];
+            RightmostChar.runtimeAnimatorController = dialogue[index].AC_Array[1];
         }
-        if (dialog[index].Emotion_Array[1] != DialogueLine.Emotion.NONE)
+        if (dialogue[index].Emotion_Array[1] != DialogueLine.Emotion.NONE)
         {
-            if (ContainsParam(RightmostChar, dialog[index].Emotion_Array[1].ToString()))
+            if (ContainsParam(RightmostChar, dialogue[index].Emotion_Array[1].ToString()))
             {
                 // reset triggers
                 ClearTriggers(RightmostChar);
 
-                RightmostChar.SetTrigger(dialog[index].Emotion_Array[1].ToString());
-                isTalking[1] = dialog[index].isTalking[1];
+                RightmostChar.SetTrigger(dialogue[index].Emotion_Array[1].ToString());
+                isTalking[1] = dialogue[index].isTalking[1];
             }
             else
             {
