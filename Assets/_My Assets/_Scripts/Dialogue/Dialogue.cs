@@ -50,9 +50,11 @@ public class Dialogue : MonoBehaviour
     public Animator RightmostChar;          /**Rightmost Character*/
     public Animator canvasAnim;             /**Animator object to turn on exit animation*/
 
-    public GameObject skipText;             /**Text that displays key to skip conversation*/
+    public TextMeshProUGUI skipText;        /**Text that displays key to skip conversation*/
     private bool isCurrentlyEssential;      /**False if the conversation is skippable*/
     private int optionIndex = -1;           /**Index in current conversation that contains options, -1 if none*/
+    private const string SKIPMSG = "S - Skip Convo";        /**desired skip text*/
+    private bool isSkipping = false;        /**True if dialogue is actively being skipped*/
 
     [Header("Text and choices")]
     public float textDelay = 0.001f;        /**Delay between each character while displaying text*/
@@ -127,8 +129,11 @@ public class Dialogue : MonoBehaviour
         }
 
         // skip entire conversation if non-essential, or jump to options
-        if (!isCurrentlyEssential && gm.gameState == gameManager.STATE.TALKING && Input.GetKeyDown(KeyCode.S))
+        if (!isSkipping && !isCurrentlyEssential && gm.gameState == gameManager.STATE.TALKING && Input.GetKeyDown(KeyCode.S))
         {
+            isSkipping = true;
+            skipText.SetText("Dialogue Skipped!");
+
             if (optionIndex == -1)
             {
                 if (!isEnding)
@@ -136,29 +141,27 @@ public class Dialogue : MonoBehaviour
                     StartCoroutine(EndDialogue());
                 }
             }
-            else
+
+            if (lastTypeTextRoutine != null)
             {
-                if (lastTypeTextRoutine != null)
+                // stop typing previous line
+                StopCoroutine(lastTypeTextRoutine);
+
+                // stop talking animations
+                if (isTalking[0])
                 {
-                    // stop typing previous line
-                    StopCoroutine(lastTypeTextRoutine);
-
-                    // stop talking animations
-                    if (isTalking[0])
-                    {
-                        LeftmostChar.SetTrigger("StopTalk");
-                    }
-
-                    if (isTalking[1])
-                    {
-                        RightmostChar.SetTrigger("StopTalk");
-                    }
+                    LeftmostChar.SetTrigger("StopTalk");
                 }
 
-                // advance to the option
-                sentenceIndex = optionIndex != 0 ? optionIndex - 1 : 0;
-                AdvanceLine();
+                if (isTalking[1])
+                {
+                   RightmostChar.SetTrigger("StopTalk");
+                }
             }
+
+            // advance to the option if not already there
+            sentenceIndex = optionIndex != 0 ? optionIndex - 1 : 0;
+            AdvanceLine();
         }
     }
 
@@ -242,9 +245,13 @@ public class Dialogue : MonoBehaviour
         // Get conversation
         currentId = convID;
 
+        // reset skipping text and status
+        skipText.SetText(SKIPMSG);
+        isSkipping = false;
+
         // be able to skip conversation if non-essential
         isCurrentlyEssential = parser.conversationList[currentId].isEssential;
-        skipText.SetActive(!isCurrentlyEssential);
+        skipText.gameObject.SetActive(!isCurrentlyEssential);
         optionIndex = !isCurrentlyEssential ? FindOptions() : -1;
 
         // set animations
@@ -278,6 +285,8 @@ public class Dialogue : MonoBehaviour
     private IEnumerator EndDialogue()
     {
         isEnding = true;
+
+        isSkipping = false;
 
         Debug.Log("End Dialogue Called");
         textDisplay.transform.parent.transform.parent.gameObject.SetActive(false);
