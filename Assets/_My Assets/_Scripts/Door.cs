@@ -76,6 +76,7 @@ public class Door : MonoBehaviour
         gm.player.agent.isStopped = false;
         gm.SetCanPause(true);
 
+        gm.areaId = areaID;
         //Change music
         //Insert FMOD code here
     }

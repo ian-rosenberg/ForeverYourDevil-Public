@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using Newtonsoft.Json;
 using System;
+using UnityEngine.InputSystem;
 
 #region Item JSON Deserialization
 
@@ -74,38 +75,130 @@ public class InventoryManagement : MonoBehaviour
     private Dictionary<object, Sprite> itemImages;
     #endregion
 
-    private List<GameObject> inventoryObjs;//The inventories in use;
-    private GameObject sharedInventory;
+    public List<GameObject> inventoryObjs;//The inventories in use, may have to change to dict to support the different characters
+    public GameObject sharedInventory;
 
     public GameObject blurShader;
     public GameObject sharedInventoryPrefab;
     public GameObject personalInventoryPrefab;
 
+    public GameObject tooltipMenu;
 
     public int numInventories;
 
+    private Inventory currentInventory;
+
+    private bool secondFire = false;
+
+    private bool tooltipOpen = false;
+
+    #region Player Actions
+    public PlayerControls pControls;
+
+    private void OnEnable()
+    {
+        pControls = new PlayerControls();
+
+        pControls.UI.Navigate.performed += HandleUIKeypress;
+        pControls.UI.Interact.performed += AcceptSelection;
+
+        pControls.UI.Interact.Enable();
+        pControls.UI.Navigate.Enable();
+    }
+
+    private void OnDisable()
+    {
+        pControls.UI.Navigate.performed -= HandleUIKeypress;
+        pControls.UI.Interact.performed -= AcceptSelection;
+
+        pControls.UI.Interact.Disable();
+        pControls.UI.Navigate.Disable();
+    }
+    #endregion
 
     // Start is called before the first frame update
     void Start()
     {
         inventoryObjs = new List<GameObject>();
-        
+
         //for(int i = 0; i < numInventories; i++)
         //{
-            //AddInventory();
+        //AddInventory();
         //}
 
         CreateItemDatabase("itemList");
 
         CreateSharedInventory();
 
+        AddPorridge();
+
         SetInventoriesInactive();
+    }
+
+    public void HandleUIKeypress(InputAction.CallbackContext context)
+    {
+        if (secondFire)
+        {
+            secondFire = false;
+            return;
+        }
+
+        if (gameManager.Instance.gameState != gameManager.STATE.PAUSED)
+            return;
+
+        Inventory inv = currentInventory.GetComponentInChildren<Inventory>();
+
+        int oldIndex = inv.selectedIndex;
+
+        Vector2 movement = context.ReadValue<Vector2>();
+
+        if (movement.x == 1)
+        {
+            if (inv.selectedIndex < inv.totalSlots - 1)
+                inv.SetIndex(1);
+        }
+        else if (movement.x == -1)
+        {
+            if (inv.selectedIndex > 0)
+                inv.SetIndex(-1);
+        }
+        else if (movement.y == -1)
+        {
+            if (inv.selectedIndex + 4 < inv.totalSlots)
+                inv.SetIndex(4);
+        }
+        else if (movement.y == 1)
+        {
+            if (inv.selectedIndex - 4 >= 0)
+                inv.SetIndex(-4);
+        }
+
+        if (inv.inventorySlots[inv.selectedIndex] != null)
+        {
+            GameObject newSlotObj = inv.inventorySlots[inv.selectedIndex];
+            GameObject oldSlotObj = inv.inventorySlots[oldIndex];
+
+            InventorySlot slot = newSlotObj.GetComponent<InventorySlot>();
+            InventorySlot oldSlot = oldSlotObj.GetComponent<InventorySlot>();
+
+            if (oldSlot.Selected())
+            {
+                oldSlot.UnSelect();
+            }
+
+            slot.Select();
+        }
+
+        secondFire = true;
     }
 
     public void AddPorridge()
     {
-        SharedInventory sI = sharedInventory.GetComponentInChildren<SharedInventory>(); 
+        SharedInventory sI = sharedInventory.GetComponentInChildren<SharedInventory>();
         sI.AddSingleItem(itemList.Consumables[0]);
+        sI.AddSingleItem(itemList.Consumables[0]);
+
+        sI.AddSingleItem(itemList.Consumables[1]);
     }
 
     private void CreateItemDatabase(string path)
@@ -128,15 +221,18 @@ public class InventoryManagement : MonoBehaviour
         {
             foreach (ItemBase item in itemList.Abilities)
             {
-                itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
-            } 
+
+                if (item.Name != "" && item.Name != null)
+                    itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
+            }
         }
 
         if (itemList.Concoctions.Count > 0)
         {
             foreach (ItemBase item in itemList.Concoctions)
             {
-                itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
+                if (item.Name != "" && item.Name != null)
+                    itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
             }
         }
 
@@ -144,7 +240,8 @@ public class InventoryManagement : MonoBehaviour
         {
             foreach (ItemBase item in itemList.Consumables)
             {
-                itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
+                if (item.Name != "" && item.Name != null)
+                    itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
             }
         }
 
@@ -152,7 +249,8 @@ public class InventoryManagement : MonoBehaviour
         {
             foreach (ItemBase item in itemList.Equipment)
             {
-                itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
+                if (item.Name != "" && item.Name != null)
+                    itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
             }
         }
 
@@ -160,7 +258,8 @@ public class InventoryManagement : MonoBehaviour
         {
             foreach (ItemBase item in itemList.Ingredients)
             {
-                itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
+                if (item.Name != "" && item.Name != null)
+                    itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
             }
         }
     }
@@ -168,13 +267,17 @@ public class InventoryManagement : MonoBehaviour
     private void AddInventory()
     {
         GameObject inventoryClone = Instantiate(personalInventoryPrefab, transform);
-        
+
         inventoryObjs.Add(inventoryClone);
     }
 
     private void CreateSharedInventory()
     {
         sharedInventory = Instantiate(sharedInventoryPrefab, transform);
+
+        currentInventory = sharedInventory.GetComponentInChildren<Inventory>();
+
+        currentInventory.SelectItemByIndex(0);
     }
 
     public void SetInventoriesInactive()
@@ -195,5 +298,49 @@ public class InventoryManagement : MonoBehaviour
     public Sprite GetItemImage(ItemBase item)
     {
         return itemImages[item];
+    }
+
+    public void AcceptSelection(InputAction.CallbackContext obj)
+    {
+        Inventory i = currentInventory.GetComponent<Inventory>();
+        InventorySlot selected = i.GetSelected();
+
+        if (!selected.Selected())
+            return;
+
+        tooltipMenu.SetActive(true); 
+
+        tooltipOpen = true;
+
+        pControls.UI.Interact.performed -= AcceptSelection;
+
+        tooltipMenu.transform.SetAsLastSibling();
+
+        currentInventory.GetComponentInChildren<Inventory>().DisableSelection();
+    }
+
+    public Inventory GetCurrentInventory()
+    {
+        return currentInventory;
+    }
+
+    public void CloseTooltip()
+    {
+        tooltipMenu.SetActive(false);
+        tooltipOpen = false;
+
+        pControls.UI.Interact.performed += AcceptSelection;
+    }
+
+    public void EnableInventoryInput()
+    {
+        pControls.UI.Navigate.performed += HandleUIKeypress;
+        pControls.UI.Interact.performed += AcceptSelection;
+    }
+
+    public void DisableInventoryInput()
+    {
+        pControls.UI.Navigate.performed -= HandleUIKeypress;
+        pControls.UI.Interact.performed -= AcceptSelection;
     }
 }

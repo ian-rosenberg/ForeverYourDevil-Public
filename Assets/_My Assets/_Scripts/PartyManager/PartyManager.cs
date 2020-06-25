@@ -50,4 +50,11 @@ public class PartyManager : MonoBehaviour
     private void Update()
     {
     }
+
+    private void SetInventories(SharedInventory shared, PersonalInventory[] personals)
+    {
+        sharedInventory = shared;
+
+        personalInventories = personals;
+    }
 }

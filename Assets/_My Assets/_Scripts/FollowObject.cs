@@ -26,14 +26,15 @@ public class FollowObject : MonoBehaviour
 
     private Vector3 new_pos; /**New position for this obj*/
     private Vector3 dampVelocity = Vector3.zero;
-
+    public Vector3 startOffset;
     [Header("DEBUG")]
     public float lagTimer = 0.9f; //Camera lagging. 1 = no lag, 0 = stationary
-
+    
     // Start is called before the first frame update
     private void Start()
     {
         offset = transform.position - target.transform.position;
+        startOffset = offset;
     }
 
     // Update is called once per frame
@@ -51,8 +52,14 @@ public class FollowObject : MonoBehaviour
         new_pos = Vector3.zero;
     }
 
-    public void SetOffset(Vector3 newOffset)
+    public void BattleOffset(Vector3 newOffset)
     {
         offset = newOffset - target.transform.position;
     }
+    public void TravelOffset(Vector3 newOffset)
+    {
+        offset = newOffset;
+    }
+    
+    
 }

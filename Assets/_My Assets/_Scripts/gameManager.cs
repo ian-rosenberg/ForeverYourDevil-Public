@@ -1,11 +1,23 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class gameManager : MonoBehaviour
 {
     #region Main Variables
 
+    //Party Infotmation
+    public string Leader = "Penny_Test_Head";
+
+    public string[] partyMembers = new string[] { "", "", "" };
+    public string[] extraMembers = new string[] { "", "", "", "" };
+
     private bool canPause = true; //Allow pausing?
+
+    public Light skyBoxDirectionalLight;
+    public float skyBoxDirectionalLerpValue = 1f;
+    public GameObject fade;
 
     #region SOME VARIABLES IN THIS REGION MAY BE REMOVED ONCE COMBAT TRANSITION SYSTEM IS IMPROVED
 
@@ -23,21 +35,28 @@ public class gameManager : MonoBehaviour
     [Header("Level-Specific")]
     public GameObject normalWorld; //Represents overworld
 
+    public string areaId = "Level1";
+    public string sceneName;
     public GameObject battleWorld; //Represents battlefield
 
-    #endregion VARIABLES IN THIS REGION WILL BE REMOVED ONCE COMBAT TRANSITION SYSTEM IS IMPROVED
+    #endregion SOME VARIABLES IN THIS REGION MAY BE REMOVED ONCE COMBAT TRANSITION SYSTEM IS IMPROVED
 
     [Header("Menus")]
-    public GameObject pauseMenu;
+    public Animator pauseMenu;
 
     public Animator CanvasAnimator;
 
     [Header("Click Indicator")]
-    public GameObject clickIndicator; //Has 2 particle effects, one for normal and one for turning off.
+    public GameObject clickIndicator; //Has 2 particles, one for normal and one for turning off.
+
     public Animator clickIndicAnim;
+
+    [Header("Inventory Management")]
+    private InventoryManagement invMan;
 
     //Singleton creation
     private static gameManager instance;
+
     public static gameManager Instance
     {
         get
@@ -55,16 +74,45 @@ public class gameManager : MonoBehaviour
 
     #endregion Main Variables
 
-    private void Awake()
+    [Header("Player Controls For Game")]
+    public PlayerControls pControls;
+
+    #region Player Actions
+
+    private void OnEnable()
     {
         player = PlayerController.Instance;
         mainCamera = CameraController.Instance;
+
+        pControls = new PlayerControls();
+
+        pControls.Player.TogglePause.performed += TogglePause;
+
+        pControls.Player.TogglePause.Enable();
     }
+
+    private void OnDisable()
+    {
+        pControls.Player.TogglePause.performed -= TogglePause;
+
+        pControls.Player.TogglePause.Disable();
+    }
+
+    #endregion Player Actions
+
     private void Start()
     {
+        skyBoxDirectionalLerpValue = 1f;
+
+        Leader = "Penny_Test_Head";
+        partyMembers = new string[] { "Player", "", "" };
+        extraMembers = new string[] { "", "", "", "" };
+
         ChangeState(STATE.TRAVELING);
         prevState = STATE.START; //Start out of combat\
         clickIndicator.SetActive(false);
+        sceneName = SceneManager.GetActiveScene().name;
+        invMan = GetComponentInChildren<InventoryManagement>();
     }
 
     public IEnumerator ClickOff()
@@ -74,22 +122,34 @@ public class gameManager : MonoBehaviour
         //clickIndicator.SetActive(false);
     }
 
-    // Update is called once per frame
-    private void Update()
+    private void FixedUpdate()
     {
-        //Pause Game
-        if (Input.GetButtonDown("Pause") && canPause)
+        skyBoxDirectionalLightLerp();
+    }
+
+    public void TogglePause(InputAction.CallbackContext context)
+    {
+        switch (context.phase)
         {
-            if (gameState == STATE.PAUSED)
-            {
-                pauseMenu.SetActive(false);
-                UnPauseGame();
-            }
-            else
-            {
-                pauseMenu.SetActive(true);
-                PauseGame();
-            }
+            case InputActionPhase.Performed:
+                if (canPause)
+                {
+                    if (gameState == STATE.PAUSED)
+                    {
+                        StartCoroutine(ExitPauseMenu());
+                        
+                    }
+                    else
+                    {
+                        pauseMenu.gameObject.SetActive(true);
+                        fade.SetActive(true);
+                        PauseGame();
+                    }
+                }
+                break;
+
+            default:
+                break;
         }
     }
 
@@ -119,6 +179,7 @@ public class gameManager : MonoBehaviour
         {
             ChangeState(STATE.PAUSED);
             Time.timeScale = 0;
+            invMan.EnableInventoryInput();
         }
     }
 
@@ -128,12 +189,15 @@ public class gameManager : MonoBehaviour
         {
             ChangeState(prevState);
             Time.timeScale = 1;
+            player.agent.ResetPath();
+
+            invMan.DisableInventoryInput();
         }
     }
 
     public void OpenInventory()
     {
-        pauseMenu.SetActive(false);
+        pauseMenu.gameObject.SetActive(false);
 
         SetCanPause(false);
 
@@ -157,6 +221,7 @@ public class gameManager : MonoBehaviour
         PauseGame();
         SetCanPause(false);
         CanvasAnimator.SetTrigger("Battle");
+        player.anim.SetTrigger("CombatTrigger");
         StartCoroutine(LoadCombatDelay());
     }
 
@@ -189,7 +254,7 @@ public class gameManager : MonoBehaviour
 
         //Teleport Camera to the battlefield
         mainCamera.followScript.transform.position = cameraSpawn.transform.position;
-        mainCamera.followScript.SetOffset(cameraSpawn.transform.position);
+        mainCamera.followScript.BattleOffset(cameraSpawn.transform.position);
 
         //Change the GameState to Combat
         ChangeState(STATE.COMBAT);
@@ -198,4 +263,32 @@ public class gameManager : MonoBehaviour
     }
 
     #endregion Entering Combat
+
+    /**
+     * @brief Decrease/increase skybox light to specified value
+     */
+
+    private void skyBoxDirectionalLightLerp()
+    {
+        skyBoxDirectionalLight.intensity = Mathf.Lerp(skyBoxDirectionalLight.intensity, skyBoxDirectionalLerpValue, 0.05f);
+    }
+
+    public void ExitPauseMenuFunction()
+    {
+        StartCoroutine(ExitPauseMenu());
+    }
+
+    public IEnumerator ExitPauseMenu()
+    {
+        //Play animation
+        pauseMenu.SetTrigger("Exit");
+        SetCanPause(false);
+        yield return new WaitForSecondsRealtime(0.283f);
+        pauseMenu.gameObject.SetActive(false);
+        fade.SetActive(false);
+
+        //Unpause
+        UnPauseGame();
+        SetCanPause(true);
+    }
 }

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - ClickIndicator
   - ItemDetails
+  - SaveMenu
   layers:
   - Default
   - TransparentFX
@@ -21,7 +22,6 @@ TagManager:
   - Post Processing
   - Inventory
   - Enemy
-  - 
   - 
   - 
   - 
