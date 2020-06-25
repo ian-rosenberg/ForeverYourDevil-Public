@@ -3,8 +3,6 @@ using System.Collections.Specialized;
 using System.Xml;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using FMOD;
-using FMODUnity;
 using System.Linq;
 using System;
 
@@ -76,6 +74,8 @@ public class DialogueLine
 
     public OrderedDictionary Options;             /**Options labels and the conversation id they go to when selected*/
 
+    public bool[] isTalking = { false, false };   /**Determines if characters are talking, [0] left, [1] right*/
+
     /**
      * @brief Create a DialogueLine without any options or sprites
      * @param name Name of character speaking
@@ -103,6 +103,13 @@ public class DialogueLine
         Content = content;
         AC_Array = ac_array;
         Emotion_Array = emotion_array;
+
+        // determine if talking
+        if (emotion_array != null)
+        {
+            isTalking[0] = emotion_array[0].ToString().Contains("Talk");
+            isTalking[1] = emotion_array[1].ToString().Contains("Talk");
+        }
     }
 
     /**
@@ -136,6 +143,13 @@ public class DialogueLine
         AC_Array = ac_array;
         Emotion_Array = emotion_array;
         Options = options;
+
+        // determine if talking
+        if (emotion_array != null)
+        {
+            isTalking[0] = emotion_array[0].ToString().Contains("Talk");
+            isTalking[1] = emotion_array[1].ToString().Contains("Talk");
+        }
     }
 
     /**
@@ -312,7 +326,6 @@ public class ParseXML : MonoBehaviour
      * @param attribute optional specific attribute to search for
      * @return true if attributes present and optional attribute is found, else false
      */
-
     private bool HasAttributes(XmlNode node, string attribute = "")
     {
         //Check if any attributes at all
@@ -330,51 +343,6 @@ public class ParseXML : MonoBehaviour
             return true;
         }
         else return false;
-    }
-
-    /**
-     * @brief Get all sprite attributes in spriteList and add them to the spriteList given.
-     * @param spriteList The list of sprites. If no sprites are specified, the last sprites given are used.
-     * @param line The line from the XML script to get sprites from.
-     */
-
-    private void GetSprites(List<Sprite> spriteList, XmlNode line)
-    {
-        //If sprite attribute is not specified, use the sprites from the previous line.
-        if (HasAttributes(line, "sprite1") || HasAttributes(line, "sprite2") || HasAttributes(line, "sprite3") || HasAttributes(line, "sprite4"))
-        {
-            spriteList.Clear();
-            //Use sprites specified
-            {
-                //Get sprites from line (if they exist)
-                if (HasAttributes(line, "sprite1"))
-                {
-                    Sprite sprite = Resources.Load<Sprite>("Sprites/" + line.Attributes["sprite1"].Value);
-                    UnityEngine.Debug.Log(sprite.name);
-                    spriteList.Add(sprite);
-                }
-                //Get sprites from line (if they exist)
-                if (HasAttributes(line, "sprite2"))
-                {
-                    Sprite sprite = Resources.Load<Sprite>("Sprites/" + line.Attributes["sprite2"].Value);
-                    spriteList.Add(sprite);
-
-                    //RuntimeAnimatorController characterAC = Resources.Load<RuntimeAnimatorController>("Animations/");
-                }
-                //Get sprites from line (if they exist)
-                if (HasAttributes(line, "sprite3"))
-                {
-                    Sprite sprite = Resources.Load<Sprite>("Sprites/" + line.Attributes["sprite3"].Value);
-                    spriteList.Add(sprite);
-                }
-                //Get sprites from line (if they exist)
-                if (HasAttributes(line, "sprite4"))
-                {
-                    Sprite sprite = Resources.Load<Sprite>("Sprites/" + line.Attributes["sprite4"].Value);
-                    spriteList.Add(sprite);
-                }
-            }
-        }
     }
 
     /**
