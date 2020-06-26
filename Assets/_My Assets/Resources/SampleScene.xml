@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<game>
+  <conversation id="1" voice="genovese_threat">
+    <character>
+      <line>Ehhhhh heheheheheheheheheheheheheh...</line>
+    </character>
+
+    <character name="Genovese">
+      <line>My, you've been a naughty girl!</line>
+      <line>I was originally planning on letting you leave with only minor bodily harm, but...</line>
+      <line>After the way you just pissed my off by rummaging through my things,</line>
+      <line>I'd think I rather enjoy watching someone clean what's left of you out of my carpet.</line>
+      <line>...Shall we begin?</line>
+    </character>
+
+  </conversation>
+</game>

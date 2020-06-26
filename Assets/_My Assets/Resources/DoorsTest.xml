@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Schema must be removed before gameplay
+<game
+xmlns="https://www.w3schools.com"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="https://www.w3schools.com/xml VN_Schema.xsd">
+  -->
+<game>
+  <!--Testing animated sprites and voice lines-->
+  <conversation id="Penny Test">
+    <character name="Penny">
+      <line sprite1="Penny_Normal" sprite2="Player">Yoooooo, Tan Pill!</line>
+    </character>
+    <character name="Tan Pill">
+      <line>That's my hastily assigned identification string! Don't wear it out!</line>
+    </character>
+    <character name="Penny">
+      <line sprite1="Penny_Sweat" sprite2="Player">What?</line>
+    </character>
+    <character name="Tan Pill">
+      <line>What?</line>
+    </character>
+    <character name="Penny">
+      <line sprite1="Penny_Normal" sprite2="Player">Uhh, anyhow! How goes there? You excited for this update vid coming out?</line>
+    </character>
+    <character name="Tan Pill">
+      <line>You betcha I am, poster girl, I MEAN, Penny!</line>
+      <line>In fact, I'd say I'm so excited...</line>
+      <line>*slidessssss out*</line>
+    </character>
+    <character name ="PENNY! :3">
+      <line sprite1="Penny_Normal" sprite2="Penny_Wow">...THAT I COULD TRANSFORRRRRRRRRRRRRRM!!!!!!!!</line>
+    </character>
+    <character name="Penny">
+      <line sprite1="Penny_Wow" sprite2="Penny_Wow">WOAHHHHHHHHHHHHHH!!!!!</line>
+    </character>
+    <character name="PENNY! :3">
+      <line>HAHAHAHA!!!!! I AM YOU NOW!</line>
+      <line sprite1="Penny_Wow" sprite2="Penny_Normal">What do you think, original, but slightly less handsome Penny?!!!</line>
+      <options>
+        <choice id="Cool">THAT'S SO COOL!!!!</choice>
+        <choice id="What">What the actual hell???</choice>
+      </options>
+    </character>
+  </conversation>
+
+  <conversation id="What">
+    <character name="Penny">
+      <line sprite1="Penny_Wow" sprite2="Penny_Normal">What the actual hell?!?!?!?!!</line>
+      <line sprite1="Penny_Wow" sprite2="Penny_Normal">It's like looking in a mirror! Except... with DEPTH.</line>
+    </character>
+    <character name="PENNY! :3">
+      <line sprite1="Penny_Normal" sprite2="Penny_Normal">It's so flippin cool, right?!!</line>
+      <line sprite1="Penny_Normal" sprite2="Penny_Normal">It's a shame that I can only sustain this form for one mor--</line>
+    </character>
+    <character name="Tan Pill">
+      <line sprite1="Penny_Normal" sprite2="Player">...</line>
+      <line>Crap...</line>
+    </character>
+  </conversation>
+
+  <conversation id="Cool">
+    <character name="Penny">
+      <line sprite1="Penny_Wow" sprite2="Penny_Normal">THAT'S SO COOOOOOOOOOOOOOOL!!!!</line>
+      <line sprite1="Penny_Wow" sprite2="Penny_Normal">You even got the detail in my hair all flipped and stuff!</line>
+    </character>
+    <character name="PENNY! :3">
+      <line sprite1="Penny_Wow" sprite2="Penny_Normal">I'm proud of all the detail, heck yeah!</line>
+    </character>
+    <character name="Penny">
+      <line sprite1="Penny_Sweat" sprite2="Penny_Normal">Though I will say, the artist who drew you... me?? We?? Yeah we.</line>
+      <line>Whoever drew us should have probably made it so that this form lasted a little...</line>
+    </character>
+    <character name="Penny">
+      <line sprite1="Player" sprite2="Penny_Normal">...</line>
+      <line>AHHHHHHHHHHHHHHHHHHHHHHHHHHHH!</line>
+    </character>
+    <character name="PENNY! :3">
+      <line sprite1="Player" sprite2="Penny_Wow">AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH!</line>
+    </character>
+  </conversation>
+
+</game>

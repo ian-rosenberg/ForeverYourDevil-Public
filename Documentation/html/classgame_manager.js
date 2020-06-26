@@ -1,0 +1,36 @@
+var classgame_manager =
+[
+    [ "STATE", "classgame_manager.html#ad6aa14a0653fdcd75e62601c03d3a189", [
+      [ "START", "classgame_manager.html#ad6aa14a0653fdcd75e62601c03d3a189ab078ffd28db767c502ac367053f6e0ac", null ],
+      [ "TRAVELING", "classgame_manager.html#ad6aa14a0653fdcd75e62601c03d3a189a3412046a0234ae4be31c68ea96a314eb", null ],
+      [ "COMBAT", "classgame_manager.html#ad6aa14a0653fdcd75e62601c03d3a189acd4174be077f1cd1964ecb7b16168db6", null ],
+      [ "PAUSED", "classgame_manager.html#ad6aa14a0653fdcd75e62601c03d3a189a99b2439e63f73ad515f7ab2447a80673", null ],
+      [ "TALKING", "classgame_manager.html#ad6aa14a0653fdcd75e62601c03d3a189a8bc47f4b51a59298036f257a2208bda1", null ]
+    ] ],
+    [ "LoadCombatants", "classgame_manager.html#ad4e8742b7fb9364d741705f88231b9d9", null ],
+    [ "LoadCombatDelay", "classgame_manager.html#afc5d716c01233709b1722f9bfe780293", null ],
+    [ "PauseGame", "classgame_manager.html#a70259fef3b0effc1db6331509f228e5c", null ],
+    [ "ScreenCap", "classgame_manager.html#a029c5978363ae67cb6309b02323cdf03", null ],
+    [ "SetCanPause", "classgame_manager.html#a1d315aeba53babec4f91b71b368ab019", null ],
+    [ "Start", "classgame_manager.html#a8c39d69eb8415a967c5448f5f60b4a58", null ],
+    [ "TriggerCombat", "classgame_manager.html#aadfa7cba815cad274d4e6983b1aeaeb7", null ],
+    [ "UnPauseGame", "classgame_manager.html#ab4dbde74b06c3119d76a7d6c1d51b763", null ],
+    [ "Update", "classgame_manager.html#ab363e37721375ad28d1b1e99652fb1f6", null ],
+    [ "battleAnim", "classgame_manager.html#a612d144c70c2c3125625541c6b013e15", null ],
+    [ "battleWorld", "classgame_manager.html#a8be490c67376353f6737e280f3097d48", null ],
+    [ "cameraSpawn", "classgame_manager.html#a25eb197992604e071215f5075d3087e6", null ],
+    [ "canPause", "classgame_manager.html#ad97cda6881c09adb9909244759641c65", null ],
+    [ "enemyCombatTriggerer", "classgame_manager.html#a3726c3fbac04c06e34874253d8766aba", null ],
+    [ "enemySpawn", "classgame_manager.html#a7743536579c32d5219baecfe35043685", null ],
+    [ "gameState", "classgame_manager.html#a2a8075d73f11f1facfcf5a678c0350ec", null ],
+    [ "instance", "classgame_manager.html#a052f267abd54d53572252cee1c7e7e54", null ],
+    [ "isPaused", "classgame_manager.html#aad71d30428208d33835bc2fe74c6546f", null ],
+    [ "mainCamera", "classgame_manager.html#a6d820e27516dbf8fa250f87e7b9c8eac", null ],
+    [ "normalWorld", "classgame_manager.html#ab8890d57a3e5a28a324aff8abcf822af", null ],
+    [ "pauseMenu", "classgame_manager.html#a69d967ad5d137248a82fe8908fc43002", null ],
+    [ "player", "classgame_manager.html#a21e6f812cfbeb24b7b7fd4065537735c", null ],
+    [ "playerSpawn", "classgame_manager.html#a1af2a117d769c95bf98984f132254ad0", null ],
+    [ "prevState", "classgame_manager.html#aa8342132110e781a14cdf61947795d4c", null ],
+    [ "screenCapRegion", "classgame_manager.html#af873ed835797ee492b88761621ee2b61", null ],
+    [ "Instance", "classgame_manager.html#a608b36e89c3f75b8d6e74ed8444d9b91", null ]
+];
