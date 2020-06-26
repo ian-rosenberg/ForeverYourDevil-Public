@@ -100,8 +100,11 @@ public class InventoryManagement : MonoBehaviour
     public int numInventories;
 
     private Inventory currentInventory;
-
-    private bool secondFire = false;
+    
+    //Input bools to make sure actions only get fired once, if necessary
+    [Header("Input booleanbs")]
+    private bool uiKeyPress = false;//UI Navigate Action
+    private bool uiInteract = false;// UI Interact Action
 
 
     #region Player Actions
@@ -112,7 +115,12 @@ public class InventoryManagement : MonoBehaviour
         pControls = new PlayerControls();
 
         pControls.UI.Navigate.performed += HandleUIKeypress;
+        pControls.UI.Navigate.performed += ctx => uiKeyPress = true;
+        pControls.UI.Navigate.canceled += ctx => uiKeyPress = false;
+
         pControls.UI.Interact.performed += AcceptSelection;
+        pControls.UI.Interact.performed += ctx => uiInteract = true;
+        pControls.UI.Interact.canceled += ctx => uiInteract = false;
 
         pControls.UI.Interact.Enable();
         pControls.UI.Navigate.Enable();
@@ -120,8 +128,13 @@ public class InventoryManagement : MonoBehaviour
 
     private void OnDisable()
     {
-        pControls.UI.Navigate.performed -= HandleUIKeypress;
+        pControls.UI.Navigate.performed += HandleUIKeypress;
+        pControls.UI.Navigate.performed -= ctx => uiInteract = true;
+        pControls.UI.Navigate.canceled -= ctx => uiInteract = false;
+
         pControls.UI.Interact.performed -= AcceptSelection;
+        pControls.UI.Interact.performed -= ctx => uiInteract = true;
+        pControls.UI.Interact.canceled -= ctx => uiInteract = false;
 
         pControls.UI.Interact.Disable();
         pControls.UI.Navigate.Disable();
@@ -151,6 +164,8 @@ public class InventoryManagement : MonoBehaviour
         CreateSharedInventory();
 
         SetInventoriesInactive();
+
+        currentInventory.SetIndex(0);
     }
 
 <<<<<<< HEAD
@@ -159,10 +174,15 @@ public class InventoryManagement : MonoBehaviour
         SharedInventory sI = sharedInventory.GetComponentInChildren<SharedInventory>(); 
 =======
     public void HandleUIKeypress(InputAction.CallbackContext context)
-    {
-        if (secondFire)
+    { 
+        if (!uiKeyPress)
+            return;
+
+        if (currentInventory.GetSelected() == null)
         {
-            secondFire = false;
+            currentInventory.SelectItemByIndex(0);
+            uiKeyPress = false;
+
             return;
         }
 
@@ -212,7 +232,7 @@ public class InventoryManagement : MonoBehaviour
             slot.Select();
         }
 
-        secondFire = true;
+        uiKeyPress = false;
     }
 
     public void AddPorridge()

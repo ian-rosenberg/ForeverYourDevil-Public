@@ -264,7 +264,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""id"": ""ba7f699d-397a-4a24-880a-9fe898ebc144"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """"
+                    ""interactions"": ""Press""
                 },
                 {
                     ""name"": ""Interact"",
