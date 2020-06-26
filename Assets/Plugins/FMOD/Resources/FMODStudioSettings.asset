@@ -74,9 +74,14 @@ MonoBehaviour:
   - Platform: 20
     Value: 32
   Plugins: []
+<<<<<<< HEAD
   MasterBanks:
   - Master
   Banks:
   - Dialogue
+=======
+  MasterBanks: []
+  Banks: []
+>>>>>>> Rebuilding inventory
   BanksToLoad: []
   LiveUpdatePort: 9264

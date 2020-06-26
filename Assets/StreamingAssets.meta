@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: 68bf00042264d1f4fb79c24da4e4e6ca
+=======
+guid: b319924abea39134584cfa1dacee4160
+>>>>>>> Rebuilding inventory
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

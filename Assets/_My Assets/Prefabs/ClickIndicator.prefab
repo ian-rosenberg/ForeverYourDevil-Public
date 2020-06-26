@@ -1,5 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+<<<<<<< HEAD
 --- !u!1 &3090163235074375630
 GameObject:
   m_ObjectHideFlags: 0
@@ -4812,6 +4813,8 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
+=======
+>>>>>>> Rebuilding inventory
 --- !u!1 &3090163236304931644
 GameObject:
   m_ObjectHideFlags: 0
@@ -4821,9 +4824,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3090163236304931640}
+<<<<<<< HEAD
   - component: {fileID: 3090163236304931641}
   - component: {fileID: 3090163236304931646}
   - component: {fileID: 3090163236304931647}
+=======
+>>>>>>> Rebuilding inventory
   - component: {fileID: 3090163236304931643}
   m_Layer: 0
   m_Name: ClickIndicator
@@ -4839,11 +4845,16 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3090163236304931644}
+<<<<<<< HEAD
   m_LocalRotation: {x: 0, y: -0, z: 0, w: 1}
+=======
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+>>>>>>> Rebuilding inventory
   m_LocalPosition: {x: -18.990189, y: 1.8000002, z: 10.393768}
   m_LocalScale: {x: 1.1043773, y: 1.1043773, z: 1.1043773}
   m_Children:
   - {fileID: 3090163236782668575}
+<<<<<<< HEAD
   - {fileID: 3090163235074375625}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -4908,6 +4919,11 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+=======
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+>>>>>>> Rebuilding inventory
 --- !u!95 &3090163236304931643
 Animator:
   serializedVersion: 3

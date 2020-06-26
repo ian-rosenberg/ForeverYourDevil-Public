@@ -15,6 +15,11 @@ public class SharedInventory : Inventory
         totalItems = 0;
 
         AddSingleItem(InventoryManagement.Instance.itemList.Consumables[0]);
+<<<<<<< HEAD
+=======
+        AddSingleItem(InventoryManagement.Instance.itemList.Consumables[0]);
+        AddSingleItem(InventoryManagement.Instance.itemList.Consumables[1]);
+>>>>>>> Rebuilding inventory
     }
 
     public void CloseInventory()
