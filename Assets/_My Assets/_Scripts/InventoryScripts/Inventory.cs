@@ -53,6 +53,7 @@ public class Inventory : MonoBehaviour
         }
 
         GameObject slotClone = Instantiate(elementOwnerPrefab, transform);
+        slotClone.GetComponentInChildren<HighlightSelf>().SetEmptySlotImage();
 
         inventorySlots.Add(slotIndices++, slotClone);
 <<<<<<< HEAD
@@ -117,6 +118,7 @@ public class Inventory : MonoBehaviour
             {
                 slot.child = item;
                 slot.img.sprite = Resources.Load<Sprite>(item.Icon);
+                slot.GetComponentInChildren<HighlightSelf>().UnHighlight();
 
                 slot.quantity++;
 <<<<<<< HEAD
@@ -203,11 +205,7 @@ public class Inventory : MonoBehaviour
         item.transform.position = new Vector3(pT.position.x, pT.position.y + item.GetComponent<SpriteRenderer>().bounds.size.y / 4, pT.position.z);
 
         if (curSlot.quantity == 0)
-        {
-            curSlot.img.sprite = null;
-
             curSlot.EmptySlot();
-        }
         else
             curSlot.SetQuantityText();
     }
