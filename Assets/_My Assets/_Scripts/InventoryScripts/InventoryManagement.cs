@@ -116,8 +116,8 @@ public class InventoryManagement : MonoBehaviour
     private void OnDisable()
     {
         pControls.UI.Navigate.performed += HandleUIKeypress;
-        pControls.UI.Navigate.performed -= ctx => uiInteract = true;
-        pControls.UI.Navigate.canceled -= ctx => uiInteract = false;
+        pControls.UI.Navigate.performed -= ctx => uiKeyPress = true;
+        pControls.UI.Navigate.canceled -= ctx => uiKeyPress = false;
 
         pControls.UI.Interact.performed -= AcceptSelection;
         pControls.UI.Interact.performed -= ctx => uiInteract = true;

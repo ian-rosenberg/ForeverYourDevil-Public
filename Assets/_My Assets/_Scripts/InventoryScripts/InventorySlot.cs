@@ -10,6 +10,7 @@ using System;
 public class InventorySlot : MonoBehaviour, IPointerClickHandler
 {
     private bool selected;
+    private HighlightSelf hs;
 
     public ItemDetails detailsObj;
     public ItemBase child;
@@ -26,7 +27,9 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
         inUse = false;
         quantity = 0;
         selected = false;
-        img = GetComponent<Image>();
+        hs = GetComponentInChildren<HighlightSelf>();
+        img = hs.GetComponent<Image>();
+        hs.SetEmptySlotImage();
         ownerInventory = this.transform.parent.gameObject;
 
         GameObject details = GameObject.FindGameObjectWithTag("ItemDetails");  
@@ -62,7 +65,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
             
         }
 
-        GetComponentInChildren<HighlightSelf>().Highlight(Color.green);
+        hs.Highlight();
 
         selected = true;
 
@@ -80,14 +83,17 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
     {
         selected = false;
 
-        GetComponentInChildren<HighlightSelf>().Highlight(Color.black);
+        if (child == null)
+            hs.SetEmptySlotImage();
+        else
+            hs.UnHighlight();
     }
 
     public void Select()
     {
         selected = true;
 
-        GetComponentInChildren<HighlightSelf>().Highlight(Color.green);
+        hs.Highlight();
 
         if (child != null)
             detailsObj.SetDetails(child);
@@ -115,6 +121,8 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
         EmptyDetails();
 
         inUse = false;
+
+        hs.SetEmptySlotImage();
     }
 
     public void EmptyDetails()
@@ -122,7 +130,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
         detailsObj.effectDescription.text = "Effect Description:\n";
         detailsObj.effects.text = "Effects:\n";
         detailsObj.itemDescription.text = "Description:\n";
-        detailsObj.itemImage.sprite = null;
+        detailsObj.itemImage.sprite = detailsObj.blank;
         detailsObj.itemName.text = "";
     }
 }
