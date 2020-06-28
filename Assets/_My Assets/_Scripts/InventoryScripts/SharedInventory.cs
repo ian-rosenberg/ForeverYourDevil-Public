@@ -20,11 +20,14 @@ public class SharedInventory : Inventory
         AddSingleItem(InventoryManagement.Instance.itemList.Consumables[0]);
         AddSingleItem(InventoryManagement.Instance.itemList.Consumables[1]);
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> Rebuilding inventory
 =======
 
         selectedIndex = 0;
 >>>>>>> Inventory updated to select the first item slot on open.
+=======
+>>>>>>> Revert "Inventory updated to select the first item slot on open."
     }
 
     public void CloseInventory()

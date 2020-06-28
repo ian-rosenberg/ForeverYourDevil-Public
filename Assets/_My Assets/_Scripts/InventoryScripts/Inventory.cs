@@ -222,11 +222,12 @@ public class Inventory : MonoBehaviour
 
     public void SelectItemByIndex(int index)
     {
-        if (index < inventorySlots.Count && index >= 0)
+        if (index <= inventorySlots.Count && index >= 0)
             selectedIndex = 0;
         else
             selectedIndex = index;
 
+<<<<<<< HEAD
 <<<<<<< HEAD
         selectedItem = inventorySlots[index].GetComponent<InventorySlot>();
 >>>>>>> Rebuilding inventory
@@ -235,5 +236,8 @@ public class Inventory : MonoBehaviour
 
         iS.Select();
 >>>>>>> Inventory updated to select the first item slot on open.
+=======
+        selectedItem = inventorySlots[index].GetComponent<InventorySlot>();
+>>>>>>> Revert "Inventory updated to select the first item slot on open."
     }
 }
