@@ -180,13 +180,11 @@ public class Inventory : MonoBehaviour
 
     public void SelectItemByIndex(int index)
     {
-        if (index < inventorySlots.Count && index >= 0)
+        if (index <= inventorySlots.Count && index >= 0)
             selectedIndex = 0;
         else
             selectedIndex = index;
 
-        InventorySlot iS = inventorySlots[index].GetComponent<InventorySlot>();
-
-        iS.Select();
+        selectedItem = inventorySlots[index].GetComponent<InventorySlot>();
     }
 }

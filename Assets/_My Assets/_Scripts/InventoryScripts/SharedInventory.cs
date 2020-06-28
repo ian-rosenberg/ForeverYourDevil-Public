@@ -17,8 +17,6 @@ public class SharedInventory : Inventory
         AddSingleItem(InventoryManagement.Instance.itemList.Consumables[0]);
         AddSingleItem(InventoryManagement.Instance.itemList.Consumables[0]);
         AddSingleItem(InventoryManagement.Instance.itemList.Consumables[1]);
-
-        selectedIndex = 0;
     }
 
     public void CloseInventory()
