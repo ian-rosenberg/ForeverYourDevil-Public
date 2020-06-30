@@ -185,6 +185,10 @@ public class Inventory : MonoBehaviour
         else
             selectedIndex = index;
 
-        selectedItem = inventorySlots[index].GetComponent<InventorySlot>();
+        InventorySlot iS = inventorySlots[index].GetComponent<InventorySlot>();
+
+        selectedItem = iS;
+
+        iS.Select();
     }
 }
