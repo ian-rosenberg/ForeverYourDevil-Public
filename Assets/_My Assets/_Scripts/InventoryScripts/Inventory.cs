@@ -229,6 +229,7 @@ public class Inventory : MonoBehaviour
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         selectedItem = inventorySlots[index].GetComponent<InventorySlot>();
 >>>>>>> Rebuilding inventory
 =======
@@ -239,5 +240,12 @@ public class Inventory : MonoBehaviour
 =======
         selectedItem = inventorySlots[index].GetComponent<InventorySlot>();
 >>>>>>> Revert "Inventory updated to select the first item slot on open."
+=======
+        InventorySlot iS = inventorySlots[index].GetComponent<InventorySlot>();
+
+        selectedItem = iS;
+
+        iS.Select();
+>>>>>>> Cleaning up Inventory UI, item racks are now under each row
     }
 }
