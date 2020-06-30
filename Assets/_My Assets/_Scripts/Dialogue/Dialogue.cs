@@ -66,7 +66,6 @@ public class Dialogue : MonoBehaviour
 
     //Colors
     public Color tanOrange = new Color(0.8018868f, 0.304684f, 0.1777768f); /**Text color*/
-
     public Color pennyGreen = new Color(0.8018868f, 0.304684f, 0.1777768f); /**Text color*/
     public Color cerulianBlue = new Color(0.1764706f, 0.6452591f, 0.8f);   /**Text color*/
 
@@ -114,6 +113,24 @@ public class Dialogue : MonoBehaviour
 
     public void Update()
     {
+        // make sure conversation is not currently ending
+        if (isEnding) { return; }
+
+        // check if dialogue voice over line is finished playing
+        if ()
+        {
+            // if the voice over has stopped, stop talking animations
+            if (isTalking[0])
+            {
+                LeftmostChar.SetTrigger("StopTalk");
+            }
+
+            if (isTalking[1])
+            {
+                RightmostChar.SetTrigger("StopTalk");
+            }
+        }
+
         // Advance/Skip Dialogue on KeyPress
         if (gm.gameState == gameManager.STATE.TALKING && Input.GetKeyDown(KeyCode.E))
         {
@@ -129,19 +146,19 @@ public class Dialogue : MonoBehaviour
         }
 
         // skip entire conversation if non-essential, or jump to options
-        if (!isSkipping && !isCurrentlyEssential && gm.gameState == gameManager.STATE.TALKING && Input.GetKeyDown(KeyCode.S))
+        else if (!isSkipping && !isCurrentlyEssential && gm.gameState == gameManager.STATE.TALKING && Input.GetKeyDown(KeyCode.S))
         {
             isSkipping = true;
             skipText.SetText("Dialogue Skipped!");
 
-            if (optionIndex == -1)
+            // if there are no options, end the conversation
+            if (optionIndex == -1 && !isEnding)
             {
-                if (!isEnding)
-                {
-                    StartCoroutine(EndDialogue());
-                }
+                StartCoroutine(EndDialogue());
+                return;
             }
 
+            // stop the previous line of dialogue before advancing to the next
             if (lastTypeTextRoutine != null)
             {
                 // stop typing previous line
@@ -159,7 +176,7 @@ public class Dialogue : MonoBehaviour
                 }
             }
 
-            // advance to the option if not already there
+            // advance to the dialogue line before the options if not already there
             sentenceIndex = optionIndex != 0 ? optionIndex - 1 : 0;
             AdvanceLine();
         }

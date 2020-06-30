@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.455
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.26319554, g: 0.28015894, b: 0.2769711, a: 0.455}
+  m_IndirectSpecularColor: {r: 0.2628528, g: 0.27992043, b: 0.27685222, a: 0.455}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -121,7 +121,7 @@ NavMeshSettings:
     accuratePlacement: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 23800000, guid: 5a66e76a752c49040ab26e4640d6ee3f, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: f681b9c8b6e8f1e4c9e85aab4baf66ef, type: 2}
 --- !u!95 &9 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 477826063, guid: 114c601f7a4e1304f8c3c639e0cad86d,
