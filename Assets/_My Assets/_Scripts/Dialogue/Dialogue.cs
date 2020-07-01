@@ -32,11 +32,12 @@ public class Dialogue : MonoBehaviour
 
     private const float NAME_BOX_WIDTH = 370.0f;
 
-    private string currentId;                       /**Conversation id to choose*/
-    private int sentenceIndex;                      /**Index of sentence to go to*/
+    private string currentId;               /**Conversation id to choose*/
+    private int sentenceIndex;              /**Index of sentence to go to*/
 
     [Header("Audio")]
     public FMOD.Studio.EventInstance dialogueAudio;              /**Voice line audio source*/
+    private bool fmodExists = false;                             /**true if voice over exists*/
 
     [Header("Display")]
     public GameObject Canvas;               /**Canvas holding dialogue box, etc*/
@@ -115,21 +116,6 @@ public class Dialogue : MonoBehaviour
     {
         // make sure conversation is not currently ending
         if (isEnding) { return; }
-
-        // check if dialogue voice over line is finished playing
-        if ()
-        {
-            // if the voice over has stopped, stop talking animations
-            if (isTalking[0])
-            {
-                LeftmostChar.SetTrigger("StopTalk");
-            }
-
-            if (isTalking[1])
-            {
-                RightmostChar.SetTrigger("StopTalk");
-            }
-        }
 
         // Advance/Skip Dialogue on KeyPress
         if (gm.gameState == gameManager.STATE.TALKING && Input.GetKeyDown(KeyCode.E))
@@ -229,7 +215,6 @@ public class Dialogue : MonoBehaviour
     /**
      * @brief Waits for animation to finish before starting dialogue. (private)
      */
-
     private IEnumerator StartDialogue(string convID, bool start)
     {
         AdvanceSprite.SetActive(false);
@@ -277,9 +262,12 @@ public class Dialogue : MonoBehaviour
         // Wait for animation to end before starting line and voice
         if (start) yield return new WaitForSeconds(1.717f);
 
+        fmodExists = false;
+
         if (parser.conversationList[currentId].VoiceLine != null)
         {
-            dialogueAudio = RuntimeManager.CreateInstance(parser.conversationList[currentId].VoiceLine); //Set voiceline
+            fmodExists = true;
+            dialogueAudio = RuntimeManager.CreateInstance(parser.conversationList[currentId].VoiceLine); // Set voiceline
 
             // Initialise FMOD Parameters
             RuntimeManager.StudioSystem.setParameterByName("LineNumber", 0);
@@ -568,15 +556,18 @@ public class Dialogue : MonoBehaviour
             }
         }
 
-        // stop talking animations
-        if (isTalking[0])
+        // stop talking animations if there is no voice over
+        if (!fmodExists)
         {
-            LeftmostChar.SetTrigger("StopTalk");
-        }
+              if (isTalking[0])
+              {
+                  LeftmostChar.SetTrigger("StopTalk");
+              }
 
-        if (isTalking[1])
-        {
-            RightmostChar.SetTrigger("StopTalk");
+              if (isTalking[1])
+              {
+                  RightmostChar.SetTrigger("StopTalk");
+              }
         }
 
         //Allow advancement
