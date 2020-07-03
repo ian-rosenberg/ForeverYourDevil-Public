@@ -8,24 +8,46 @@ using Newtonsoft.Json;
 using TMPro;
 using System;
 
+public enum VisiblePosition{
+    Top,
+    Middle, 
+    Bottom
+}
+
 public class Inventory : MonoBehaviour
 {
+
+    
     [Header("Inventory Base Class")]
     private int slotIndices;
     private InventorySlot selectedItem;
 
+    [Header("Inventory Scrolling")]
+    private int numRows;
+    private int numCols;
+    
+    public int[] visibleRows;
 
-    public Dictionary<object, GameObject> inventorySlots;
+    public float rowSpacing;
+    
+
+    public VisiblePosition vPos;
+
+    public RectTransform rTransform;
+
     public int selectedIndex = 0;
+    public int currentRow = 0;
+    
+    public Dictionary<object, GameObject> inventorySlots;
+
     public int totalSlots;
     public int totalItems;
 
     public GameObject elementOwnerPrefab;//The grid space in which an item can reside
     public GameObject itemDrop;
 
-
     public bool canSelect = true;
-
+    
     public void AddSlot()
     {
         if (inventorySlots == null)
@@ -119,6 +141,10 @@ public class Inventory : MonoBehaviour
         {
             pair.Value.GetComponent<InventorySlot>().ownerInventory = this.gameObject;
         }
+
+        numCols = GetComponent<GridLayoutGroup>().constraintCount;
+
+        numRows = slots / numCols;
     }
 
     public InventorySlot GetLastSelected()
@@ -133,7 +159,7 @@ public class Inventory : MonoBehaviour
 
         return null;
     }
-    
+
     public InventorySlot GetSelected()
     {
         return inventorySlots[selectedIndex].GetComponent<InventorySlot>();
@@ -170,7 +196,41 @@ public class Inventory : MonoBehaviour
 
     public void SetIndex(int val)
     {
+        if (currentRow == visibleRows[2] &&
+            currentRow < numRows)
+        {
+            if (val == numCols)
+            {
+                for (int i = 0; i < visibleRows.Length; i++)
+                {
+                    visibleRows[i] += 1;
+                }
+
+                ShiftInventory(true);
+            }
+        }
+        else if (currentRow == visibleRows[0] &&
+        currentRow > 0)
+        {
+            if (val == -numCols)
+            {
+                for (int i = 0; i < visibleRows.Length; i++)
+                {
+                    visibleRows[i] -= 1;
+                }
+
+                ShiftInventory(false);
+            }
+                
+        }
+        
         selectedIndex += val;
+
+        selectedItem = inventorySlots[selectedIndex].GetComponent<InventorySlot>();
+
+        currentRow = selectedIndex / numCols;
+
+        Debug.Log("row: " + currentRow);
     }
 
     public void DisableSelection()
@@ -190,5 +250,17 @@ public class Inventory : MonoBehaviour
         selectedItem = iS;
 
         iS.Select();
+    }
+
+    public void ShiftInventory(bool shiftDown)
+    {
+        if (shiftDown)
+        {
+            rTransform.localPosition += new Vector3(0, rowSpacing, 0);  
+        }
+        else
+        {
+            rTransform.localPosition -= new Vector3(0, rowSpacing, 0);
+        }
     }
 }

@@ -89,7 +89,7 @@ public class InventoryManagement : MonoBehaviour
     private Inventory currentInventory;
     
     //Input bools to make sure actions only get fired once, if necessary
-    [Header("Input booleanbs")]
+    [Header("Input booleans")]
     private bool uiKeyPress = false;//UI Navigate Action
     private bool uiInteract = false;// UI Interact Action
 
