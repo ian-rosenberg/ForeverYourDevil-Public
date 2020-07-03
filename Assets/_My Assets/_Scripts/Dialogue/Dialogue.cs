@@ -1,15 +1,11 @@
 ﻿using FMODUnity;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-<<<<<<< HEAD
-=======
 using UnityEngine.InputSystem;
->>>>>>> Rebuilding inventory
 
 /**
  * @brief Manager for displaying images, text, etc from parsed dialogue from ParseXML
@@ -67,11 +63,11 @@ public class Dialogue : MonoBehaviour
     private bool canPress = false;                  /**Is the user allowed to advance the text?*/
     private bool skip = false;                      /**Display all characters at once if true, one at a time if false*/
 
-<<<<<<< HEAD
+    private bool[] isTalking = { false, false };    /**Is one of the characters talking?*/
     /**
      * @brief Initialize dialogue manager and get parsed dialogue from ParseXML
      */
-=======
+     
     [Header("Player Controls")]
     public PlayerControls pControls;
 
@@ -94,8 +90,7 @@ public class Dialogue : MonoBehaviour
 
     /**
         * @brief Initialize dialogue manager and get parsed dialogue from ParseXML
-        */
->>>>>>> Rebuilding inventory
+    */
     private void Start()
     {
         canPress = false;
@@ -110,18 +105,10 @@ public class Dialogue : MonoBehaviour
     /**
      * @brief Main game loop. Advance line of text or skip it depending on input.
      */
-
-<<<<<<< HEAD
-    private void Update()
-    {
-        //Advance/Skip Dialogue on KeyPress
-        if (Input.GetButtonDown("Interact") && gm.gameState == gameManager.STATE.TALKING) //Return = enter key
-=======
     private void AdvanceSkipDialogue(InputAction.CallbackContext context)
     {
         //Advance/Skip Dialogue on KeyPress
         if (gm.gameState == gameManager.STATE.TALKING) //Return = enter key
->>>>>>> Rebuilding inventory
         {
             if (canPress)
             {
@@ -223,7 +210,6 @@ public class Dialogue : MonoBehaviour
     /**
      * @brief Waits for animation to finish before turning off dialogue canvas
      */
-
     private IEnumerator EndDialogue()
     {
         Debug.Log("End Dialogue Called");
@@ -332,11 +318,18 @@ public class Dialogue : MonoBehaviour
             if (ContainsParam(LeftmostChar, dialog[index].Emotion_Array[0].ToString()))
             {
                 LeftmostChar.SetTrigger(dialog[index].Emotion_Array[0].ToString());
+                isTalking[0] = dialog[index].isTalking[0];
             }
             else
             {
                 LeftmostChar.SetTrigger("MakeDefault");
             }
+        }
+
+        // reset talking
+        else if (isTalking[0])
+        {
+            LeftmostChar.SetTrigger("StartTalk");
         }
 
         // set animation for rightmost character
@@ -349,11 +342,18 @@ public class Dialogue : MonoBehaviour
             if (ContainsParam(RightmostChar, dialog[index].Emotion_Array[1].ToString()))
             {
                 RightmostChar.SetTrigger(dialog[index].Emotion_Array[1].ToString());
+                isTalking[1] = dialog[index].isTalking[1];
             }
             else
             {
                 RightmostChar.SetTrigger("MakeDefault");
             }
+        }
+
+        // reset talking
+        else if (isTalking[1])
+        {
+            RightmostChar.SetTrigger("StartTalk");
         }
     }
 
@@ -395,7 +395,6 @@ public class Dialogue : MonoBehaviour
      * @brief Coroutine that displays text char by char until line is exhausted or skipped
      * @param s string to display
      */
-
     private IEnumerator TypeText(string s)
     {
         Debug.Log("Running coroutine.");
@@ -423,6 +422,18 @@ public class Dialogue : MonoBehaviour
                     yield return new WaitForSeconds(textDelay);
             }
         }
+
+        // stop talking animations
+        if (isTalking[0])
+        {
+            LeftmostChar.SetTrigger("StopTalk");
+        }
+
+        if (isTalking[1])
+        {
+            RightmostChar.SetTrigger("StopTalk");
+        }
+
         //Allow advancement
         skip = false;
         Debug.Log("skip = false");
