@@ -211,7 +211,7 @@ public class Inventory : MonoBehaviour
 
             return;
         }
-        else if(selectedIndex <= 0)
+        else if(selectedIndex < 0)
         {
             selectedIndex = 0;
 
@@ -224,6 +224,7 @@ public class Inventory : MonoBehaviour
         if (val == numCols)
         {
             if (oldRow == visibleRows[2] &&
+                oldRow != currentRow &&
                 currentRow < numRows)
             {
                 for (int i = 0; i < visibleRows.Length; i++)
@@ -237,6 +238,7 @@ public class Inventory : MonoBehaviour
         else if (val == -numCols)
         {
             if (oldRow == visibleRows[0] &&
+                oldRow != currentRow &&
                 currentRow >= 0)
             {
                 for (int i = 0; i < visibleRows.Length; i++)
