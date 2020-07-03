@@ -15,27 +15,6 @@ public class SharedInventory : Inventory
         totalItems = 0;
 
         AddSingleItem(InventoryManagement.Instance.itemList.Consumables[0]);
-<<<<<<< HEAD
-=======
-        AddSingleItem(InventoryManagement.Instance.itemList.Consumables[0]);
-        AddSingleItem(InventoryManagement.Instance.itemList.Consumables[1]);
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> Rebuilding inventory
-=======
-
-        selectedIndex = 0;
->>>>>>> Inventory updated to select the first item slot on open.
-=======
->>>>>>> Revert "Inventory updated to select the first item slot on open."
-=======
-
-        GridLayoutGroup glg = GetComponent<GridLayoutGroup>();
-
-        GetComponent<Inventory>().rowSpacing = glg.cellSize.y + glg.spacing.y;
-        GetComponent<Inventory>().rTransform = GetComponent<RectTransform>();
->>>>>>> Shared Inventory scrolls up and down by keypress
     }
 
     public void CloseInventory()
@@ -46,5 +25,4 @@ public class SharedInventory : Inventory
 
         gameManager.Instance.pauseMenu.SetActive(true);
     }
-
 }

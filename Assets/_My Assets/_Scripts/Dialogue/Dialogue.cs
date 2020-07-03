@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.InputSystem;
 
 /**
  * @brief Manager for displaying images, text, etc from parsed dialogue from ParseXML
@@ -64,33 +63,10 @@ public class Dialogue : MonoBehaviour
     private bool skip = false;                      /**Display all characters at once if true, one at a time if false*/
 
     private bool[] isTalking = { false, false };    /**Is one of the characters talking?*/
+
     /**
      * @brief Initialize dialogue manager and get parsed dialogue from ParseXML
      */
-     
-    [Header("Player Controls")]
-    public PlayerControls pControls;
-
-
-    private void OnEnable()
-    {
-        pControls = new PlayerControls();
-
-        pControls.UI.Interact.performed += AdvanceSkipDialogue;
-        
-        pControls.UI.Interact.Enable();
-    }
-    
-    private void OnDisable()
-    {
-        pControls.UI.Interact.performed -= AdvanceSkipDialogue;
-
-        pControls.UI.Interact.Disable();
-    }
-
-    /**
-        * @brief Initialize dialogue manager and get parsed dialogue from ParseXML
-    */
     private void Start()
     {
         canPress = false;
@@ -105,10 +81,10 @@ public class Dialogue : MonoBehaviour
     /**
      * @brief Main game loop. Advance line of text or skip it depending on input.
      */
-    private void AdvanceSkipDialogue(InputAction.CallbackContext context)
+    private void Update()
     {
         //Advance/Skip Dialogue on KeyPress
-        if (gm.gameState == gameManager.STATE.TALKING) //Return = enter key
+        if (Input.GetButtonDown("Interact") && gm.gameState == gameManager.STATE.TALKING) //Return = enter key
         {
             if (canPress)
             {

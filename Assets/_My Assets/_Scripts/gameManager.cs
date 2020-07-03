@@ -1,13 +1,5 @@
-<<<<<<< HEAD
 ﻿using System.Collections;
 using UnityEngine;
-=======
-﻿using System;
-using System.Collections;
-using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Interactions;
->>>>>>> Rebuilding inventory
 
 public class gameManager : MonoBehaviour
 {
@@ -41,11 +33,7 @@ public class gameManager : MonoBehaviour
     public Animator CanvasAnimator;
 
     [Header("Click Indicator")]
-<<<<<<< HEAD
     public GameObject clickIndicator; //Has 2 particle effects, one for normal and one for turning off.
-=======
-    public GameObject clickIndicator; //Has 2 particles, one for normal and one for turning off.
->>>>>>> Rebuilding inventory
     public Animator clickIndicAnim;
 
     //Singleton creation
@@ -67,38 +55,11 @@ public class gameManager : MonoBehaviour
 
     #endregion Main Variables
 
-<<<<<<< HEAD
     private void Awake()
     {
         player = PlayerController.Instance;
         mainCamera = CameraController.Instance;
     }
-=======
-    [Header("Player Controls For Game")]
-    public PlayerControls pControls;
-    
-    #region Player Actions
-    private void OnEnable()
-    {
-        player = PlayerController.Instance;
-        mainCamera = CameraController.Instance;
-
-        pControls = new PlayerControls();
-
-        pControls.Player.TogglePause.performed += TogglePause;   
-
-        pControls.Player.TogglePause.Enable();
-    }
-
-    private void OnDisable()
-    {
-        pControls.Player.TogglePause.performed -= TogglePause;
-
-        pControls.Player.TogglePause.Disable();
-    }
-    #endregion
-
->>>>>>> Rebuilding inventory
     private void Start()
     {
         ChangeState(STATE.TRAVELING);
@@ -113,7 +74,6 @@ public class gameManager : MonoBehaviour
         //clickIndicator.SetActive(false);
     }
 
-<<<<<<< HEAD
     // Update is called once per frame
     private void Update()
     {
@@ -133,34 +93,6 @@ public class gameManager : MonoBehaviour
         }
     }
 
-=======
-    public void TogglePause(InputAction.CallbackContext context)
-    {
-        switch (context.phase)
-        {
-            case InputActionPhase.Performed:
-                if (canPause)
-                {
-                    if (gameState == STATE.PAUSED)
-                    {
-                        pauseMenu.SetActive(false);
-                        UnPauseGame();
-                    }
-                    else
-                    {
-                        pauseMenu.SetActive(true);
-                        PauseGame();
-                    }
-                }
-                break;
-
-            default:
-                break;
-        }
-    }
-
-
->>>>>>> Rebuilding inventory
     /**
      * @brief Change the state of the game and update all dependant classes's game states
      */
@@ -213,10 +145,6 @@ public class gameManager : MonoBehaviour
         canPause = pause;
     }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> Rebuilding inventory
     #endregion Pausing
 
     #region Entering Combat

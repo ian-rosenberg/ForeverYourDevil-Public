@@ -10,10 +10,7 @@ public class PartyMember : MonoBehaviour
     [Header("Player")]
     public Animator anim; // animation controller for player
 
-<<<<<<< HEAD
     public Action currentBehavior; //Function pointer for player behavior (changed by gameManager)
-=======
->>>>>>> Rebuilding inventory
     public int health = 100; //Current Health of the player; 0 kills player
 
     public int maxHealth = 100; //Max Health the player is allowed to heal to
@@ -33,7 +30,6 @@ public class PartyMember : MonoBehaviour
     [Header("Game Manager")]
     public gameManager gameManager;
 
-<<<<<<< HEAD
     //Pathfinding
     [Header("AStar Pathfinding")]
     public AStarNode combatPosition; // node representing the grid position of the player
@@ -51,28 +47,17 @@ public class PartyMember : MonoBehaviour
     private bool combatMoving;
 
     public TileGrid grid; // the grid we are currently navigating
-=======
-
-    [Header("Inventory")]
-    [SerializeField]
-    protected Inventory shared;
-    protected Inventory personal;
-
->>>>>>> Rebuilding inventory
 
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
-<<<<<<< HEAD
 
         selected = null;
 
         combatMoving = false;
 
         prevPath = path;
-=======
->>>>>>> Rebuilding inventory
     }
 
     // Start is called before the first frame update
@@ -84,7 +69,6 @@ public class PartyMember : MonoBehaviour
     }
 
     // Update is called once per frame
-<<<<<<< HEAD
     private void Update()
     {
         //Apply current behavior
@@ -95,8 +79,6 @@ public class PartyMember : MonoBehaviour
     {
         return !autoMove;
     }
-=======
->>>>>>> Rebuilding inventory
 
     #region Player Stats
 
@@ -123,7 +105,6 @@ public class PartyMember : MonoBehaviour
 
     #endregion Player Stats
 
-<<<<<<< HEAD
     #region Player Behavior Functions
     public void Player_Travelling()
     {
@@ -321,6 +302,4 @@ public class PartyMember : MonoBehaviour
         //Disable Colliders, Rigidbodies, etc.
     }
     #endregion
-=======
->>>>>>> Rebuilding inventory
 }

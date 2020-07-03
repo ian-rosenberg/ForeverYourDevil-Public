@@ -5,10 +5,6 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using Newtonsoft.Json;
 using System;
-<<<<<<< HEAD
-=======
-using UnityEngine.InputSystem;
->>>>>>> Rebuilding inventory
 
 #region Item JSON Deserialization
 
@@ -78,85 +74,25 @@ public class InventoryManagement : MonoBehaviour
     private Dictionary<object, Sprite> itemImages;
     #endregion
 
-<<<<<<< HEAD
     private List<GameObject> inventoryObjs;//The inventories in use;
     private GameObject sharedInventory;
-=======
-    public List<GameObject> inventoryObjs;//The inventories in use, may have to change to dict to support the different characters
-    public GameObject sharedInventory;
->>>>>>> Rebuilding inventory
 
     public GameObject blurShader;
     public GameObject sharedInventoryPrefab;
     public GameObject personalInventoryPrefab;
 
-<<<<<<< HEAD
 
     public int numInventories;
 
-=======
-    public GameObject tooltipMenu;
-
-    public int numInventories;
-
-    private Inventory currentInventory;
-    
-    //Input bools to make sure actions only get fired once, if necessary
-    [Header("Input booleans")]
-    private bool uiKeyPress = false;//UI Navigate Action
-    private bool uiInteract = false;// UI Interact Action
-
-
-    #region Player Actions
-    public PlayerControls pControls;
-
-    private void OnEnable()
-    {
-        pControls = new PlayerControls();
-
-        pControls.UI.Navigate.performed += HandleUIKeypress;
-        pControls.UI.Navigate.performed += ctx => uiKeyPress = true;
-        pControls.UI.Navigate.canceled += ctx => uiKeyPress = false;
-
-        pControls.UI.Interact.performed += AcceptSelection;
-        pControls.UI.Interact.performed += ctx => uiInteract = true;
-        pControls.UI.Interact.canceled += ctx => uiInteract = false;
-
-        pControls.UI.Interact.Enable();
-        pControls.UI.Navigate.Enable();
-    }
-
-    private void OnDisable()
-    {
-        pControls.UI.Navigate.performed += HandleUIKeypress;
-        pControls.UI.Navigate.performed -= ctx => uiKeyPress = true;
-        pControls.UI.Navigate.canceled -= ctx => uiKeyPress = false;
-
-        pControls.UI.Interact.performed -= AcceptSelection;
-        pControls.UI.Interact.performed -= ctx => uiInteract = true;
-        pControls.UI.Interact.canceled -= ctx => uiInteract = false;
-
-        pControls.UI.Interact.Disable();
-        pControls.UI.Navigate.Disable();
-    }
-    #endregion
->>>>>>> Rebuilding inventory
 
     // Start is called before the first frame update
     void Start()
     {
         inventoryObjs = new List<GameObject>();
-<<<<<<< HEAD
         
         //for(int i = 0; i < numInventories; i++)
         //{
             //AddInventory();
-=======
-
-        //for(int i = 0; i < numInventories; i++)
-        //{
-        //AddInventory();
->>>>>>> Rebuilding inventory
         //}
 
         CreateItemDatabase("itemList");
@@ -164,81 +100,11 @@ public class InventoryManagement : MonoBehaviour
         CreateSharedInventory();
 
         SetInventoriesInactive();
-
-        currentInventory.SetIndex(0);
     }
 
-<<<<<<< HEAD
     public void AddPorridge()
     {
         SharedInventory sI = sharedInventory.GetComponentInChildren<SharedInventory>(); 
-=======
-    public void HandleUIKeypress(InputAction.CallbackContext context)
-    { 
-        if (!uiKeyPress)
-            return;
-
-        if (currentInventory.GetSelected() == null)
-        {
-            currentInventory.SelectItemByIndex(0);
-            uiKeyPress = false;
-
-            return;
-        }
-
-        if (gameManager.Instance.gameState != gameManager.STATE.PAUSED)
-            return;
-
-        Inventory inv = currentInventory.GetComponentInChildren<Inventory>();
-
-        int oldIndex = inv.selectedIndex;
-
-        Vector2 movement = context.ReadValue<Vector2>();
-
-        if (movement.x == 1)
-        {
-            if (inv.selectedIndex < inv.totalSlots - 1)
-                inv.SetIndex(1);
-        }
-        else if (movement.x == -1)
-        {
-            if (inv.selectedIndex > 0)
-                inv.SetIndex(-1);
-        }
-        else if (movement.y == -1)
-        {
-            if (inv.selectedIndex + 4 < inv.totalSlots)
-                inv.SetIndex(4);
-        }
-        else if (movement.y == 1)
-        {
-            if (inv.selectedIndex - 4 >= 0)
-                inv.SetIndex(-4);
-        }
-
-        if (inv.inventorySlots[inv.selectedIndex] != null)
-        {
-            GameObject newSlotObj = inv.inventorySlots[inv.selectedIndex];
-            GameObject oldSlotObj = inv.inventorySlots[oldIndex];
-
-            InventorySlot slot = newSlotObj.GetComponent<InventorySlot>();
-            InventorySlot oldSlot = oldSlotObj.GetComponent<InventorySlot>();
-
-            if (oldSlot.Selected())
-            {
-                oldSlot.UnSelect();
-            }
-
-            slot.Select();
-        }
-
-        uiKeyPress = false;
-    }
-
-    public void AddPorridge()
-    {
-        SharedInventory sI = sharedInventory.GetComponentInChildren<SharedInventory>();
->>>>>>> Rebuilding inventory
         sI.AddSingleItem(itemList.Consumables[0]);
     }
 
@@ -247,10 +113,6 @@ public class InventoryManagement : MonoBehaviour
         TextAsset json = Resources.Load<TextAsset>(path);
 
         itemImages = new Dictionary<object, Sprite>();
-<<<<<<< HEAD
-=======
-        itemImages = new Dictionary<object, Sprite>();
->>>>>>> Rebuilding inventory
 
         itemList = new Items();
 
@@ -266,27 +128,15 @@ public class InventoryManagement : MonoBehaviour
         {
             foreach (ItemBase item in itemList.Abilities)
             {
-<<<<<<< HEAD
                 itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
             } 
-=======
-
-                if (item.Name != "" && item.Name != null)
-                    itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
-            }
->>>>>>> Rebuilding inventory
         }
 
         if (itemList.Concoctions.Count > 0)
         {
             foreach (ItemBase item in itemList.Concoctions)
             {
-<<<<<<< HEAD
                 itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
-=======
-                if (item.Name != "" && item.Name != null)
-                    itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
->>>>>>> Rebuilding inventory
             }
         }
 
@@ -294,12 +144,7 @@ public class InventoryManagement : MonoBehaviour
         {
             foreach (ItemBase item in itemList.Consumables)
             {
-<<<<<<< HEAD
                 itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
-=======
-                if (item.Name != "" && item.Name != null)
-                    itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
->>>>>>> Rebuilding inventory
             }
         }
 
@@ -307,12 +152,7 @@ public class InventoryManagement : MonoBehaviour
         {
             foreach (ItemBase item in itemList.Equipment)
             {
-<<<<<<< HEAD
                 itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
-=======
-                if (item.Name != "" && item.Name != null)
-                    itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
->>>>>>> Rebuilding inventory
             }
         }
 
@@ -320,12 +160,7 @@ public class InventoryManagement : MonoBehaviour
         {
             foreach (ItemBase item in itemList.Ingredients)
             {
-<<<<<<< HEAD
                 itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
-=======
-                if (item.Name != "" && item.Name != null)
-                    itemImages.Add(item, Resources.Load<Sprite>(item.Icon));
->>>>>>> Rebuilding inventory
             }
         }
     }
@@ -333,24 +168,13 @@ public class InventoryManagement : MonoBehaviour
     private void AddInventory()
     {
         GameObject inventoryClone = Instantiate(personalInventoryPrefab, transform);
-<<<<<<< HEAD
         
-=======
-
->>>>>>> Rebuilding inventory
         inventoryObjs.Add(inventoryClone);
     }
 
     private void CreateSharedInventory()
     {
         sharedInventory = Instantiate(sharedInventoryPrefab, transform);
-<<<<<<< HEAD
-=======
-
-        currentInventory = sharedInventory.GetComponentInChildren<Inventory>();
-
-        currentInventory.SelectItemByIndex(0);
->>>>>>> Rebuilding inventory
     }
 
     public void SetInventoriesInactive()
@@ -372,69 +196,4 @@ public class InventoryManagement : MonoBehaviour
     {
         return itemImages[item];
     }
-<<<<<<< HEAD
-=======
-
-    public void AcceptSelection(InputAction.CallbackContext obj)
-    {
-
-        Inventory i = currentInventory.GetComponent<Inventory>();
-        InventorySlot selected = i.GetSelected();
-
-        if (!selected.Selected())
-            return;
-
-        tooltipMenu.SetActive(true);
-
-        DisableInventoryInput();
-
-        tooltipMenu.transform.SetAsLastSibling();
-
-        currentInventory.GetComponentInChildren<Inventory>().DisableSelection();
-    }
-
-    public Inventory GetCurrentInventory()
-    {
-        return currentInventory;
-    }
-
-    public void CloseTooltip()
-    {
-        tooltipMenu.SetActive(false);
-    }
-
-    public void ChangedStateTo(gameManager.STATE newState)
-    {
-        switch (newState)
-        {
-            case gameManager.STATE.START:
-                Debug.LogError("Cannot switch GM State to START. This should not happen.");
-                break;
-            case gameManager.STATE.TRAVELING:
-                DisableInventoryInput();
-                break;
-            case gameManager.STATE.COMBAT:
-                //open personal inventory
-                break;
-            case gameManager.STATE.PAUSED:
-                EnableInventoryInput();
-                break;
-            case gameManager.STATE.TALKING:
-                DisableInventoryInput();
-                break;
-        }
-    }
-
-    public void EnableInventoryInput()
-    {
-        pControls.UI.Navigate.performed += HandleUIKeypress;
-        pControls.UI.Interact.performed += AcceptSelection;
-    }
-
-    public void DisableInventoryInput()
-    {
-        pControls.UI.Navigate.performed -= HandleUIKeypress;
-        pControls.UI.Interact.performed -= AcceptSelection;
-    }
->>>>>>> Rebuilding inventory
 }
