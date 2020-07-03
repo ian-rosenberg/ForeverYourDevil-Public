@@ -79,6 +79,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   conversationID: 3
   talkIndicator: {fileID: 671503966416699023}
+<<<<<<< HEAD
 --- !u!1 &671503966416699023
 GameObject:
   m_ObjectHideFlags: 0
@@ -236,6 +237,8 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+=======
+>>>>>>> Rebuilding inventory
 --- !u!1 &671503967315770961
 GameObject:
   m_ObjectHideFlags: 0
@@ -291,6 +294,10 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+<<<<<<< HEAD
+=======
+  m_RayTracingMode: 2
+>>>>>>> Rebuilding inventory
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -334,3 +341,89 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+<<<<<<< HEAD
+=======
+--- !u!1001 &6300999839523562765
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 671503966069844221}
+    m_Modifications:
+    - target: {fileID: 6782435010265750402, guid: e18379fe4f529a944a6309480daab410,
+        type: 3}
+      propertyPath: m_Name
+      value: TalkIndicator
+      objectReference: {fileID: 0}
+    - target: {fileID: 6782435010265750405, guid: e18379fe4f529a944a6309480daab410,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6782435010265750405, guid: e18379fe4f529a944a6309480daab410,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.724
+      objectReference: {fileID: 0}
+    - target: {fileID: 6782435010265750405, guid: e18379fe4f529a944a6309480daab410,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6782435010265750405, guid: e18379fe4f529a944a6309480daab410,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6782435010265750405, guid: e18379fe4f529a944a6309480daab410,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6782435010265750405, guid: e18379fe4f529a944a6309480daab410,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6782435010265750405, guid: e18379fe4f529a944a6309480daab410,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6782435010265750405, guid: e18379fe4f529a944a6309480daab410,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6782435010265750405, guid: e18379fe4f529a944a6309480daab410,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6782435010265750405, guid: e18379fe4f529a944a6309480daab410,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6782435010265750405, guid: e18379fe4f529a944a6309480daab410,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 6782435010265750406, guid: e18379fe4f529a944a6309480daab410, type: 3}
+    - {fileID: 6782435010265750407, guid: e18379fe4f529a944a6309480daab410, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: e18379fe4f529a944a6309480daab410, type: 3}
+--- !u!1 &671503966416699023 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6782435010265750402, guid: e18379fe4f529a944a6309480daab410,
+    type: 3}
+  m_PrefabInstance: {fileID: 6300999839523562765}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &671503966416699016 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6782435010265750405, guid: e18379fe4f529a944a6309480daab410,
+    type: 3}
+  m_PrefabInstance: {fileID: 6300999839523562765}
+  m_PrefabAsset: {fileID: 0}
+>>>>>>> Rebuilding inventory

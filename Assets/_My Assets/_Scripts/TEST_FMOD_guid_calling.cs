@@ -20,11 +20,19 @@ public class TEST_FMOD_guid_calling : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+<<<<<<< HEAD
      if (Input.GetKeyDown(KeyCode.O))
+=======
+     /*if (Input.GetKeyDown(KeyCode.O))
+>>>>>>> Rebuilding inventory
         {
             guidtest = RuntimeManager.CreateInstance(Event);
             guidtest.start();
             guidtest.release();
+<<<<<<< HEAD
         }   
+=======
+        }*/   
+>>>>>>> Rebuilding inventory
     }
 }

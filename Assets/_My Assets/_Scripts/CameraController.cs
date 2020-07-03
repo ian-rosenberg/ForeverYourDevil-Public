@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+<<<<<<< HEAD
+=======
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+>>>>>>> Rebuilding inventory
 
 public class CameraController : MonoBehaviour
 {
@@ -52,6 +57,34 @@ public class CameraController : MonoBehaviour
     public Transform enemyLockOn;
     private Vector3 dampVelocity = Vector3.zero;
 
+<<<<<<< HEAD
+=======
+    [Header("Player Input")]
+    private bool camReset = false;
+    private bool camLockState = false;
+    public PlayerControls pControls;
+
+    private void OnEnable()
+    {
+        pControls = new PlayerControls();
+
+        pControls.Player.ResetCamera.performed += context => camReset = true;
+        pControls.Player.LockTarget.performed += context => camLockState = !camLockState;
+
+        pControls.Player.ResetCamera.Enable();
+        pControls.Player.LockTarget.Enable();
+    }
+
+    private void OnDisable()
+    {
+        pControls.Player.ResetCamera.performed -= context => camReset = true;
+        pControls.Player.LockTarget.performed -= context => camLockState = !camLockState;
+
+        pControls.Player.ResetCamera.Disable();
+        pControls.Player.LockTarget.Disable();
+    }
+
+>>>>>>> Rebuilding inventory
     private void Awake()
     {
         gm = gameManager.Instance;
@@ -76,17 +109,29 @@ public class CameraController : MonoBehaviour
         if (gm.gameState != gameManager.STATE.PAUSED)
         {
             //Camera Reset
+<<<<<<< HEAD
             if (Input.GetButtonDown("Camera Reset") && !isCameraReseting)
+=======
+            if (camReset && !isCameraReseting)
+>>>>>>> Rebuilding inventory
             {
                 StartCoroutine(ResetCamera());
             }
 
             //Move camera with right click and hold
+<<<<<<< HEAD
             if (Input.GetMouseButton(1) && !isCameraReseting) //If hold right click
             {
                 ResetCameraNotification.SetActive(true);
                 mouseX += Input.GetAxis("Mouse X") * rotateSpeed;
                 mouseY += Input.GetAxis("Mouse Y") * rotateSpeed;
+=======
+            if ((Mathf.Abs(Mouse.current.rightButton.ReadValue()) != 0) && !isCameraReseting) //If hold right click
+            {
+                ResetCameraNotification.SetActive(true);
+                mouseX += Mouse.current.delta.x.ReadValue() * rotateSpeed;
+                mouseY += Mouse.current.delta.y.ReadValue() * rotateSpeed;
+>>>>>>> Rebuilding inventory
 
                 mouseY = Mathf.Clamp(mouseY, -30, 45);
 
@@ -94,12 +139,24 @@ public class CameraController : MonoBehaviour
                 FollowY.localRotation = Quaternion.Euler(-mouseY, 0f, 0f);
             }
 
+<<<<<<< HEAD
             //Zoom in and out with mouse wheel.
             if (Input.GetAxis("Mouse ScrollWheel") < 0) // back
+=======
+            //Debug.Log(Mouse.current.scroll.ReadValue().y);
+
+            //Zoom in and out with mouse wheel.
+            //float z = Mathf.Clamp(Mouse.current.scroll, -.8f, .8f);
+
+            //transform.position += new Vector3(0, 0, z);
+            
+            if (Mouse.current.scroll.ReadValue().y < 0) // back
+>>>>>>> Rebuilding inventory
             {
                 ResetCameraNotification.SetActive(true);
                 if (zoom >= -.8f)
                 {
+<<<<<<< HEAD
                     zoom += Input.GetAxisRaw("Mouse ScrollWheel");
                     transform.position -= transform.forward;
                 }
@@ -109,22 +166,45 @@ public class CameraController : MonoBehaviour
                 if (zoom <= .8f)
                 {
                     zoom += Input.GetAxisRaw("Mouse ScrollWheel");
+=======
+                    zoom += -.1f;
+                    transform.position -= transform.forward;
+                }
+            }
+            if (Mouse.current.scroll.ReadValue().y > 0) // forward
+            {
+                if (zoom <= .8f)
+                {
+                    zoom += .1f;
+>>>>>>> Rebuilding inventory
                     transform.position += transform.forward;
                 }
             }
 
             //DEBUG - lock onto specified target with keypress
+<<<<<<< HEAD
             if (Input.GetKeyDown(KeyCode.B))
             {
                 ChangeCameraState(MODE.FOLLOWING, enemyLockOn.transform);
             }
             if (Input.GetKeyUp(KeyCode.B))
+=======
+            if (!camLockState)
+            {
+                ChangeCameraState(MODE.FOLLOWING, enemyLockOn.transform);
+            }
+            if (camLockState)
+>>>>>>> Rebuilding inventory
             {
                 ChangeCameraState(MODE.FOLLOWING, gm.player.transform);
             }
         }
     }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> Rebuilding inventory
     /**
      * @brief Set default values of the camera at start of game (or start of scene)
      */
@@ -167,6 +247,10 @@ public class CameraController : MonoBehaviour
             yield return null; //advance frame
         }
         isCameraReseting = false;
+<<<<<<< HEAD
+=======
+        camReset = false;
+>>>>>>> Rebuilding inventory
     }
 
     /**
