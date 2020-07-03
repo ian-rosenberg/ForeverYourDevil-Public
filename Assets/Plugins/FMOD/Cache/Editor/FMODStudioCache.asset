@@ -160,7 +160,7 @@ MonoBehaviour:
   Path: event:/Genovese_Threat
   guid: d89a4eebacc64f418d5ec3d012ca6ae6
   Banks:
-  - {fileID: 2215941246462629338}
+  - {fileID: -4720239585350389710}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
@@ -203,6 +203,23 @@ MonoBehaviour:
   Max: 101
   Default: 0
   Exists: 0
+--- !u!114 &-5948458482716155772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: SectionNumber
+  m_EditorClassIdentifier: 
+  Name: SectionNumber
+  Min: 0
+  Max: 101
+  Default: 0
+  Exists: 1
 --- !u!114 &-5864493797359404131
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -238,7 +255,7 @@ MonoBehaviour:
   lastModified: 637269884346395894
   LoadResult: 0
   FileSizes: []
-  Exists: 1
+  Exists: 0
 --- !u!114 &-5484041594763675581
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -256,6 +273,24 @@ MonoBehaviour:
   Max: 101
   Default: 0
   Exists: 0
+--- !u!114 &-4720239585350389710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Dialogue.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/_My Assets/FMOD/FYD FMOD Project/FMOD Banks/Desktop/Dialogue.bank
+  SubDir: 
+  lastModified: 637277795675752342
+  LoadResult: 0
+  FileSizes: []
+  Exists: 1
 --- !u!114 &-4707666383569958984
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -274,6 +309,23 @@ MonoBehaviour:
   LoadResult: 0
   FileSizes: []
   Exists: 0
+--- !u!114 &-4567021754964720777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: Music Volume
+  m_EditorClassIdentifier: 
+  Name: Music Volume
+  Min: 0
+  Max: 110
+  Default: 100
+  Exists: 1
 --- !u!114 &-4478289325975180168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -365,7 +417,7 @@ MonoBehaviour:
   Min: 0
   Max: 101
   Default: 0
-  Exists: 1
+  Exists: 0
 --- !u!114 &-2990691949088953873
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -437,7 +489,7 @@ MonoBehaviour:
   Path: event:/Characters/Penny/Emotes/Cheers
   guid: 69fc31b619094248b82899a5eeb67804
   Banks:
-  - {fileID: -5670044196039890683}
+  - {fileID: 1573550276189663561}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -462,6 +514,40 @@ MonoBehaviour:
   Max: 2
   Default: 0
   Exists: 0
+--- !u!114 &-723478850337232768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: LineNumber
+  m_EditorClassIdentifier: 
+  Name: LineNumber
+  Min: 0
+  Max: 101
+  Default: 0
+  Exists: 1
+--- !u!114 &-294593747596694826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: DialogueEnd
+  m_EditorClassIdentifier: 
+  Name: DialogueEnd
+  Min: 0
+  Max: 2
+  Default: 0
+  Exists: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -476,23 +562,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EditorBanks:
   - {fileID: 2519392363079690390}
-  - {fileID: 2215941246462629338}
-  - {fileID: -5670044196039890683}
+  - {fileID: -4720239585350389710}
+  - {fileID: 1573550276189663561}
+  - {fileID: 6272447842554141835}
   EditorEvents:
   - {fileID: -1705701056130315425}
   - {fileID: -6392903409657051759}
-  - {fileID: 7991717779492095287}
-  - {fileID: 358590848839737868}
-  - {fileID: 4585112483119092221}
+  - {fileID: 5782859685474781718}
+  - {fileID: 2789855000352680092}
+  - {fileID: 4067181836209757522}
+  - {fileID: 4417949103357952345}
   EditorParameters:
-  - {fileID: 4757344277510037846}
-  - {fileID: -3075365526743375637}
-  - {fileID: 3568663655681164011}
+  - {fileID: -5948458482716155772}
+  - {fileID: 6166087710454931797}
+  - {fileID: 2925310031892391970}
+  - {fileID: -723478850337232768}
+  - {fileID: -294593747596694826}
+  - {fileID: -4567021754964720777}
+  - {fileID: 4125846657502300509}
   MasterBanks:
-  - {fileID: -5670044196039890683}
+  - {fileID: 1573550276189663561}
   StringsBanks:
   - {fileID: 2519392363079690390}
-  stringsBankWriteTime: 637269884346415844
+  stringsBankWriteTime: 637277795676330598
   cacheVersion: 3
 --- !u!114 &358590848839737868
 MonoBehaviour:
@@ -508,8 +600,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: event:/Voicelines/MovementTest/What
   guid: 54a5bc684c089a4ea7c23595a59937e2
-  Banks:
-  - {fileID: -5670044196039890683}
+  Banks: []
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
@@ -586,6 +677,24 @@ MonoBehaviour:
   Max: 101
   Default: 0
   Exists: 0
+--- !u!114 &1573550276189663561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/_My Assets/FMOD/FYD FMOD Project/FMOD Banks/Desktop/Master.bank
+  SubDir: 
+  lastModified: 637277795676260810
+  LoadResult: 0
+  FileSizes: []
+  Exists: 1
 --- !u!114 &2215941246462629338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -603,7 +712,7 @@ MonoBehaviour:
   lastModified: 637269884337023887
   LoadResult: 0
   FileSizes: []
-  Exists: 1
+  Exists: 0
 --- !u!114 &2519392363079690390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -618,12 +727,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: Assets/_My Assets/FMOD/FYD FMOD Project/FMOD Banks/Desktop/Master.strings.bank
   SubDir: 
-  lastModified: 637269884346415844
+  lastModified: 637277795676330598
   LoadResult: 0
   FileSizes:
   - Name: 
-    Value: 1162
+    Value: 1634
   Exists: 1
+--- !u!114 &2789855000352680092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Voicelines/MovementTest/Penny_Test/What
+  m_EditorClassIdentifier: 
+  Path: event:/Voicelines/MovementTest/Penny_Test/What
+  guid: 54a5bc684c089a4ea7c23595a59937e2
+  Banks:
+  - {fileID: 1573550276189663561}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 20750
 --- !u!114 &2917579167890220371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -642,6 +774,23 @@ MonoBehaviour:
   LoadResult: 0
   FileSizes: []
   Exists: 0
+--- !u!114 &2925310031892391970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: SFX Volume
+  m_EditorClassIdentifier: 
+  Name: SFX Volume
+  Min: 0
+  Max: 110
+  Default: 100
+  Exists: 1
 --- !u!114 &3381516337221897882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -675,7 +824,7 @@ MonoBehaviour:
   Min: 0
   Max: 2
   Default: 0
-  Exists: 1
+  Exists: 0
 --- !u!114 &3970842863173986432
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -710,6 +859,46 @@ MonoBehaviour:
   Max: 101
   Default: 0
   Exists: 0
+--- !u!114 &4067181836209757522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Voicelines/MovementTest/Penny_Test/Penny Test
+  m_EditorClassIdentifier: 
+  Path: event:/Voicelines/MovementTest/Penny_Test/Penny Test
+  guid: 61a8d4052a96a244988dce95c3344909
+  Banks:
+  - {fileID: 1573550276189663561}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 31500
+--- !u!114 &4125846657502300509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: Master Volume
+  m_EditorClassIdentifier: 
+  Name: Master Volume
+  Min: 0
+  Max: 110
+  Default: 100
+  Exists: 1
 --- !u!114 &4220929052719928457
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -728,6 +917,30 @@ MonoBehaviour:
   LoadResult: 0
   FileSizes: []
   Exists: 0
+--- !u!114 &4417949103357952345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music/mus_TheLedoux
+  m_EditorClassIdentifier: 
+  Path: event:/Music/mus_TheLedoux
+  guid: e26476e6d0670e45bf5684015e3ec1e9
+  Banks:
+  - {fileID: 1573550276189663561}
+  - {fileID: 6272447842554141835}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 60000
 --- !u!114 &4505509637079747293
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -778,8 +991,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: event:/Voicelines/MovementTest/Penny Test
   guid: 61a8d4052a96a244988dce95c3344909
-  Banks:
-  - {fileID: -5670044196039890683}
+  Banks: []
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
@@ -839,7 +1051,7 @@ MonoBehaviour:
   Min: 0
   Max: 101
   Default: 0
-  Exists: 1
+  Exists: 0
 --- !u!114 &4808628835435591085
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -857,6 +1069,29 @@ MonoBehaviour:
   Max: 101
   Default: 0
   Exists: 0
+--- !u!114 &5782859685474781718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Voicelines/MovementTest/Penny_Test/Cool
+  m_EditorClassIdentifier: 
+  Path: event:/Voicelines/MovementTest/Penny_Test/Cool
+  guid: 3b325e29f79d5e448781fea67c93cb8d
+  Banks:
+  - {fileID: 1573550276189663561}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 26000
 --- !u!114 &5947464324637320386
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -875,6 +1110,41 @@ MonoBehaviour:
   LoadResult: 0
   FileSizes: []
   Exists: 0
+--- !u!114 &6166087710454931797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: Dialogue Volume
+  m_EditorClassIdentifier: 
+  Name: Dialogue Volume
+  Min: 0
+  Max: 110
+  Default: 100
+  Exists: 1
+--- !u!114 &6272447842554141835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Music.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/_My Assets/FMOD/FYD FMOD Project/FMOD Banks/Desktop/Music.bank
+  SubDir: 
+  lastModified: 637277795676559984
+  LoadResult: 0
+  FileSizes: []
+  Exists: 1
 --- !u!114 &7398800773426708952
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -906,8 +1176,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: event:/Voicelines/MovementTest/Cool
   guid: 3b325e29f79d5e448781fea67c93cb8d
-  Banks:
-  - {fileID: -5670044196039890683}
+  Banks: []
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
