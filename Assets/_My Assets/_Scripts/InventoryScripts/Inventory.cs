@@ -36,6 +36,7 @@ public class Inventory : MonoBehaviour
     public RectTransform rTransform;
 
     public int selectedIndex = 0;
+    public int oldRow = 0;
     public int currentRow = 0;
     
     public Dictionary<object, GameObject> inventorySlots;
@@ -196,10 +197,34 @@ public class Inventory : MonoBehaviour
 
     public void SetIndex(int val)
     {
-        if (currentRow == visibleRows[2] &&
-            currentRow < numRows)
+        oldRow = currentRow;
+
+        selectedIndex += val;
+
+        selectedItem = inventorySlots[selectedIndex].GetComponent<InventorySlot>();
+
+        currentRow = selectedIndex / numCols;
+
+        if(selectedIndex >= totalSlots)
         {
-            if (val == numCols)
+            selectedIndex = totalSlots - 1;
+
+            return;
+        }
+        else if(selectedIndex <= 0)
+        {
+            selectedIndex = 0;
+
+            return;
+        }
+
+        if (oldRow == currentRow)
+            return;
+
+        if (val == numCols)
+        {
+            if (oldRow == visibleRows[2] &&
+                currentRow < numRows)
             {
                 for (int i = 0; i < visibleRows.Length; i++)
                 {
@@ -207,12 +232,12 @@ public class Inventory : MonoBehaviour
                 }
 
                 ShiftInventory(true);
-            }
+            }  
         }
-        else if (currentRow == visibleRows[0] &&
-        currentRow > 0)
+        else if (val == -numCols)
         {
-            if (val == -numCols)
+            if (oldRow == visibleRows[0] &&
+                currentRow >= 0)
             {
                 for (int i = 0; i < visibleRows.Length; i++)
                 {
@@ -220,17 +245,36 @@ public class Inventory : MonoBehaviour
                 }
 
                 ShiftInventory(false);
-            }
-                
+            } 
         }
-        
-        selectedIndex += val;
+        else if(Mathf.Abs(val) == 1)
+        {
+            if(currentRow != oldRow)
+            {
+                if(val == 1 &&
+                    oldRow != currentRow &&
+                    oldRow == visibleRows[2])
+                {
+                    for (int i = 0; i < visibleRows.Length; i++)
+                    {
+                        visibleRows[i] += 1;
+                    }
 
-        selectedItem = inventorySlots[selectedIndex].GetComponent<InventorySlot>();
+                    ShiftInventory(true);
+                }
+                else if(val == -1 &&
+                     oldRow != currentRow &&
+                     oldRow == visibleRows[0])
+                {
+                     for (int i = 0; i < visibleRows.Length; i++)
+                     {
+                         visibleRows[i] -= 1;
+                     }
 
-        currentRow = selectedIndex / numCols;
-
-        Debug.Log("row: " + currentRow);
+                     ShiftInventory(false);
+                }
+            }
+        }
     }
 
     public void DisableSelection()
