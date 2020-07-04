@@ -7,18 +7,26 @@ using System;
 
 public class TooltipMenu : MonoBehaviour
 {
-    public Color selectColor;
-    public Color unSelectColor;
-
     public GameObject use;
     public GameObject move;
     public GameObject drop;
 
     private GameObject selected = null;
     private GameObject prevSelected = null;
+    
+    private Color selectColor;
+    private Color unSelectColor;
 
     #region Player Actions
     public PlayerControls pControls;
+
+    private void Start()
+    {
+        selected = use;
+        unSelectColor = new Color(0.6431373f, 0.5764706f, 0.4470589f, 1f);
+        selectColor = new Color(0.8584906f, 0.3567862f, 0f, 1f);
+        selected.GetComponent<Image>().color = selectColor;
+    }
 
     private void OnEnable()
     {
@@ -27,10 +35,6 @@ public class TooltipMenu : MonoBehaviour
         pControls.UI.Cancel.performed += ReturnToPreviousMenu;
         pControls.UI.Navigate.performed += HandleTooltipNavigation;
         pControls.UI.Interact.performed += AcceptMenuItem;
-
-        selected = use;
-        selected.GetComponent<Image>().color = selectColor;
-        unSelectColor = GetComponent<Image>().color;
 
         pControls.UI.Interact.Enable();
         pControls.UI.Navigate.Enable();

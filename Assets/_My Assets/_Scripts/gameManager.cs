@@ -60,7 +60,9 @@ public class gameManager : MonoBehaviour
 
     [Header("Player Controls For Game")]
     public PlayerControls pControls;
-    
+
+    public GameObject resetText;
+
     #region Player Actions
     private void OnEnable()
     {
@@ -148,6 +150,8 @@ public class gameManager : MonoBehaviour
         {
             ChangeState(STATE.PAUSED);
             Time.timeScale = 0;
+
+            resetText.SetActive(false);
         }
     }
 
@@ -157,6 +161,8 @@ public class gameManager : MonoBehaviour
         {
             ChangeState(prevState);
             Time.timeScale = 1;
+
+            resetText.SetActive(true);
         }
     }
 
@@ -167,6 +173,7 @@ public class gameManager : MonoBehaviour
         SetCanPause(false);
 
         InventoryManagement.Instance.SetSharedInventoryActive(true);
+
     }
 
     public void SetCanPause(bool pause)

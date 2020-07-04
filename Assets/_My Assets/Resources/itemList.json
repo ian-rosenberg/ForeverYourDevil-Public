@@ -7,23 +7,40 @@
 		],
 	"Consumables": 
 		[
-				{
-  				"ID" : "TP_Small",
-  				"Icon" : "Sprites/porridge",
-  				"Name" : "Small Tan Pill's Porridge",
-  				"Consumable" : true,
-  				"Cooldown": 0,
-  				"Duration": 3,
-  				"EffectDescription" : "Restores 100 health.",
-  				"Description" : "A hearty drinkable meal from everyone's favorite hypercellulose gelatin timelord!!!",
-  				"SFX": "{eb4e9ad8-c6ac-414f-8d5e-c3d012ca6ae6}",
-  				"Bonuses" : {
-  					"HP": 100,
-  					"Stamina": 100,
-  					"Tolerance": 20,
-  					"Attack": 4
-  					}
-				}	
+			{
+				"ID": "TP_Small",
+				"Icon": "Sprites/porridge",
+				"Name": "Small Tan Pill's Porridge",
+				"Consumable": true,
+				"Cooldown": 0,
+				"Duration": 3,
+				"EffectDescription": "Restores 100 health.",
+				"Description": "A hearty drinkable meal from everyone's favorite hypercellulose gelatin timelord!!!",
+				"SFX": "{eb4e9ad8-c6ac-414f-8d5e-c3d012ca6ae6}",
+				"Bonuses": {
+					"HP": 100,
+					"Stamina": 100,
+					"Tolerance": 20,
+					"Attack": 4
+				}
+			},
+			{
+				"ID": "HP_Vial",
+				"Icon": "Sprites/healthvial",
+				"Name": "Small Health Vial",
+				"Consumable": true,
+				"Cooldown": 0,
+				"Duration": 0,
+				"EffectDescription": "Restores 15 health and 5 stamina.",
+				"Description": "A small vial of health potion. Abundant, but not particularly helpful in a pinch.",
+				"SFX": "{eb4e9ad8-c6ac-414f-8d5e-c3d012ca6ae6}",
+				"Bonuses": {
+					"HP": 15,
+					"Stamina": 5,
+					"Tolerance": 0,
+					"Attack": 0
+				}
+			}
 		],
 			
 	"Concoctions":
