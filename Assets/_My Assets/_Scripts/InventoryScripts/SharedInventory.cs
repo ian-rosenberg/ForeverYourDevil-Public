@@ -15,6 +15,13 @@ public class SharedInventory : Inventory
         totalItems = 0;
 
         AddSingleItem(InventoryManagement.Instance.itemList.Consumables[0]);
+        AddSingleItem(InventoryManagement.Instance.itemList.Consumables[0]);
+        AddSingleItem(InventoryManagement.Instance.itemList.Consumables[1]);
+
+        GridLayoutGroup glg = GetComponent<GridLayoutGroup>();
+
+        GetComponent<Inventory>().rowSpacing = glg.cellSize.y + glg.spacing.y;
+        GetComponent<Inventory>().rTransform = GetComponent<RectTransform>();
     }
 
     public void CloseInventory()
@@ -25,4 +32,5 @@ public class SharedInventory : Inventory
 
         gameManager.Instance.pauseMenu.SetActive(true);
     }
+
 }
