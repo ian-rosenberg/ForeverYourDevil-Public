@@ -32,33 +32,32 @@ public class TooltipMenu : MonoBehaviour
     {
         pControls = new PlayerControls();
 
-        pControls.UI.Cancel.performed += ReturnToPreviousMenu;
         pControls.UI.Navigate.performed += HandleTooltipNavigation;
         pControls.UI.Interact.performed += AcceptMenuItem;
 
         pControls.UI.Interact.Enable();
         pControls.UI.Navigate.Enable();
-        pControls.UI.Cancel.Enable();
     }
 
     private void OnDisable()
     {
-        pControls.UI.Cancel.performed -= ReturnToPreviousMenu;
         pControls.UI.Navigate.performed -= HandleTooltipNavigation;
         pControls.UI.Interact.performed -= AcceptMenuItem;
 
-        selected.GetComponent<Image>().color = unSelectColor;
-        selected = null;
+        selected = use;
+
+        use.GetComponent<Image>().color = selectColor;
+        move.GetComponent<Image>().color = unSelectColor;
+        drop.GetComponent<Image>().color = unSelectColor;
 
 
         pControls.UI.Interact.Disable();
         pControls.UI.Navigate.Disable();
-        pControls.UI.Cancel.Disable();
     }
 
     private void AcceptMenuItem(InputAction.CallbackContext obj)
     {
-        if(selected == drop)
+        if (selected == drop)
         {
             Inventory current = InventoryManagement.Instance.GetCurrentInventory();
 
@@ -66,12 +65,12 @@ public class TooltipMenu : MonoBehaviour
 
             current.DropItem(obj);
 
-            if(!slot.inUse)
-            {
-                gameObject.SetActive(false);
-            }
-
             CloseMenu();
+
+            SharedInventory sI = InventoryManagement.Instance.sharedInventory.GetComponentInChildren<SharedInventory>();
+
+            if (sI.totalItems == 0)
+                sI.CloseInventory();
         }
     }
 
@@ -81,11 +80,6 @@ public class TooltipMenu : MonoBehaviour
         invMan.EnableInventoryInput();
 
         SendMessageUpwards("CloseTooltip");        
-    }
-
-    private void ReturnToPreviousMenu(InputAction.CallbackContext obj)
-    {
-        
     }
     #endregion
 

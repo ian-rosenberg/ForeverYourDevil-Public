@@ -78,7 +78,6 @@ public class InventoryManagement : MonoBehaviour
     public List<GameObject> inventoryObjs;//The inventories in use, may have to change to dict to support the different characters
     public GameObject sharedInventory;
 
-    public GameObject blurShader;
     public GameObject sharedInventoryPrefab;
     public GameObject personalInventoryPrefab;
 
@@ -91,7 +90,6 @@ public class InventoryManagement : MonoBehaviour
     //Input bools to make sure actions only get fired once, if necessary
     [Header("Input booleans")]
     private bool uiKeyPress = false;//UI Navigate Action
-    private bool uiInteract = false;// UI Interact Action
 
 
     #region Player Actions
@@ -106,11 +104,12 @@ public class InventoryManagement : MonoBehaviour
         pControls.UI.Navigate.canceled += ctx => uiKeyPress = false;
 
         pControls.UI.Interact.performed += AcceptSelection;
-        pControls.UI.Interact.performed += ctx => uiInteract = true;
-        pControls.UI.Interact.canceled += ctx => uiInteract = false;
+
+        pControls.UI.Cancel.performed += CancelSelection;
 
         pControls.UI.Interact.Enable();
         pControls.UI.Navigate.Enable();
+        pControls.UI.Cancel.Enable();
     }
 
     private void OnDisable()
@@ -120,11 +119,12 @@ public class InventoryManagement : MonoBehaviour
         pControls.UI.Navigate.canceled -= ctx => uiKeyPress = false;
 
         pControls.UI.Interact.performed -= AcceptSelection;
-        pControls.UI.Interact.performed -= ctx => uiInteract = true;
-        pControls.UI.Interact.canceled -= ctx => uiInteract = false;
+
+        pControls.UI.Cancel.performed -= CancelSelection;
 
         pControls.UI.Interact.Disable();
         pControls.UI.Navigate.Disable();
+        pControls.UI.Cancel.Disable();
     }
     #endregion
 
@@ -149,7 +149,7 @@ public class InventoryManagement : MonoBehaviour
 
     public void HandleUIKeypress(InputAction.CallbackContext context)
     { 
-        if (!uiKeyPress)
+        if (!uiKeyPress && sharedInventory.activeInHierarchy)
             return;
 
         if (currentInventory.GetSelected() == null)
@@ -190,21 +190,19 @@ public class InventoryManagement : MonoBehaviour
                 inv.SetIndex(-4);
         }
 
-        if (inv.inventorySlots[inv.selectedIndex] != null)
+        GameObject newSlotObj = inv.inventorySlots[inv.selectedIndex];
+        GameObject oldSlotObj = inv.inventorySlots[oldIndex];
+
+        InventorySlot slot = newSlotObj.GetComponent<InventorySlot>();
+        InventorySlot oldSlot = oldSlotObj.GetComponent<InventorySlot>();
+
+        if (oldSlot.Selected())
         {
-            GameObject newSlotObj = inv.inventorySlots[inv.selectedIndex];
-            GameObject oldSlotObj = inv.inventorySlots[oldIndex];
-
-            InventorySlot slot = newSlotObj.GetComponent<InventorySlot>();
-            InventorySlot oldSlot = oldSlotObj.GetComponent<InventorySlot>();
-
-            if (oldSlot.Selected())
-            {
-                oldSlot.UnSelect();
-            }
-
-            slot.Select();
+            oldSlot.UnSelect();
         }
+
+        slot.Select();
+      
 
         uiKeyPress = false;
     }
@@ -317,7 +315,6 @@ public class InventoryManagement : MonoBehaviour
 
     public void AcceptSelection(InputAction.CallbackContext obj)
     {
-
         Inventory i = currentInventory.GetComponent<Inventory>();
         InventorySlot selected = i.GetSelected();
 
@@ -331,6 +328,30 @@ public class InventoryManagement : MonoBehaviour
         tooltipMenu.transform.SetAsLastSibling();
 
         currentInventory.GetComponentInChildren<Inventory>().DisableSelection();
+    }
+
+    private void CancelSelection(InputAction.CallbackContext obj)
+    {
+        if (!obj.performed)
+            return;
+        
+        if (tooltipMenu.activeInHierarchy)
+        {
+            CloseTooltip();
+            EnableInventoryInput();
+        }
+        else if(sharedInventory.activeInHierarchy)
+        {
+            SharedInventory sI = sharedInventory.GetComponentInChildren<SharedInventory>();
+                
+            sI.CloseInventory();
+
+            sI.GetSelected().UnSelect();
+
+            sI.ResetInventory();
+
+            sI.DisableSelection();
+        }
     }
 
     public Inventory GetCurrentInventory()
@@ -357,10 +378,8 @@ public class InventoryManagement : MonoBehaviour
                 //open personal inventory
                 break;
             case gameManager.STATE.PAUSED:
-                EnableInventoryInput();
                 break;
             case gameManager.STATE.TALKING:
-                DisableInventoryInput();
                 break;
         }
     }

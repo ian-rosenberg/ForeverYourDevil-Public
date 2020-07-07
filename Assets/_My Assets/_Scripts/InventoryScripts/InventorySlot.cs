@@ -12,6 +12,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
     private bool selected;
     private HighlightSelf hs;
 
+    public Sprite blank;
     public ItemDetails detailsObj;
     public ItemBase child;
     public bool inUse;
@@ -123,6 +124,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
         inUse = false;
 
         hs.SetEmptySlotImage();
+        img.sprite = blank;
     }
 
     public void EmptyDetails()

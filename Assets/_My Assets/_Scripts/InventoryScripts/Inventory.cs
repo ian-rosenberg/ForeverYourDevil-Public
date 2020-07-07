@@ -190,9 +190,26 @@ public class Inventory : MonoBehaviour
         item.transform.position = new Vector3(pT.position.x, pT.position.y + item.GetComponent<SpriteRenderer>().bounds.size.y / 4, pT.position.z);
 
         if (curSlot.quantity == 0)
-            curSlot.EmptySlot();
+        {
+            curSlot.EmptySlot(); 
+            
+            if(selectedIndex > 0)
+                SetIndex(-1);
+
+            SelectItemByIndex(selectedIndex);
+        }
         else
             curSlot.SetQuantityText();
+
+        totalItems--;
+    }
+
+    public void ResetInventory()
+    {
+        while(selectedIndex > 0)
+        {
+            SetIndex(-1);
+        }
     }
 
     public void SetIndex(int val)

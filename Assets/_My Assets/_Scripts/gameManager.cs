@@ -168,12 +168,21 @@ public class gameManager : MonoBehaviour
 
     public void OpenInventory()
     {
+        SharedInventory sI = InventoryManagement.Instance.sharedInventory.GetComponentInChildren<SharedInventory>();
+
+
         pauseMenu.SetActive(false);
 
         SetCanPause(false);
 
-        InventoryManagement.Instance.SetSharedInventoryActive(true);
+        if (!sI.gameObject.activeInHierarchy)
+        {
+            InventoryManagement.Instance.SetSharedInventoryActive(true);
 
+            InventoryManagement.Instance.EnableInventoryInput();
+        }
+        
+        sI.SelectItemByIndex(0);
     }
 
     public void SetCanPause(bool pause)

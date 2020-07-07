@@ -28,6 +28,8 @@ public class SharedInventory : Inventory
     {
         InventoryManagement.Instance.SetInventoriesInactive();
 
+        InventoryManagement.Instance.DisableInventoryInput();
+
         gameManager.Instance.SetCanPause(true);
 
         gameManager.Instance.pauseMenu.SetActive(true);

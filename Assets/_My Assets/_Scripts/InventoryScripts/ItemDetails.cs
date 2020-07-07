@@ -67,10 +67,6 @@ public class ItemDetails : MonoBehaviour
     
     public void SetBlankImage()
     {
-        Color newColor = itemImage.material.color;
-
-        newColor.a = 255;
-
-        itemImage.material.SetColor("_Color", newColor);
+        GetComponent<Image>().sprite = blank;
     }
 }
