@@ -10,9 +10,10 @@ public class TooltipMenu : MonoBehaviour
     public GameObject use;
     public GameObject move;
     public GameObject drop;
+    public GameObject cancel;
 
-    private GameObject selected = null;
-    private GameObject prevSelected = null;
+    public GameObject selected = null;
+    public GameObject prevSelected = null;
     
     private Color selectColor;
     private Color unSelectColor;
@@ -26,6 +27,8 @@ public class TooltipMenu : MonoBehaviour
         unSelectColor = new Color(0.6431373f, 0.5764706f, 0.4470589f, 1f);
         selectColor = new Color(0.8584906f, 0.3567862f, 0f, 1f);
         selected.GetComponent<Image>().color = selectColor;
+
+        prevSelected = selected;
     }
 
     private void OnEnable()
@@ -49,6 +52,7 @@ public class TooltipMenu : MonoBehaviour
         use.GetComponent<Image>().color = selectColor;
         move.GetComponent<Image>().color = unSelectColor;
         drop.GetComponent<Image>().color = unSelectColor;
+        cancel.GetComponent<Image>().color = unSelectColor;
 
 
         pControls.UI.Interact.Disable();
@@ -72,14 +76,19 @@ public class TooltipMenu : MonoBehaviour
             if (sI.totalItems == 0)
                 sI.CloseInventory();
         }
+        else if(selected == cancel)
+        {
+            CloseMenu();
+        }
     }
 
-    private void CloseMenu()
+    public void CloseMenu()
     {
         InventoryManagement invMan = GetComponentInParent<InventoryManagement>();
+        
+        SendMessageUpwards("CloseTooltip");    
+        
         invMan.EnableInventoryInput();
-
-        SendMessageUpwards("CloseTooltip");        
     }
     #endregion
 
@@ -103,14 +112,30 @@ public class TooltipMenu : MonoBehaviour
             if(selected == use)
             {
                 selected = move;
+
+                move.GetComponent<SelectToolTipClick>().move = true;
+
                 prevSelected = use;
             }
             else if(selected == move)
             {
                 selected = drop;
+
+                move.GetComponent<SelectToolTipClick>().drop = true;
+
+
                 prevSelected = move;
             }
-            else if (selected == drop)
+            else if(selected == drop)
+            {
+                selected = cancel;
+
+                move.GetComponent<SelectToolTipClick>().cancel = true;
+
+
+                prevSelected = drop;
+            }
+            else if (selected == cancel)
             {
                 return;
             }
@@ -124,18 +149,75 @@ public class TooltipMenu : MonoBehaviour
             else if (selected == move)
             {
                 selected = use;
+
+                move.GetComponent<SelectToolTipClick>().use = true;
+
+
                 prevSelected = move;
             }
             else if (selected == drop)
             {
                 selected = move;
+
+                move.GetComponent<SelectToolTipClick>().move = true;
+
+
                 prevSelected = drop;
+            }
+            else if (selected == cancel)
+            {
+                selected = drop;
+
+                move.GetComponent<SelectToolTipClick>().drop = true;
+
+
+                prevSelected = cancel;
             }
         }
 
+        ChangeSelectionColor();
+    }
+
+    public void ChangeSelectionColor()
+    {
         selected.GetComponent<Image>().color = selectColor;
-            
+
         prevSelected.GetComponent<Image>().color = unSelectColor;
-        
+    }
+
+    public void UnSelectLastClickedOption()
+    {
+        SelectToolTipClick[] items = GetComponentsInChildren<SelectToolTipClick>();
+
+        GameObject go = null; 
+
+        foreach (SelectToolTipClick tip in items)
+        {
+            if (tip.currentlySelected)
+            {
+                go = tip.gameObject;
+
+                tip.currentlySelected = false;
+
+                go.GetComponent<Image>().color = unSelectColor; 
+                
+                if (go == use)
+                {
+                    prevSelected = use;
+                }
+                else if (go == move)
+                {
+                    prevSelected = move;
+                }
+                else if (go == drop)
+                {
+                    prevSelected = drop;
+                }
+                else if (go == cancel)
+                {
+                    prevSelected = cancel;
+                }
+            } 
+        }
     }
 }

@@ -104,9 +104,11 @@ public class InventoryManagement : MonoBehaviour
         pControls.UI.Navigate.canceled += ctx => uiKeyPress = false;
 
         pControls.UI.Interact.performed += AcceptSelection;
+        pControls.UI.SecondaryInteract.performed += AcceptSelection;
 
         pControls.UI.Cancel.performed += CancelSelection;
 
+        pControls.UI.SecondaryInteract.Enable();
         pControls.UI.Interact.Enable();
         pControls.UI.Navigate.Enable();
         pControls.UI.Cancel.Enable();
@@ -114,14 +116,16 @@ public class InventoryManagement : MonoBehaviour
 
     private void OnDisable()
     {
-        pControls.UI.Navigate.performed += HandleUIKeypress;
+        pControls.UI.Navigate.performed -= HandleUIKeypress;
         pControls.UI.Navigate.performed -= ctx => uiKeyPress = true;
         pControls.UI.Navigate.canceled -= ctx => uiKeyPress = false;
 
         pControls.UI.Interact.performed -= AcceptSelection;
+        pControls.UI.SecondaryInteract.performed -= AcceptSelection;
 
         pControls.UI.Cancel.performed -= CancelSelection;
 
+        pControls.UI.SecondaryInteract.Disable();
         pControls.UI.Interact.Disable();
         pControls.UI.Navigate.Disable();
         pControls.UI.Cancel.Disable();
@@ -318,7 +322,7 @@ public class InventoryManagement : MonoBehaviour
         Inventory i = currentInventory.GetComponent<Inventory>();
         InventorySlot selected = i.GetSelected();
 
-        if (!selected.Selected())
+        if (selected.child == null)
             return;
 
         tooltipMenu.SetActive(true);
@@ -388,11 +392,15 @@ public class InventoryManagement : MonoBehaviour
     {
         pControls.UI.Navigate.performed += HandleUIKeypress;
         pControls.UI.Interact.performed += AcceptSelection;
+        pControls.UI.SecondaryInteract.performed += AcceptSelection;
+        pControls.UI.Cancel.performed += CancelSelection;
     }
 
     public void DisableInventoryInput()
     {
         pControls.UI.Navigate.performed -= HandleUIKeypress;
         pControls.UI.Interact.performed -= AcceptSelection;
+        pControls.UI.SecondaryInteract.performed -= AcceptSelection;
+        pControls.UI.Cancel.performed -= CancelSelection;
     }
 }

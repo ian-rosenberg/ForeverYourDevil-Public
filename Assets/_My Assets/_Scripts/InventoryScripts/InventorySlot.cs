@@ -20,7 +20,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
     public int maxQuantity;
     public Image img;
 
-    public GameObject ownerInventory;
+    public Inventory ownerInventory;
 
     private void Awake()
     {
@@ -31,7 +31,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
         hs = GetComponentInChildren<HighlightSelf>();
         img = hs.GetComponent<Image>();
         hs.SetEmptySlotImage();
-        ownerInventory = this.transform.parent.gameObject;
+        ownerInventory = GetComponentInParent<Inventory>();
 
         GameObject details = GameObject.FindGameObjectWithTag("ItemDetails");  
         detailsObj = details.GetComponentInChildren<ItemDetails>();
@@ -43,26 +43,21 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
         {
             if (selected)
                 UnSelect();
-
-            return;
         }
+
         InventorySlot slot = ownerInventory.GetComponent<Inventory>().GetLastSelected();
 
         if (slot != null)
             slot.UnSelect();
+    
+        Dictionary<object, GameObject> itemDict = ownerInventory.inventorySlots;
 
-        //Set up for right click to instantiate a shortcut menu
-        //if(Mouse.current.rightButton.ReadValue() != 0)
-
-        
-        Dictionary<object, GameObject> itemDict = ownerInventory.GetComponent<Inventory>().inventorySlots;
-
-        foreach(KeyValuePair<object, GameObject> pair in itemDict)
+        foreach(GameObject val in itemDict.Values)
         {
-            bool s = pair.Value.GetComponent<InventorySlot>().selected;
+            bool s = val.GetComponent<InventorySlot>().selected;
             
             if(s)
-                pair.Value.GetComponent<InventorySlot>().UnSelect();
+                val.GetComponent<InventorySlot>().UnSelect();
             
         }
 
@@ -78,6 +73,8 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
         {
             detailsObj.SetDetails(child);
         }
+
+        ownerInventory.GetComponent<Inventory>().GetIndexBySlot(gameObject);
     }
 
     public void UnSelect()
@@ -102,7 +99,6 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
             EmptyDetails();
     }
     
-
     public void SetQuantityText()
     {
         GetComponentInChildren<TextMeshProUGUI>().text = quantity.ToString();

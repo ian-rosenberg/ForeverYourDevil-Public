@@ -17,6 +17,8 @@ public class SharedInventory : Inventory
         AddSingleItem(InventoryManagement.Instance.itemList.Consumables[0]);
         AddSingleItem(InventoryManagement.Instance.itemList.Consumables[0]);
         AddSingleItem(InventoryManagement.Instance.itemList.Consumables[1]);
+        AddSingleItem(InventoryManagement.Instance.itemList.Consumables[1]);
+        AddSingleItem(InventoryManagement.Instance.itemList.Consumables[1]);
 
         GridLayoutGroup glg = GetComponent<GridLayoutGroup>();
 
@@ -29,6 +31,10 @@ public class SharedInventory : Inventory
         InventoryManagement.Instance.SetInventoriesInactive();
 
         InventoryManagement.Instance.DisableInventoryInput();
+
+        SharedInventory sI = InventoryManagement.Instance.sharedInventory.GetComponentInChildren<SharedInventory>();
+
+        sI.UnSelectAll();
 
         gameManager.Instance.SetCanPause(true);
 

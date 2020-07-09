@@ -89,6 +89,7 @@ public class gameManager : MonoBehaviour
         ChangeState(STATE.TRAVELING);
         prevState = STATE.START; //Start out of combat\
         clickIndicator.SetActive(false);
+        InventoryManagement.Instance.DisableInventoryInput();
     }
 
     public IEnumerator ClickOff()
@@ -162,6 +163,8 @@ public class gameManager : MonoBehaviour
             ChangeState(prevState);
             Time.timeScale = 1;
 
+            InventoryManagement.Instance.DisableInventoryInput();
+
             resetText.SetActive(true);
         }
     }
@@ -169,7 +172,6 @@ public class gameManager : MonoBehaviour
     public void OpenInventory()
     {
         SharedInventory sI = InventoryManagement.Instance.sharedInventory.GetComponentInChildren<SharedInventory>();
-
 
         pauseMenu.SetActive(false);
 

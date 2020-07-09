@@ -281,6 +281,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": ""Press""
+                },
+                {
+                    ""name"": ""SecondaryInteract"",
+                    ""type"": ""Button"",
+                    ""id"": ""9b519174-903a-47ed-ba2d-42f1baa6ccda"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press""
                 }
             ],
             ""bindings"": [
@@ -492,6 +500,17 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""Cancel"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6e43457a-da90-4f2c-a49f-807aaab9d458"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""SecondaryInteract"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -573,6 +592,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
         m_UI_Interact = m_UI.FindAction("Interact", throwIfNotFound: true);
         m_UI_Cancel = m_UI.FindAction("Cancel", throwIfNotFound: true);
+        m_UI_SecondaryInteract = m_UI.FindAction("SecondaryInteract", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -706,6 +726,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_UI_Navigate;
     private readonly InputAction m_UI_Interact;
     private readonly InputAction m_UI_Cancel;
+    private readonly InputAction m_UI_SecondaryInteract;
     public struct UIActions
     {
         private @PlayerControls m_Wrapper;
@@ -713,6 +734,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @Navigate => m_Wrapper.m_UI_Navigate;
         public InputAction @Interact => m_Wrapper.m_UI_Interact;
         public InputAction @Cancel => m_Wrapper.m_UI_Cancel;
+        public InputAction @SecondaryInteract => m_Wrapper.m_UI_SecondaryInteract;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -731,6 +753,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Cancel.started -= m_Wrapper.m_UIActionsCallbackInterface.OnCancel;
                 @Cancel.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnCancel;
                 @Cancel.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnCancel;
+                @SecondaryInteract.started -= m_Wrapper.m_UIActionsCallbackInterface.OnSecondaryInteract;
+                @SecondaryInteract.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnSecondaryInteract;
+                @SecondaryInteract.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnSecondaryInteract;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -744,6 +769,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Cancel.started += instance.OnCancel;
                 @Cancel.performed += instance.OnCancel;
                 @Cancel.canceled += instance.OnCancel;
+                @SecondaryInteract.started += instance.OnSecondaryInteract;
+                @SecondaryInteract.performed += instance.OnSecondaryInteract;
+                @SecondaryInteract.canceled += instance.OnSecondaryInteract;
             }
         }
     }
@@ -808,5 +836,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnNavigate(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
         void OnCancel(InputAction.CallbackContext context);
+        void OnSecondaryInteract(InputAction.CallbackContext context);
     }
 }

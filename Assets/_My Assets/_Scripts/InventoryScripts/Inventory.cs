@@ -8,12 +8,6 @@ using Newtonsoft.Json;
 using TMPro;
 using System;
 
-public enum VisiblePosition{
-    Top,
-    Middle, 
-    Bottom
-}
-
 public class Inventory : MonoBehaviour
 {
 
@@ -29,9 +23,6 @@ public class Inventory : MonoBehaviour
     public int[] visibleRows;
 
     public float rowSpacing;
-    
-
-    public VisiblePosition vPos;
 
     public RectTransform rTransform;
 
@@ -131,6 +122,18 @@ public class Inventory : MonoBehaviour
         AddSlotWithItem(item);
     }
 
+    public void GetIndexBySlot(GameObject slot)
+    {
+        for (int i = 0; i < inventorySlots.Values.Count; i++)
+        {
+            if (inventorySlots[i] == slot)
+            {
+                SelectItemByIndex(i);
+                break;
+            }
+        }
+    }
+
     public void ExpandInventory(int slots)
     {
         for (int i = 0; i < slots; i++)
@@ -140,7 +143,7 @@ public class Inventory : MonoBehaviour
 
         foreach (KeyValuePair<object, GameObject> pair in inventorySlots)
         {
-            pair.Value.GetComponent<InventorySlot>().ownerInventory = this.gameObject;
+            pair.Value.GetComponent<InventorySlot>().ownerInventory = this;
         }
 
         numCols = GetComponent<GridLayoutGroup>().constraintCount;
@@ -195,6 +198,42 @@ public class Inventory : MonoBehaviour
             
             if(selectedIndex > 0)
                 SetIndex(-1);
+        }
+        else
+            curSlot.SetQuantityText();
+
+        totalItems--;
+    }
+    
+    public void DropItem()
+    {
+        InventorySlot curSlot = inventorySlots[selectedIndex].GetComponent<InventorySlot>();
+        Transform pT = gameManager.Instance.player.transform;
+
+        if (curSlot == null)
+            return;
+
+        if (curSlot.child == null)
+            return;
+
+        if (curSlot.quantity < 1)
+            return;
+
+        curSlot.quantity--;
+
+
+        GameObject item = Instantiate(itemDrop, pT);
+
+        item.transform.SetParent(gameManager.Instance.gameObject.transform);
+        item.GetComponent<ItemDropped>().SetItem(curSlot.child);
+        item.transform.position = new Vector3(pT.position.x, pT.position.y + item.GetComponent<SpriteRenderer>().bounds.size.y / 4, pT.position.z);
+
+        if (curSlot.quantity == 0)
+        {
+            curSlot.EmptySlot(); 
+            
+            if(selectedIndex > 0)
+                SetIndex(-1);
 
             SelectItemByIndex(selectedIndex);
         }
@@ -216,24 +255,23 @@ public class Inventory : MonoBehaviour
     {
         oldRow = currentRow;
 
+        inventorySlots[selectedIndex].GetComponent<InventorySlot>().UnSelect();
+
         selectedIndex += val;
 
-        selectedItem = inventorySlots[selectedIndex].GetComponent<InventorySlot>();
-
         currentRow = selectedIndex / numCols;
-
-        if(selectedIndex >= totalSlots)
+        
+        if (selectedIndex >= totalSlots)
         {
             selectedIndex = totalSlots - 1;
-
-            return;
         }
-        else if(selectedIndex < 0)
+        else if (selectedIndex < 0)
         {
             selectedIndex = 0;
-
-            return;
         }
+
+        selectedItem = inventorySlots[selectedIndex].GetComponent<InventorySlot>();
+        selectedItem.Select();
 
         if (oldRow == currentRow)
             return;
@@ -250,7 +288,7 @@ public class Inventory : MonoBehaviour
                 }
 
                 ShiftInventory(true);
-            }  
+            }
         }
         else if (val == -numCols)
         {
@@ -264,13 +302,13 @@ public class Inventory : MonoBehaviour
                 }
 
                 ShiftInventory(false);
-            } 
+            }
         }
-        else if(Mathf.Abs(val) == 1)
+        else if (Mathf.Abs(val) == 1)
         {
-            if(currentRow != oldRow)
+            if (currentRow != oldRow)
             {
-                if(val == 1 &&
+                if (val == 1 &&
                     oldRow != currentRow &&
                     oldRow == visibleRows[2])
                 {
@@ -281,19 +319,21 @@ public class Inventory : MonoBehaviour
 
                     ShiftInventory(true);
                 }
-                else if(val == -1 &&
-                     oldRow != currentRow &&
-                     oldRow == visibleRows[0])
+                else if (val == -1 &&
+                        oldRow != currentRow &&
+                        oldRow == visibleRows[0])
                 {
-                     for (int i = 0; i < visibleRows.Length; i++)
-                     {
-                         visibleRows[i] -= 1;
-                     }
+                    for (int i = 0; i < visibleRows.Length; i++)
+                    {
+                        visibleRows[i] -= 1;
+                    }
 
-                     ShiftInventory(false);
+                    ShiftInventory(false);
                 }
             }
         }
+
+        selectedItem.Select();
     }
 
     public void DisableSelection()
@@ -303,7 +343,11 @@ public class Inventory : MonoBehaviour
 
     public void SelectItemByIndex(int index)
     {
-        if (index <= inventorySlots.Count && index >= 0)
+        InventorySlot oSlot = inventorySlots[selectedIndex].GetComponent<InventorySlot>();
+
+        oSlot.UnSelect();
+
+        if (index >= inventorySlots.Count && index <= 0)
             selectedIndex = 0;
         else
             selectedIndex = index;
@@ -324,6 +368,14 @@ public class Inventory : MonoBehaviour
         else
         {
             rTransform.localPosition -= new Vector3(0, rowSpacing, 0);
+        }
+    }
+
+    public void UnSelectAll()
+    {
+        foreach(GameObject go in inventorySlots.Values)
+        {
+            go.GetComponent<InventorySlot>().UnSelect();
         }
     }
 }
