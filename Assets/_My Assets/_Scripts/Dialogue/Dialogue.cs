@@ -36,6 +36,8 @@ public class Dialogue : MonoBehaviour
     //public AudioSpectrum spectrumManager;
     //public VoiceLineSyncer voiceManager;
     public FMOD.Studio.EventInstance dialogueAudio;              /**Voice line audio source*/
+    private bool characterTalking = false;
+    private FMOD.Studio.PLAYBACK_STATE fmodState;
 
     [Header("Display")]
     public GameObject Canvas;               /**Canvas holding dialogue box, etc*/
@@ -96,6 +98,10 @@ public class Dialogue : MonoBehaviour
                 skip = true;
                 Debug.Log("Skip = true");
             }
+        }
+        if (gm.gameState == gameManager.STATE.TALKING)
+        {
+            CheckDialogueVolume();
         }
     }
 
@@ -361,4 +367,12 @@ public class Dialogue : MonoBehaviour
         textBoxFrame.color = frameColor;
         nameBoxFrame.color = frameColor;
     }
+
+    void CheckDialogueVolume()
+    {
+        dialogueAudio.getPlaybackState(out fmodState);
+        if (fmodState == FMOD.Studio.PLAYBACK_STATE.PLAYING) { characterTalking = true; }
+        else { characterTalking = false; }
+    }
+
 }
