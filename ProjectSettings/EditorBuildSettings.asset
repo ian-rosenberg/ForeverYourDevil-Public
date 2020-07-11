@@ -8,7 +8,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_My Assets/_Scenes/Cutscene.unity
     guid: d548153a2372962478d74d84cab4309c
-  - enabled: 1
-    path: Assets/_My Assets/_Scenes/MovementTest.unity
-    guid: 8386d14bfd9421145ab451077a8ef127
-  m_configObjects: {}
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: Assets/_My Assets/_Scenes/MessagingTest.unity
+    guid: e6afd4499efb89340bc3cbf646457917
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: 795a07584c8165f499853aba9236fc0f,
+      type: 2}

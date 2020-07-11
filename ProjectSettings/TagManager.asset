@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - ClickIndicator
+  - ItemDetails
+  - SaveMenu
   layers:
   - Default
   - TransparentFX
@@ -18,8 +20,8 @@ TagManager:
   - Ground
   - Player
   - Post Processing
-  - 
-  - 
+  - Inventory
+  - Enemy
   - 
   - 
   - 

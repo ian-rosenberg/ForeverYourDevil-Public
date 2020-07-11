@@ -1,1 +1,1 @@
-alias fyd=cd d/Unity/Unity\ Projects/FYD/
+alias fyd=cd ~../../../D/Unity/Unity\ Projects/FYD/

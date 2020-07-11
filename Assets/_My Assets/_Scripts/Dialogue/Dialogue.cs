@@ -1,22 +1,22 @@
-﻿using System.Collections;
+﻿using FMODUnity;
+using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
+using System.Text.RegularExpressions;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using System.Text.RegularExpressions;
+using UnityEngine.InputSystem;
 using System.Linq;
-using FMODUnity;
 
 /**
  * @brief Manager for displaying images, text, etc from parsed dialogue from ParseXML
- * @author Omar Ilyas
+ * @author Omar Ilyas (edited by Ashley Roesler)
  */
 
 public class Dialogue : MonoBehaviour
 {
     ParseXML parser;                        /**Parser index containing all sentences in List*/
-    gameManager gm;                /**Master manager controlling game state*/
+    gameManager gm;                         /**Master manager controlling game state*/
 
     private static Dialogue instance;       /**Create singleton instance*/
 
@@ -29,30 +29,32 @@ public class Dialogue : MonoBehaviour
             return instance;
         }
     }
-    string currentId;                       /**Conversation id to choose*/
-    int sentenceIndex;                      /**Index of sentence to go to*/
+
+    private const float NAME_BOX_WIDTH = 370.0f;
+
+    private string currentId;                       /**Conversation id to choose*/
+    private int sentenceIndex;                      /**Index of sentence to go to*/
 
     [Header("Audio")]
-    //public AudioSpectrum spectrumManager;
-    //public VoiceLineSyncer voiceManager;
     public FMOD.Studio.EventInstance dialogueAudio;              /**Voice line audio source*/
-    private bool characterTalking = false;
-    private FMOD.Studio.PLAYBACK_STATE fmodState;
-    FMOD.DSP dsp = new FMOD.DSP();
-    FMOD.DSP_METERING_INFO meterInfo = new FMOD.DSP_METERING_INFO();
-    FMOD.ChannelGroup channelGroup;
-    bool loaded;
 
     [Header("Display")]
     public GameObject Canvas;               /**Canvas holding dialogue box, etc*/
 
     public TextMeshProUGUI nameBox;         /**Display name if given*/
     public TextMeshProUGUI textDisplay;     /**Display for text*/
+    public RectTransform nameRect;          /**NameBox rectangle*/
     public Image nameBoxFrame;              /**Background frame of textbox*/
     public Image textBoxFrame;              /**Background frame of textbox*/
-    public Image LeftmostChar;              /**Leftmost Character*/
-    public Image RightmostChar;             /**Rightmost Char*/
+    public Animator LeftmostChar;           /**Leftmost Character*/
+    public Animator RightmostChar;          /**Rightmost Character*/
     public Animator canvasAnim;             /**Animator object to turn on exit animation*/
+
+    public TextMeshProUGUI skipText;        /**Text that displays key to skip conversation*/
+    private bool isCurrentlyEssential;      /**False if the conversation is skippable*/
+    private int optionIndex = -1;           /**Index in current conversation that contains options, -1 if none*/
+    private const string SKIPMSG = "S - Skip Convo";        /**desired skip text*/
+    private bool isSkipping = false;        /**True if dialogue is actively being skipped*/
 
     [Header("Text and choices")]
     public float textDelay = 0.001f;        /**Delay between each character while displaying text*/
@@ -64,16 +66,41 @@ public class Dialogue : MonoBehaviour
 
     //Colors
     public Color tanOrange = new Color(0.8018868f, 0.304684f, 0.1777768f); /**Text color*/
+
     public Color pennyGreen = new Color(0.8018868f, 0.304684f, 0.1777768f); /**Text color*/
     public Color cerulianBlue = new Color(0.1764706f, 0.6452591f, 0.8f);   /**Text color*/
 
-    bool canPress = false;                  /**Is the user allowed to advance the text?*/
-    bool skip = false;                      /**Display all characters at once if true, one at a time if false*/
+    private bool canPress = false;                  /**Is the user allowed to advance the text?*/
+    private bool skip = false;                      /**Display all characters at once if true, one at a time if false*/
+
+    private bool[] isTalking = { false, false };    /**Is one of the characters talking?*/
+    private Coroutine lastTypeTextRoutine = null;   /**Keeps track of the last coroutine called for typing text*/
+
+    private bool isEnding = false;                  /**True if EndDialogue has been called*/
+
+    [Header("Player Controls")]
+    public PlayerControls pControls;
+
+
+    //private void OnEnable()
+    //{
+    //    pControls = new PlayerControls();
+
+    //    pControls.UI.Interact.performed += AdvanceSkipDialogue;
+
+    //    pControls.UI.Interact.Enable();
+    //}
+
+    //private void OnDisable()
+    //{
+    //    pControls.UI.Interact.performed -= AdvanceSkipDialogue;
+
+    //    pControls.UI.Interact.Disable();
+    //}
 
     /**
-     * @brief Initialize dialogue manager and get parsed dialogue from ParseXML
-     */
-
+        * @brief Initialize dialogue manager and get parsed dialogue from ParseXML
+        */
     private void Start()
     {
         canPress = false;
@@ -85,41 +112,89 @@ public class Dialogue : MonoBehaviour
         InitializeDialogue();
     }
 
-    /**
-     * @brief Main game loop. Advance line of text or skip it depending on input.
-     */
-    void Update()
+    public void Update()
     {
-        //Advance/Skip Dialogue on KeyPress
-        if (Input.GetButtonDown("Interact") && gm.gameState == gameManager.STATE.TALKING) //Return = enter key
+        // Advance/Skip Dialogue on KeyPress
+        if (gm.gameState == gameManager.STATE.TALKING && Input.GetKeyDown(KeyCode.E))
         {
             if (canPress)
             {
                 AdvanceLine(); //Display line of text
             }
-            else if (!textDisplay.text.Equals(""))
+            else if (textDisplay.text.Length > 5)
             {
                 skip = true;
                 Debug.Log("Skip = true");
             }
         }
-        if (gm.gameState == gameManager.STATE.TALKING)
+
+        // skip entire conversation if non-essential, or jump to options
+        if (!isSkipping && !isCurrentlyEssential && gm.gameState == gameManager.STATE.TALKING && Input.GetKeyDown(KeyCode.S))
         {
-            CheckDialogueVolume();
+            isSkipping = true;
+            skipText.SetText("Dialogue Skipped!");
+
+            if (optionIndex == -1)
+            {
+                if (!isEnding)
+                {
+                    StartCoroutine(EndDialogue());
+                }
+            }
+
+            if (lastTypeTextRoutine != null)
+            {
+                // stop typing previous line
+                StopCoroutine(lastTypeTextRoutine);
+
+                // stop talking animations
+                if (isTalking[0])
+                {
+                    LeftmostChar.SetTrigger("StopTalk");
+                }
+
+                if (isTalking[1])
+                {
+                    RightmostChar.SetTrigger("StopTalk");
+                }
+            }
+
+            // advance to the option if not already there
+            sentenceIndex = optionIndex != 0 ? optionIndex - 1 : 0;
+            AdvanceLine();
+        }
+    }
+
+    /**
+     * @brief Main game loop. Advance line of text or skip it depending on input.
+     */
+    private void AdvanceSkipDialogue(InputAction.CallbackContext context)
+    {
+        // Advance/Skip Dialogue on KeyPress
+        if (gm.gameState == gameManager.STATE.TALKING) //Return = enter key
+        {
+            if (canPress)
+            {
+                AdvanceLine(); // Display line of text
+            }
+            else if (textDisplay.text.Length > 5)
+            {
+                skip = true;
+                Debug.Log("Skip = true");
+            }
         }
     }
 
     /**
      * @brief Initialize/Clear dialogue box for a new set of dialogue
      */
-
     void InitializeDialogue()
     {
-        //Clear and hide Namebox
+        // Clear and hide Namebox
         nameBox.gameObject.transform.parent.gameObject.SetActive(false); //Replace with fade out animation
         nameBox.text = "";
 
-        //Clear dialogue box and reset color
+        // Clear dialogue box and reset color
         textDisplay.text = "";
         SetFrameTextColor(tanOrange, tanOrange);
     }
@@ -128,7 +203,6 @@ public class Dialogue : MonoBehaviour
      * @brief Activate dialogue box and load from conversation specified.
      * @param conversationID id of conversation to load
      */
-
     public void TriggerDialogue(string conversationID)
     {
         InitializeDialogue();
@@ -138,75 +212,82 @@ public class Dialogue : MonoBehaviour
     /**
      * @brief Waits for animation to finish before starting dialogue. (private)
      */
-    IEnumerator StartDialogue(string convID, bool start)
+
+    private IEnumerator StartDialogue(string convID, bool start)
     {
         AdvanceSprite.SetActive(false);
         canPress = false;
         sentenceIndex = 0;
 
-        //Set gamestate
+        // Set gamestate
         if (start)
         {
             gm.ChangeState(gameManager.STATE.TALKING);
 
-            //Turn on Canvas
+            // Turn on Canvas
             Canvas.SetActive(true);
             textDisplay.transform.parent.transform.parent.gameObject.SetActive(true);
         }
         else
         {
-            //Destroy Buttons
+            // Destroy Buttons
             foreach (Transform button in choiceArea)
             {
                 Debug.Log(button.gameObject.name);
                 button.gameObject.GetComponent<Animator>().SetTrigger("Off");
             }
 
-            //Wait for fadeout animation to end
+            // Wait for fadeout animation to end
             canvasAnim.SetTrigger("Choice");
             yield return new WaitForSeconds(1.533f);
         }
 
-        //Get conversation
+        // Get conversation
         currentId = convID;
 
-        //Set sprites
-        if (parser.conversationList[currentId].DialogueLines[0].Sprites.Any())
-        {
-            if (parser.conversationList[currentId].DialogueLines[0].Sprites[0])
-                LeftmostChar.sprite = parser.conversationList[currentId].DialogueLines[0].Sprites[0];
-            if (parser.conversationList[currentId].DialogueLines[0].Sprites[1])
-                RightmostChar.sprite = parser.conversationList[currentId].DialogueLines[0].Sprites[1];
-        }
+        // reset skipping text and status
+        skipText.SetText(SKIPMSG);
+        isSkipping = false;
 
-        //Wait for animation to end before starting line and voice
+        // be able to skip conversation if non-essential
+        isCurrentlyEssential = parser.conversationList[currentId].isEssential;
+        skipText.gameObject.SetActive(!isCurrentlyEssential);
+        optionIndex = !isCurrentlyEssential ? FindOptions() : -1;
+
+        // set animations
+        SetAnimations(parser.conversationList[currentId].DialogueLines, 0);
+
+        // Wait for animation to end before starting line and voice
         if (start) yield return new WaitForSeconds(1.717f);
 
         if (parser.conversationList[currentId].VoiceLine != null)
         {
             dialogueAudio = RuntimeManager.CreateInstance(parser.conversationList[currentId].VoiceLine); //Set voiceline
 
-            //Initialise FMOD Parameters
+            // Initialise FMOD Parameters
             RuntimeManager.StudioSystem.setParameterByName("LineNumber", 0);
             RuntimeManager.StudioSystem.setParameterByName("SectionNumber", 0);
             RuntimeManager.StudioSystem.setParameterByName("DialogueEnd", 0);
 
-            //Play Audio
+            // Play Audio
             dialogueAudio.start();
-            StartCoroutine(GetChannelGroup());
 
-            Debug.Log(LeftmostChar.sprite.name);
-            Debug.Log(RightmostChar.sprite.name);
+            Debug.Log(LeftmostChar.GetCurrentAnimatorClipInfo(0)[0].clip.name);
+            Debug.Log(RightmostChar.GetCurrentAnimatorClipInfo(0)[0].clip.name);
         }
-        //Go to next line
+        // Go to next line
         AdvanceLine();
     }
 
     /**
      * @brief Waits for animation to finish before turning off dialogue canvas
      */
-    IEnumerator EndDialogue()
+    private IEnumerator EndDialogue()
     {
+        isEnding = true;
+
+        isSkipping = false;
+
         Debug.Log("End Dialogue Called");
         textDisplay.transform.parent.transform.parent.gameObject.SetActive(false);
         canvasAnim.SetTrigger("Exit");
@@ -214,11 +295,14 @@ public class Dialogue : MonoBehaviour
         Canvas.SetActive(false);
         RuntimeManager.StudioSystem.setParameterByName("DialogueEnd", 1);
         gm.ChangeState(gameManager.STATE.TRAVELING);
+
+        isEnding = false;
     }
 
     /**
      * @brief Advance one line in conversation dialogue list chosen and display on screen
      */
+
     public void AdvanceLine()
     {
         Debug.Log("Advance Line Called");
@@ -228,10 +312,10 @@ public class Dialogue : MonoBehaviour
         AdvanceSprite.SetActive(false);
 
         //Get current conversation
-        List<DialogueLine> dialog = parser.conversationList[currentId].DialogueLines;
+        List<DialogueLine> dialogue = parser.conversationList[currentId].DialogueLines;
 
         //If there are no more lines
-        if (sentenceIndex >= dialog.Count)
+        if (sentenceIndex >= dialogue.Count)
         {
             Debug.Log("END");
             //Disable conversation box (replace with animation)
@@ -239,10 +323,10 @@ public class Dialogue : MonoBehaviour
         }
 
         //else if the next line is a set of options
-        else if (dialog[sentenceIndex].Options != null)
+        else if (dialogue[sentenceIndex].Options != null)
         {
             float multiplier = 1;
-            foreach (DictionaryEntry option in dialog[sentenceIndex].Options)
+            foreach (DictionaryEntry option in dialogue[sentenceIndex].Options)
             {
                 //Place each subsequent choice higher than the other
                 Vector2 pos = new Vector2(0, choiceDist * multiplier);
@@ -257,7 +341,6 @@ public class Dialogue : MonoBehaviour
                 multiplier++;
             }
         }
-
         else //If there are more lines
         {
             //Play voice line (stop and start for workaround)
@@ -265,30 +348,35 @@ public class Dialogue : MonoBehaviour
             dialogueAudio.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
             dialogueAudio.start(); // <---DUMB
 
-            //Set sprites
-            if (dialog[sentenceIndex].Sprites.Any())
-            {
-                if (dialog[sentenceIndex].Sprites[0])
-                    LeftmostChar.sprite = dialog[sentenceIndex].Sprites[0];
-                if (dialog[sentenceIndex].Sprites[1])
-                    RightmostChar.sprite = dialog[sentenceIndex].Sprites[1];
-            }
+            // set animations
+            SetAnimations(dialogue, sentenceIndex);
 
-            Debug.Log(LeftmostChar.sprite.name);
-            Debug.Log(RightmostChar.sprite.name);
+            Debug.Log(LeftmostChar.GetCurrentAnimatorClipInfo(0)[0].clip.name);
+            Debug.Log(RightmostChar.GetCurrentAnimatorClipInfo(0)[0].clip.name);
 
             //Set name
-            if (!dialog[sentenceIndex].Name.Equals(""))
+            if (!dialogue[sentenceIndex].Name.Equals(""))
             {
                 nameBox.gameObject.transform.parent.gameObject.SetActive(true); //Replace with fade in animation
-                nameBox.text = dialog[sentenceIndex].Name;
+                nameBox.text = dialogue[sentenceIndex].Name;
+
                 //Give special color/frame image to special names
-                if (nameBox.text == "Adult")
-                    SetFrameTextColor(cerulianBlue, cerulianBlue);
-                else if (nameBox.text == "Penny")
-                    SetFrameTextColor(pennyGreen, pennyGreen);
-                else
-                    SetFrameTextColor(tanOrange, tanOrange);
+                switch (nameBox.text)
+                {
+                    case "Adult":
+                        SetFrameTextColor(cerulianBlue, cerulianBlue);
+                        break;
+                    case "Penny":
+                        SetFrameTextColor(pennyGreen, pennyGreen);
+                        break;
+                    default:
+                        SetFrameTextColor(tanOrange, tanOrange);
+                        break;
+                }
+
+                // resize name box according to length of name (sets right bound of name box)
+                float size = nameBox.GetPreferredValues(nameBox.text).x - NAME_BOX_WIDTH;
+                nameRect.offsetMax = new Vector2(size, nameRect.offsetMax.y);
             }
             else //if no name
             {
@@ -298,16 +386,125 @@ public class Dialogue : MonoBehaviour
             textDisplay.text = ""; //Reset Text to blank
 
             //Display line to read from conversationlist
-            StartCoroutine(TypeText(dialog[sentenceIndex].Content));
+            lastTypeTextRoutine = StartCoroutine(TypeText(dialogue[sentenceIndex].Content));
             sentenceIndex++;
-            Debug.Log("Sentence Index: " + sentenceIndex);
         }
+    }
+
+    /**
+     * @brief Sets the current left and right animations
+     */
+    void SetAnimations(List<DialogueLine> dialogue, int index)
+    {
+        // set animation for leftmost character
+        if (dialogue[index].AC_Array[0])
+        {
+            LeftmostChar.runtimeAnimatorController = dialogue[index].AC_Array[0];
+        }
+        if (dialogue[index].Emotion_Array[0] != DialogueLine.Emotion.NONE)
+        {
+            if (ContainsParam(LeftmostChar, dialogue[index].Emotion_Array[0].ToString()))
+            {
+                // reset triggers
+                ClearTriggers(LeftmostChar);
+
+                LeftmostChar.SetTrigger(dialogue[index].Emotion_Array[0].ToString());
+                isTalking[0] = dialogue[index].isTalking[0];
+            }
+            else
+            {
+                LeftmostChar.SetTrigger("MakeDefault");
+                isTalking[0] = false;
+            }
+        }
+
+        // reset talking
+        else if (isTalking[0])
+        {
+            LeftmostChar.SetTrigger("StartTalk");
+        }
+
+        // set animation for rightmost character
+        if (dialogue[index].AC_Array[1])
+        {
+            RightmostChar.runtimeAnimatorController = dialogue[index].AC_Array[1];
+        }
+        if (dialogue[index].Emotion_Array[1] != DialogueLine.Emotion.NONE)
+        {
+            if (ContainsParam(RightmostChar, dialogue[index].Emotion_Array[1].ToString()))
+            {
+                // reset triggers
+                ClearTriggers(RightmostChar);
+
+                RightmostChar.SetTrigger(dialogue[index].Emotion_Array[1].ToString());
+                isTalking[1] = dialogue[index].isTalking[1];
+            }
+            else
+            {
+                RightmostChar.SetTrigger("MakeDefault");
+                isTalking[1] = false;
+            }
+        }
+
+        // reset talking
+        else if (isTalking[1])
+        {
+            RightmostChar.SetTrigger("StartTalk");
+        }
+    }
+
+    /**
+     * @brief resets the triggers of the given animator
+     */
+    private void ClearTriggers(Animator anim)
+    {
+        foreach (AnimatorControllerParameter p in anim.parameters)
+        {
+            if (p.type == AnimatorControllerParameterType.Trigger)
+            {
+                anim.ResetTrigger(p.name);
+            }
+        }
+    }
+
+    /**
+     * @brief Checks if the given animator has a parameter with the given string name
+     */
+    bool ContainsParam(Animator anim, string param)
+    {
+        foreach (AnimatorControllerParameter acp in anim.parameters)
+        {
+            if (acp.name == param)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @brief Finds the sentence index of the line containing options
+     */
+    int FindOptions()
+    {
+        int n = 0;
+
+        foreach (DialogueLine DL in parser.conversationList[currentId].DialogueLines)
+        {
+            if (DL.Options != null)
+            {
+                return n;
+            }
+            n++;
+        }
+        return -1;
     }
 
     /**
      * @brief Change the conversation and conversation id upon clicking a choice
      * @param convID the conversation to go to upon button click
      */
+
     public void ChangeConversation(string convID)
     {
         Debug.Log("Running Change Conversation : " + convID);
@@ -326,7 +523,7 @@ public class Dialogue : MonoBehaviour
      * @brief Coroutine that displays text char by char until line is exhausted or skipped
      * @param s string to display
      */
-    IEnumerator TypeText(string s)
+    private IEnumerator TypeText(string s)
     {
         Debug.Log("Running coroutine.");
 
@@ -344,15 +541,27 @@ public class Dialogue : MonoBehaviour
             else
             {
                 textDisplay.text += chars[i];
-                //Add delay for certain punctuation
-                if (new Regex(@"^[,.;:]*$").IsMatch(chars[i].ToString()))
-                    yield return new WaitForSeconds(textDelay + 0.37f);
-                else if (new Regex(@"^[?!]*$").IsMatch(chars[i].ToString()))
-                    yield return new WaitForSeconds(textDelay + 0.16f);
-                else
-                    yield return new WaitForSeconds(textDelay);
+                ////Add delay for certain punctuation
+                //if (new Regex(@"^[,.;:]*$").IsMatch(chars[i].ToString()))
+                //    yield return new WaitForSeconds(textDelay + 0.37f);
+                //else if (new Regex(@"^[?!]*$").IsMatch(chars[i].ToString()))
+                //    yield return new WaitForSeconds(textDelay + 0.16f);
+                // else
+                yield return new WaitForSeconds(textDelay);
             }
         }
+
+        // stop talking animations
+        if (isTalking[0])
+        {
+            LeftmostChar.SetTrigger("StopTalk");
+        }
+
+        if (isTalking[1])
+        {
+            RightmostChar.SetTrigger("StopTalk");
+        }
+
         //Allow advancement
         skip = false;
         Debug.Log("skip = false");
@@ -365,63 +574,12 @@ public class Dialogue : MonoBehaviour
      * @param frameColor the new color of the background frame
      * @param textColor the new color of the text
      */
-    void SetFrameTextColor(Color frameColor, Color textColor)
+
+    private void SetFrameTextColor(Color frameColor, Color textColor)
     {
         textDisplay.color = textColor;
         nameBox.color = textColor;
         textBoxFrame.color = frameColor;
         nameBoxFrame.color = frameColor;
     }
-
-    #region Check Dialogue Volume
-    void CheckDialogueVolume()
-    {
-        //dialogueAudio.getPlaybackState(out fmodState);
-        //if (fmodState == FMOD.Studio.PLAYBACK_STATE.PLAYING) { characterTalking = true; }
-        //else { characterTalking = false; }
-
-        if (GetRMS() > -30.0f) { characterTalking = true; }
-        else { characterTalking = false; }
-    }
-
-    IEnumerator GetChannelGroup()
-    {
-        if (dialogueAudio.isValid())
-        {
-            while (dialogueAudio.getChannelGroup(out channelGroup) != FMOD.RESULT.OK)
-            {
-                yield return new WaitForEndOfFrame();
-                loaded = false;
-            }
-
-            channelGroup.getDSP(0, out dsp);
-            dsp.setMeteringEnabled(false, true);
-
-            loaded = true;
-        }
-        else
-        {
-            Debug.Log("There is no instance");
-            yield return null;
-        }
-    }
-
-    float GetRMS()
-    {
-        float rms = 0f;
-
-        dsp.getMeteringInfo(System.IntPtr.Zero, out meterInfo);
-        for (int i = 0; i < meterInfo.numchannels; i++)
-        {
-            rms += meterInfo.rmslevel[i] * meterInfo.rmslevel[i];
-        }
-
-        rms = Mathf.Sqrt(rms / (float)meterInfo.numchannels);
-
-        float db = rms > 0 ? 20.0f * Mathf.Log10(rms * Mathf.Sqrt(2.0f)) : -80.0f;
-
-        if (db > 10.0f) { db = 10.0f; }
-        return db;
-    }
-    #endregion
 }

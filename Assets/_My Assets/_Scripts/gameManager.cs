@@ -1,38 +1,64 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.UI;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem.Interactions;
 
 public class gameManager : MonoBehaviour
 {
     #region Main Variables
 
-    bool canPause = true; //Allow pausing?
+    //Party Infotmation
+    public string Leader = "Penny_Test_Head";
 
-    //public GameObject CameraX, CameraY;
+    public string[] partyMembers = new string[] { "", "", "" };
+    public string[] extraMembers = new string[] { "", "", "", "" };
+
+    private bool canPause = true; //Allow pausing?
+
+    public Light skyBoxDirectionalLight;
+    public float skyBoxDirectionalLerpValue = 1f;
+    public GameObject fade;
+
+    #region SOME VARIABLES IN THIS REGION MAY BE REMOVED ONCE COMBAT TRANSITION SYSTEM IS IMPROVED
+
     [Header("Common")]
-    public FollowObject mainCamera; //Main parent object for camera
-    public Animator battleAnim; //Canvas for battle transition
-    public Image screenCapRegion; //Place to display image on
+    public CameraController mainCamera; //Main parent object for camera
 
     public PlayerController player; //Reference to player script
 
-    [Header("Combat")]
+    [Header("Combat")] //Will most likely move to combat manager
     public Transform[] playerSpawn, enemySpawn;
+
     public Transform cameraSpawn;
-    GameObject enemyCombatTriggerer; //The enemy that triggered combat last (temporary value)
+    private GameObject enemyCombatTriggerer; //The enemy that triggered combat last (temporary value)
 
     [Header("Level-Specific")]
     public GameObject normalWorld; //Represents overworld
+
+    public string areaId = "Level1";
+    public string sceneName;
     public GameObject battleWorld; //Represents battlefield
 
+    #endregion SOME VARIABLES IN THIS REGION MAY BE REMOVED ONCE COMBAT TRANSITION SYSTEM IS IMPROVED
+
     [Header("Menus")]
-    public GameObject pauseMenu;
+    public Animator pauseMenu;
 
+    public Animator CanvasAnimator;
 
+    [Header("Click Indicator")]
+    public GameObject clickIndicator; //Has 2 particles, one for normal and one for turning off.
+    
+    public Animator clickIndicAnim;
+
+    [Header("Inventory Management")]
+    private InventoryManagement invMan;
+
+    //Singleton creation
     private static gameManager instance;
+
     public static gameManager Instance
     {
         get
@@ -46,86 +72,165 @@ public class gameManager : MonoBehaviour
     public enum STATE { START, TRAVELING, COMBAT, PAUSED, TALKING }
 
     public STATE gameState; //Current State of the game
-    STATE prevState; //Previous State of the game (before pausing)
-    #endregion
+    private STATE prevState; //Previous State of the game (before pausing)
 
-    // Start is called before the first frame update
-    void Start()
+    #endregion Main Variables
+
+    [Header("Player Controls For Game")]
+    public PlayerControls pControls;
+
+    public GameObject resetText;
+
+    #region Player Actions
+    private void OnEnable()
     {
-        ChangeState(STATE.TRAVELING);
-        //player.currentBehavior = player.Player_Travelling;
-        prevState = STATE.START; //Start out of combat
+        player = PlayerController.Instance;
+        mainCamera = CameraController.Instance;
+
+        pControls = new PlayerControls();
+
+        pControls.Player.TogglePause.performed += TogglePause;
+
+        pControls.Player.TogglePause.Enable();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnDisable()
     {
-        //Pause Game
-        if (Input.GetButtonDown("Pause") && canPause)
+        pControls.Player.TogglePause.performed -= TogglePause;
+
+        pControls.Player.TogglePause.Disable();
+    }
+
+    #endregion Player Actions
+
+    private void Start()
+    {
+        skyBoxDirectionalLerpValue = 1f;
+
+        Leader = "Penny_Test_Head";
+        partyMembers = new string[] { "Player", "", "" };
+        extraMembers = new string[] { "", "", "", "" };
+
+        ChangeState(STATE.TRAVELING);
+        prevState = STATE.START; //Start out of combat\
+        clickIndicator.SetActive(false);
+        sceneName = SceneManager.GetActiveScene().name;
+    
+	InventoryManagement.Instance.DisableInventoryInput();
+    }
+
+    public IEnumerator ClickOff()
+    {
+        clickIndicAnim.SetTrigger("Off");
+        yield return new WaitForSeconds(0.25f);
+        //clickIndicator.SetActive(false);
+    }
+
+    private void FixedUpdate()
+    {
+        skyBoxDirectionalLightLerp();
+    }
+
+    public void TogglePause(InputAction.CallbackContext context)
+    {
+        switch (context.phase)
         {
-            if (gameState == STATE.PAUSED)
-            {
-                pauseMenu.SetActive(false);
-                UnPauseGame();
-            }
-            else
-            {
-                pauseMenu.SetActive(true);
-                PauseGame();
-            }
+            case InputActionPhase.Performed:
+                if (canPause)
+                {
+                    if (gameState == STATE.PAUSED)
+                    {
+                        StartCoroutine(ExitPauseMenu());
+                        
+                    }
+                    else
+                    {
+                        pauseMenu.gameObject.SetActive(true);
+                        fade.SetActive(true);
+                        PauseGame();
+                    }
+                }
+                break;
+
+            default:
+                break;
         }
     }
 
-    //Change the state of the game and update all dependant classes's game states
+
+    /**
+     * @brief Change the state of the game and update all dependant classes's game states
+     */
+
     public void ChangeState(STATE state)
     {
-        if (state != gameState) //Make sure state is not a duplicate
+        if (state != gameState && state != STATE.START) //Make sure state is not a duplicate
         {
-            switch (state)
-            {
-                case STATE.TALKING:
-                    player.currentBehavior = player.Player_Talking;
-                    break;
-                case STATE.TRAVELING:
-                    player.currentBehavior = player.Player_Travelling;
-                    break;
-                case STATE.COMBAT:
-                    player.currentBehavior = player.Player_Combat;
-                    break;
-                case STATE.START:
-                    Debug.LogError("Cannot go back to Start. Don't collect $200.");
-                    return;
-            }
             //If state is valid, change it.
             prevState = gameState;
             gameState = state;
+
+            //Send message to dependant components within GameManager
+            BroadcastMessage("ChangedStateTo", state);
+            Debug.Log("Message Sent?");
         }
     }
 
     #region Pausing
+
     public void PauseGame()
     {
         if (gameState != STATE.PAUSED)
         {
             ChangeState(STATE.PAUSED);
             Time.timeScale = 0;
+
+            resetText.SetActive(false);
         }
     }
+
     public void UnPauseGame()
     {
         if (gameState == STATE.PAUSED)
         {
             ChangeState(prevState);
             Time.timeScale = 1;
+            player.agent.ResetPath();
+
+            InventoryManagement.Instance.DisableInventoryInput();
+
+            resetText.SetActive(true);
         }
     }
+
+    public void OpenInventory()
+    {
+        SharedInventory sI = InventoryManagement.Instance.sharedInventory.GetComponentInChildren<SharedInventory>();
+
+        pauseMenu.gameObject.SetActive(false);
+
+        SetCanPause(false);
+
+        if (!sI.gameObject.activeInHierarchy)
+        {
+            InventoryManagement.Instance.SetSharedInventoryActive(true);
+
+            InventoryManagement.Instance.EnableInventoryInput();
+        }
+        
+        sI.SelectItemByIndex(0);
+    }
+
     public void SetCanPause(bool pause)
     {
         canPause = pause;
     }
-    #endregion
+
+
+    #endregion Pausing
 
     #region Entering Combat
+
     public void TriggerCombat(GameObject enemy)
     {
         // StartCoroutine(ScreenCap());
@@ -133,11 +238,12 @@ public class gameManager : MonoBehaviour
         enemyCombatTriggerer = enemy;
         PauseGame();
         SetCanPause(false);
-        battleAnim.SetTrigger("Battle");
+        CanvasAnimator.SetTrigger("Battle");
+        player.anim.SetTrigger("CombatTrigger");
         StartCoroutine(LoadCombatDelay());
     }
 
-    IEnumerator LoadCombatDelay()
+    private IEnumerator LoadCombatDelay()
     {
         Debug.Log("Loading Combatant Delay");
         yield return new WaitForSecondsRealtime(3f);
@@ -146,33 +252,61 @@ public class gameManager : MonoBehaviour
 
     public void LoadCombatants()
     {
-        PlayerController pc = player.GetComponent<PlayerController>();
-
         Debug.Log("Loading Combatants");
         UnPauseGame();
 
+        //Turn on Battlefield
         normalWorld.SetActive(false);
         battleWorld.SetActive(true);
 
-        NavMeshAgent playerAgent = player.GetComponent<NavMeshAgent>();
-        //playerAgent.enabled = true;
-        playerAgent.ResetPath();
-        playerAgent.enabled = false;
+        //Teleport Player to the BattleField
+        player.agent.ResetPath();
+        player.agent.enabled = false;
+        player.transform.position = player.grid.NearestGridNode(playerSpawn[0].position).worldPosition;
+        player.combatPosition = player.grid.NearestGridNode(player.transform.position);
+        player.agent.enabled = true;
 
-        player.transform.position = pc.grid.NearestGridNode(playerSpawn[0].position).worldPosition;
-        pc.combatPosition = pc.grid.NearestGridNode(player.transform.position);
-        playerAgent.enabled = true;
-        //playerAgent.ResetPath();
-        enemyCombatTriggerer.transform.position = pc.grid.NearestGridNode(enemySpawn[0].position).worldPosition;
+        //Teleport Enemy to the BattleField
+        enemyCombatTriggerer.transform.position = player.grid.NearestGridNode(enemySpawn[0].position).worldPosition;
         enemyCombatTriggerer = null;
-        mainCamera.SetOffset(cameraSpawn.transform.position);
 
+        //Teleport Camera to the battlefield
+        mainCamera.followScript.transform.position = cameraSpawn.transform.position;
+        mainCamera.followScript.BattleOffset(cameraSpawn.transform.position);
+
+        //Change the GameState to Combat
         ChangeState(STATE.COMBAT);
-
-        battleAnim.SetTrigger("Loaded");
+        CanvasAnimator.SetTrigger("Loaded");
         SetCanPause(true);
     }
-    #endregion
 
+    #endregion Entering Combat
 
+    /**
+     * @brief Decrease/increase skybox light to specified value
+     */
+
+    private void skyBoxDirectionalLightLerp()
+    {
+        skyBoxDirectionalLight.intensity = Mathf.Lerp(skyBoxDirectionalLight.intensity, skyBoxDirectionalLerpValue, 0.05f);
+    }
+
+    public void ExitPauseMenuFunction()
+    {
+        StartCoroutine(ExitPauseMenu());
+    }
+
+    public IEnumerator ExitPauseMenu()
+    {
+        //Play animation
+        pauseMenu.SetTrigger("Exit");
+        SetCanPause(false);
+        yield return new WaitForSecondsRealtime(0.283f);
+        pauseMenu.gameObject.SetActive(false);
+        fade.SetActive(false);
+
+        //Unpause
+        UnPauseGame();
+        SetCanPause(true);
+    }
 }

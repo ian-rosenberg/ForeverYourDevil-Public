@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Schema must be removed before gameplay
+<game
+xmlns="https://www.w3schools.com"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="https://www.w3schools.com/xml VN_Schema.xsd">
+  -->
+<game>
+  <!--Testing animated sprites and voice lines-->
+  <conversation id="Penny Test" voice="{05d4a861-962a-44a2-988d-ce95c3344909}">
+    <character name="Penny">
+      <line AC_L="Penny_AC" emotion_L="Talking" AC_R="Default_AC">Yoooooo, Tan Pill!</line>
+    </character>
+    <character name="Tan Pill">
+      <line emotion_L="Idle">That's my hastily assigned identification string! Don't wear it out!</line>
+    </character>
+    <character name="Penny">
+      <line emotion_L="ConfusedTalk">What?</line>
+    </character>
+    <character name="Tan Pill">
+      <line emotion_L="Confused">What?</line>
+    </character>
+    <character name="Penny">
+      <line emotion_L="Talking">Uhh, anyhow! How goes there? You excited for this update vid coming out?</line>
+    </character>
+    <character name="Tan Pill">
+      <line emotion_L="Idle">You betcha I am, poster girl, I MEAN, Penny!</line>
+      <line>In fact, I'd say I'm so excited...</line>
+    </character>
+    <character name ="PENNY! :3">
+      <line emotion_L="Idle" AC_R="Penny_AC" emotion_R="AmazedTalk">...THAT I COULD TRANSFORRRRRRRRRRRRRRM!!!!!!!!</line>
+    </character>
+    <character name="Penny">
+      <line emotion_L="AmazedTalk" emotion_R="Amazed">WOAH!!!</line>
+    </character>
+    <character name="PENNY! :3">
+      <line emotion_L="Amazed" emotion_R="AmazedTalk">AHAHAHAHA!!!! I AM YOU NOW!</line>
+      <line emotion_L="Confused" emotion_R="Talking">What do you think, original, but slightly less handsome Penny????</line>
+      <options>
+        <choice id="Cool">THAT'S SO COOL!!!!</choice>
+        <choice id="What">What the actual hell???</choice>
+      </options>
+    </character>
+  </conversation>
+
+  <conversation id="What" voice="{68bca554-084c-4e9a-a7c2-3595a59937e2}">
+    <character name="Penny">
+      <line AC_L="Penny_AC" emotion_L="AmazedTalk" AC_R="Penny_AC" emotion_R="Idle">What the actual hell?!?!?!?!!</line>
+      <line>It's like looking in a mirror! Except... with DEPTH.</line>
+    </character>
+    <character name="PENNY! :3">
+      <line emotion_L="Amazed" emotion_R="Talking">It's so flippin cool, right?!!</line>
+      <line emotion_L="Idle">It's a shame that I can only sustain this form for one mor--</line>
+    </character>
+    <character name="Tan Pill">
+      <line emotion_L="Idle" AC_R="Default_AC">...</line>
+      <line emotion_L="Confused">Crap...</line>
+    </character>
+  </conversation>
+
+  <conversation id="Cool" voice="{295e323b-9df7-445e-8781-fea67c93cb8d}">
+    <character name="Penny">
+      <line AC_L="Penny_AC" emotion_L="AmazedTalk" AC_R="Penny_AC" emotion_R="Idle">THAT'S SO COOL!!!!</line>
+      <line emotion_L="AmazedTalk" emotion_R="Idle">You even got the detail in my hair all flipped and stuff!</line>
+    </character>
+    <character name="PENNY! :3">
+      <line emotion_L="Idle" emotion_R="AmazedTalk">I'm proud of all the detail, heck yeah!</line>
+    </character>
+    <character name="Penny">
+      <line emotion_L="ConfusedTalk" emotion_R="Amazed">Though I will say, the artist who drew you... me?? We?? Yeah we.</line>
+      <line emotion_L="SadTalk" emotion_R="Idle">Whoever drew us should have probably made it so that this form lasted a little...</line>
+    </character>
+    <character name="Penny">
+      <line AC_L="Default_AC" emotion_R="Idle">...</line>
+      <line >AHHHHHHHHH!</line>
+    </character>
+    <character name="PENNY! :3">
+      <line emotion_R="AmazedTalk">AHHHHHHHHHHHHHHH!</line>
+    </character>
+  </conversation>
+
+  <!--Testing Official Animations-->
+  <conversation id="Official_Test">
+    <character name="Penny">
+      <line AC_L="Penny_AC" emotion_L="Talking" AC_R="Penny_AC" emotion_R="Idle">'Twas brillig, and the slithy toves</line>
+      <line>Did gyre and gimble in the wabe:</line>
+      <line>All mimsy were the borogoves,</line>
+      <line>And the mome raths outgrabe.</line>
+      <line emotion_L="AmazedTalk" emotion_R="Confused">"Beware the Jabberwock, my son!</line>
+      <line>The jaws that bite, the claws that catch!</line>
+      <line>Beware the Jubjub bird, and shun</line>
+      <line>The frumious Bandersnatch!"</line>
+    </character>
+    <character name="Also Penny">
+      <line emotion_L="Amazed" emotion_R="ConfusedTalk">He took his vorpal sword in hand;</line>
+      <line>Long time the manxome foe he sought--</line>
+      <line>So rested he by the Tumtum tree</line>
+      <line>And stood awhile in thought.</line>
+      <line emotion_L="Idle" emotion_R="Talking">And, as in uffish thought he stood,</line>
+      <line>The Jabberwock, with eyes of flame,</line>
+      <line>Came whiffling through the tulgey wood,</line>
+      <line>And burbled as it came!</line>
+    </character>
+    <character name="Penny">
+      <line emotion_L="SadTalk" emotion_R="Sad">One, two! One, two! And through and through</line>
+      <line>The vorpal blade went snicker-snack!</line>
+      <line>He left it dead, and with its head</line>
+      <line>He went galumphing back.</line>
+      <line emotion_L="AmazedTalk">"And hast thou slain the Jabberwock?</line>
+      <line>Come to my arms, my beamish boy!</line>
+      <line>O frabjous day! Callooh! Callay!"</line>
+      <line emotion_L="SadTalk">He chortled in his joy.</line>
+    </character>
+    <character name="Also Penny">
+      <line emotion_L="Idle" emotion_R="Talking">'Twas brillig, and the slithy toves</line>
+      <line>Did gyre and gimble in the wabe:</line>
+      <line>All mimsy were the borogoves,</line>
+      <line>And the mome raths outgrabe.</line>
+    </character>
+  </conversation>
+
+</game>

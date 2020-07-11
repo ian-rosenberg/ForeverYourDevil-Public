@@ -2,164 +2,222 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.AI;
-using TMPro;
+using UnityEngine.InputSystem;
 
 /**
  * PlayerController - Script for player movement out-ofcombat and within combat
- * 
+ *
  * Authors - Omar Ilyas, Ian Rosenberg
- * 
+ *
  * Tutorials used: Brackys - Navmesh Tutorials - https://www.youtube.com/watch?v=CHV1ymlw-P8&t=11s
  */
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : PartyMember
 {
-    private gameManager gameManager;
+    [Header("Player Combat")]
+    public TileGrid grid; // the grid we are currently navigating
+    
+    private bool combatMoving;
+
+    [Header("Inventory Management")]
+    private InventoryManagement invManager;
 
     //Pathfinding
     [Header("AStar Pathfinding")]
     public AStarNode combatPosition; // node representing the grid position of the player
+
     public Vector3 nodeBattlePos; // node position of player on battlefield
     public CharacterPathfinding pathfinder;//pathfinding script
 
-    private AStarNode selected;
     public List<AStarNode> path; //current path - x == x, y == z
     public List<AStarNode> prevPath; //The last path to un-highlight - x == x, y == z
-    public List<AStarNode> lockedPath; //The path to walk along on click t - x == x, y == z
-    private bool autoMove = false;
+    public List<AStarNode> lockedPath; //The path to walk along on click - x == x, y == z
+    
+    private AStarNode selected;
 
-    public TileGrid grid; // the grid we are currently navigating
-
-    [Header("Player")]
-    public Animator anim; // animation controller for player
+    [Header("Behavior")]
+    [SerializeField]
+    private bool canPickup = false;
+    
     public Action currentBehavior; //Function pointer for player behavior (changed by gameManager)
+    
+    private bool sprint = false;
 
-    [Tooltip("Specify what layer(s) to use in raycast")]
-    public LayerMask layerMask;
+    [Header("Player Actions")]
+    public PlayerControls pControls;
 
-    NavMeshAgent agent; /**Player Agent Component for pathfinding movement*/
-    public float normalSpeed, sprintSpeed;
-    //public Rigidbody rb;
+    private Vector2 axes;
 
-    public GameObject clickIndicator; //Has 2 particle effects, one for normal and one for turning off.
-    public Animator clickIndicAnim;
+    //Singleton creation
+    private static PlayerController instance;
 
-    [Header("Combat")]
-    public int health = 100; //Current Health of the player; 0 kills player
-    public int maxHealth = 100; //Max Health the player is allowed to heal to
-    public int tolerance = 25; //Current Tolerance. Max will kill the player
-    public int maxTolerance = 100; //Max Tolerance before player is killed
-    public int stamina = 6; // Current Stamina, allows player to do actions
-    public int maxStamina = 6; //Max stamina player is allowed to have
-    public PlayerGUI playerGUI; //Gui menu of the player
-    bool combatMoving; //Is the player moving during combat?
+    public static PlayerController Instance
+    {
+        get
+        {
+            if (instance == null)
+                instance = FindObjectOfType<PlayerController>();
+            return instance;
+        }
+    }
+
+    private void OnEnable()
+    {
+        pControls = new PlayerControls();
+        
+	pControls.Player.LeftClick.performed += AutoTravel;
+        pControls.Player.LeftClick.performed += CombatTravel;
+        pControls.Player.Use.performed += Pickup;
+        pControls.Player.Sprint.performed += Sprint;
+        pControls.Player.ManualTravel.performed += context => axes = context.ReadValue<Vector2>();
+
+        pControls.Player.ManualTravel.canceled += context => axes = Vector2.zero;
+
+        pControls.Player.LeftClick.Enable();
+        pControls.Player.Sprint.Enable();
+        pControls.Player.ManualTravel.Enable();
+        pControls.Player.Use.Enable();
+    }
+
+    public void Pickup(InputAction.CallbackContext obj)
+    {
+        StartCoroutine(PickupItem());
+    }
+
+    private void OnDisable()
+    {
+        pControls.Player.LeftClick.performed -= AutoTravel;
+        pControls.Player.LeftClick.performed -= CombatTravel;
+        pControls.Player.Use.performed -= Pickup;
+        pControls.Player.Sprint.started -= Sprint;
+        pControls.Player.ManualTravel.performed -= context => axes = context.ReadValue<Vector2>();
+
+        pControls.Player.LeftClick.Disable();
+        pControls.Player.Sprint.Disable();
+        pControls.Player.ManualTravel.Disable();
+        pControls.Player.Use.Disable();
+    }
 
     // Awake is called before start
-    void Awake()
+    private void Awake()
     {
-        agent = GetComponent<NavMeshAgent>();
-        gameManager = gameManager.Instance;
-
         selected = null;
 
-        path = null;
+        combatMoving = false;
 
+        prevPath = null;
         prevPath = path;
+
+        gameManager = gameManager.Instance;
+        invManager = InventoryManagement.Instance;
+    
+	currentBehavior = Player_Travelling;
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        ChangeHealth(health, maxHealth);
-        ChangeStamina(stamina, maxStamina);
-        ChangeTolerance(tolerance, maxTolerance);
-        clickIndicator.SetActive(false);
-    }
-
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         //Apply current behavior
         currentBehavior();
+
+        anim.SetFloat("Speed", (agent.velocity.magnitude / sprintSpeed));
     }
 
-    #region Behavior Functions
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("ClickIndicator"))
+        {
+            agent.ResetPath(); //Stop agent if it hits indicator
+            StartCoroutine(gameManager.Instance.ClickOff());
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if ((other.gameObject.GetComponent<ItemDropped>() as ItemDropped) != null && canPickup)
+        {
+            ItemBase item = other.GetComponent<ItemDropped>().GetItem();
+
+            Debug.Log("Picked up " + item.Name);
+
+            invManager.sharedInventory.SetActive(true);
+            invManager.GetComponentInChildren<SharedInventory>().AddSingleItem(item);
+            invManager.sharedInventory.SetActive(false);
+
+            Destroy(other.gameObject);
+
+            canPickup = false;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if ((other.gameObject.GetComponent<ItemDropped>() as ItemDropped) != null)
+        {
+            canPickup = false;
+        }
+    }
+
+    private void Sprint(InputAction.CallbackContext context)
+    {
+        sprint = !sprint;
+        
+	if (sprint)
+            agent.speed = sprintSpeed;
+        else
+            agent.speed = normalSpeed;
+    }
+
+    public Vector3 GetDefaultGridSpawn()
+    {
+        return grid.defaultSpawn;
+    }
+
+    #region Player Behavior Functions
+
     public void Player_Travelling()
     {
-        //Set animator (need to change)
+       //Set animator (need to change)
         if (!anim.GetBool("Traveling"))
         {
             anim.SetBool("Traveling", true);
             anim.SetTrigger("TravelingTrigger");
             anim.SetBool("Combat", false);
         }
+        anim.SetBool("StayIdle", false);
 
-        //Click to move (w/pathfinding)
-        if (Input.GetMouseButtonDown(0)) //If left click (not hold)
+        //Manual WASD/Gamepad Travel
+        float h = axes.x;
+        float v = axes.y;
+       // Debug.Log("<color=blue>H: " + h + ", V: " + v + "</color>");
+
+        if (Mathf.Abs(h) > 0 || Mathf.Abs(v) > 0)
         {
-            //Determine if walkable
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); //create ray obj from camera to click point
-            RaycastHit hit;
+            if (!agent.isStopped)
+                agent.ResetPath();
 
-            //If ray hit walkable area
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask)) //cast ray. if hit land, move
-            {
-                //Check hit layer
-                if (hit.transform.gameObject.layer == 9) //If click ground
-                {
-                    //Set indicator where clicked
-                    clickIndicator.SetActive(true);
-                    clickIndicAnim.SetTrigger("On");
-                    clickIndicator.transform.position = hit.point + new Vector3(0, 2f, 0);
+            ////Set Global Direction With Camera
+            agent.velocity = ((Camera.main.transform.forward * v) + (Camera.main.transform.right * h)) * agent.speed;
 
-                    //Move player/agent to hit point
-                    agent.SetDestination(hit.point);
-                }
-            }
-
-        }
-        //Right click to sprint
-        if (Input.GetButton("Sprint"))
-        {
-            agent.speed = sprintSpeed;
-            //Set if anim is in run or idle (set by number in blend tree)
-            anim.SetFloat("Speed", agent.velocity.magnitude / agent.speed);
-        }
-        else
-        {
-            agent.speed = normalSpeed;
-            //Set if anim is in run or idle (set by number in blend tree)
-            anim.SetFloat("Speed", (agent.velocity.magnitude / agent.speed) * .5f);
-        }
-
-        //Keyboard movement
-        float vertical = Input.GetAxis("Vertical");
-        float horizontal = Input.GetAxis("Horizontal");
-        if (Mathf.Abs(vertical) > 0 || Mathf.Abs(horizontal) > 0)
-        {
-            agent.ResetPath();
-            agent.velocity = new Vector3(horizontal, 0, vertical) * agent.speed;
-            clickIndicator.SetActive(false);
+            gameManager.clickIndicator.SetActive(false);
         }
     }
-    public void Player_Talking()
+
+    public void AutoTravel(InputAction.CallbackContext context)
     {
-        agent.ResetPath(); //Resets directions to agent to stop it
-    }
-    public void Player_Combat()
-    {
-        if (!anim.GetBool("Combat"))
+        if (gameManager.gameState != gameManager.STATE.TRAVELING)
+            return;
+        
+	//Automatic travel via Input System
+        if (!anim.GetBool("Traveling"))
         {
-            anim.SetBool("Traveling", false);
-            anim.SetTrigger("CombatTrigger");
-            anim.SetBool("Combat", true);
+            anim.SetBool("Traveling", true);
+            anim.SetTrigger("TravelingTrigger");
+            anim.SetBool("Combat", false);
         }
-        //Click to move (w/pathfinding)
+        anim.SetBool("StayIdle", false);
 
         //Determine if walkable
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); //create ray obj from camera to click point
+        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue()); //create ray obj from camera to click point
         RaycastHit hit;
 
         //If ray hit walkable area
@@ -168,7 +226,69 @@ public class PlayerController : MonoBehaviour
             //Check hit layer
             if (hit.transform.gameObject.layer == 9) //If click ground
             {
-                //if (selected == null || selected != grid.NearestGridNode(hit.point))
+                gameManager.clickIndicator.SetActive(true);
+                gameManager.clickIndicAnim.SetTrigger("On");
+                gameManager.clickIndicator.transform.position = hit.point + new Vector3(0, 1f, 0);
+
+                //Move player/agent to hit point
+                agent.SetDestination(hit.point);
+            }
+        }
+    }
+
+    public void CombatTravel(InputAction.CallbackContext context)
+    {
+        //If click, show indicator and move character (accounting for stamina)
+        if (gameManager.gameState != gameManager.STATE.COMBAT)
+            return;
+
+        //Determine if walkable
+        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue()); //create ray obj from camera to click point
+        RaycastHit hit;
+
+        //If ray hit walkable area
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask)) //cast ray. if hit land, move
+        {
+            //Check hit layer
+            if (hit.transform.gameObject.layer == 9) //If click ground
+            {
+                GameObject clickIndicator = gameManager.Instance.clickIndicator;
+
+                //Show indicator
+                clickIndicator.SetActive(true);
+                gameManager.Instance.clickIndicAnim.SetTrigger("On");
+
+                Vector3 gridPoint = grid.NearestGridNode(hit.point).worldPosition;
+                clickIndicator.transform.position = gridPoint + new Vector3(0, 2f, 0);
+
+                //Move character along path
+                if (!combatMoving)
+                {
+                    lockedPath = path;
+                    combatMoving = true;
+                    StartCoroutine(CombatMove());
+                }
+            }
+        }
+
+        agent.speed = normalSpeed;
+        //Set if anim is in run or idle (set by number in blend tree
+    }
+
+    public void Player_Combat()
+    {
+        //Determine if walkable
+        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue()); //create ray obj from camera to click point
+        RaycastHit hit;
+
+        //If ray hit walkable area
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask)) //cast ray. if hit land, move
+        {
+            //Check hit layer
+            if (hit.transform.gameObject.layer == 9) //If click ground
+            {
+                
+		//if (selected == null || selected != grid.NearestGridNode(hit.point))
                 //{
                 prevPath = path;
 
@@ -181,83 +301,12 @@ public class PlayerController : MonoBehaviour
 
                     selected = grid.NearestGridNode(hit.point);
                 }
-
-                //If click, show indicator and move character (accounting for stamina)
-                if (Input.GetMouseButtonDown(0))
-                {
-                    //Show indicator
-                    clickIndicator.SetActive(true);
-                    clickIndicAnim.SetTrigger("On");
-
-                    Vector3 gridPoint = grid.NearestGridNode(hit.point).worldPosition;
-                    clickIndicator.transform.position = gridPoint + new Vector3(0, 2f, 0);
-
-                    //Move character along path
-                    if (!combatMoving)
-                    {
-                        lockedPath = path;
-                        combatMoving = true;
-                        StartCoroutine(CombatMove());
-                    }
-
-                }
             }
         }
 
         agent.speed = normalSpeed;
-        //Set if anim is in run or idle (set by number in blend tree)
-        anim.SetFloat("Speed", (agent.velocity.magnitude / agent.speed));
-
-    }
-    #endregion
-
-    #region Player Stats
-    public void ChangeHealth(int newHealth, int newMaxHealth) {
-        health = newHealth;
-        maxHealth = newMaxHealth;
-        playerGUI.ChangeHealth(newHealth, newMaxHealth);
-    }
-    public void ChangeTolerance(int newTolerance, int newMaxTolerance) {
-        tolerance = newTolerance;
-        maxTolerance = newMaxTolerance;
-        playerGUI.ChangeTolerance(newTolerance, newMaxTolerance);
-    }
-    public void ChangeStamina(int newStamina, int newMaxStamina) {
-        stamina = newStamina;
-        maxStamina = newMaxStamina;
-        playerGUI.ChangeStamina(newStamina, newMaxStamina);
-    }
-    #endregion
-
-    public bool ToggleAutoMove()
-    {
-        return !autoMove;
     }
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("ClickIndicator"))
-        {
-            agent.ResetPath(); //Stop agent if it hits indicator
-            StartCoroutine(ClickOff());
-        }
-    }
-
-    //Turn Click Indicator off (called by anim event)
-    IEnumerator ClickOff()
-    {
-        clickIndicAnim.SetTrigger("Off");
-        yield return new WaitForSeconds(0.25f);
-        //clickIndicator.SetActive(false);
-
-    }
-
-    public Vector3 GetDefaultGridSpawn()
-    {
-        return grid.defaultSpawn;
-    }
-
-    //Move character along path determined through AStar
     public IEnumerator CombatMove()
     {
         //If path is greater than stamina, do not move
@@ -275,8 +324,6 @@ public class PlayerController : MonoBehaviour
             //Move along path with NavMesh
             while (i < lockedPath.Count)
             {
-
-
                 agent.SetDestination(lockedPath[i].worldPosition);
                 yield return null;
                 //If reached destination node (with some forgiveness)
@@ -289,7 +336,8 @@ public class PlayerController : MonoBehaviour
                     Debug.Log("Arrived at node: " + i);
                     i++; //Go to next node
                     stamina--; //Subtract stamina and text update
-                    
+                    playerGUI.ChangeStamina(stamina, maxStamina);
+
                     //agent.ResetPath();
                 }
             }
@@ -300,4 +348,69 @@ public class PlayerController : MonoBehaviour
             combatMoving = false;
         }
     }
+
+    public void ChangedStateTo(gameManager.STATE newState)
+    {
+        switch (newState)
+        {
+            case gameManager.STATE.START:
+                Debug.LogError("Cannot switch GM State to START. This should not happen.");
+                break;
+
+            case gameManager.STATE.TRAVELING:
+                currentBehavior = Player_Travelling;
+                break;
+
+            case gameManager.STATE.COMBAT:
+                currentBehavior = Player_Combat;
+                break;
+
+            case gameManager.STATE.PAUSED:
+                currentBehavior = Player_Paused;
+                break;
+
+            case gameManager.STATE.TALKING:
+                currentBehavior = Player_Talking;
+                break;
+        }
+
+        if (newState != gameManager.STATE.TRAVELING)
+        { 
+            pControls.Player.Use.performed -= Pickup;
+
+            if (newState == gameManager.STATE.COMBAT)
+            {
+                pControls.Player.Sprint.started -= Sprint;
+                pControls.Player.ManualTravel.performed -= context => axes = context.ReadValue<Vector2>();
+            }
+        } 
+        else
+        {
+            pControls.Player.Use.performed += Pickup;
+            pControls.Player.Sprint.started += Sprint;
+            pControls.Player.ManualTravel.performed += context => axes = context.ReadValue<Vector2>();
+        }
+    }
+
+    private IEnumerator PickupItem()
+    {
+        canPickup = true;
+
+        yield return new WaitForSeconds(1f);
+
+        canPickup = false;
+    }
+
+    public void Player_Talking()
+    {
+        agent.ResetPath(); //Resets directions to agent to stop it
+        anim.SetBool("StayIdle", true);
+    }
+
+    public void Player_Paused()
+    {
+        //Disable Colliders, Rigidbodies, etc.
+    }
+
+    #endregion Player Behavior Functions
 }

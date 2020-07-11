@@ -1,35 +1,39 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class NPCController : MonoBehaviour
 {
-    Dialogue diagManager;
-    gameManager gameManager;
+    private Dialogue diagManager;
+    private gameManager gameManager;
     public string conversationID; //Conversation number for communication
     public GameObject talkIndicator;
 
-    private bool canTalk = false;
+    [Header("Player Input")]
+    private PlayerControls pControls;
+    private bool interact = false;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         diagManager = Dialogue.Instance;
         gameManager = gameManager.Instance;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnEnable()
     {
-        if (canTalk == true)
-        {
-            if (Input.GetButtonDown("Interact"))
-            {
-                diagManager.TriggerDialogue(conversationID);
-                talkIndicator.SetActive(false);
-                canTalk = false; //need this to not make the text turn to gibberish. 
-            }
-        }
+        pControls = new PlayerControls();
+
+        pControls.Player.Use.performed += context => interact = true;
+
+        pControls.Player.ManualTravel.Disable();
+    }
+
+
+    private void OnDisable()
+    {
+        pControls.Player.Use.performed -= context => interact = true;
+
+        pControls.Player.Use.Disable();
+        pControls.Player.ManualTravel.Enable();
     }
 
     private void OnTriggerStay(Collider other)
@@ -37,7 +41,21 @@ public class NPCController : MonoBehaviour
         if (other.gameObject.layer == LayerMask.NameToLayer("Player") && gameManager.gameState == gameManager.STATE.TRAVELING)
         {
             talkIndicator.SetActive(true);
-            canTalk = true;
+
+            if (interact)
+            {
+                pControls.Player.Use.performed -= context => interact = true;
+
+                diagManager.TriggerDialogue(conversationID);
+                talkIndicator.SetActive(false);
+            }
+
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                diagManager.TriggerDialogue(conversationID);
+                talkIndicator.SetActive(false);
+            }
+
         }
     }
 
@@ -46,8 +64,12 @@ public class NPCController : MonoBehaviour
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             talkIndicator.SetActive(false);
-            canTalk = false;
         }
     }
 
+
+    //private void Update()
+    //{
+    //    Debug.Log("interact" + interact);
+    //}
 }
