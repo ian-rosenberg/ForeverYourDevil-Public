@@ -121,52 +121,40 @@ public class CameraController : MonoBehaviour
 
         //Debug.Log(Mouse.current.scroll.ReadValue().y);
 
-            //Debug.Log(Mouse.current.scroll.ReadValue().y);
+        //Debug.Log(Mouse.current.scroll.ReadValue().y);
 
-            //Zoom in and out with mouse wheel.
-            //float z = Mathf.Clamp(Mouse.current.scroll, -.8f, .8f);
+        //Zoom in and out with mouse wheel.
+        //float z = Mathf.Clamp(Mouse.current.scroll, -.8f, .8f);
 
-            //transform.position += new Vector3(0, 0, z);
-            
-            if (Mouse.current.scroll.ReadValue().y < 0) // back
-            {
-                ResetCameraNotification.SetActive(true);
-                if (zoom >= -.8f)
-                {
-                    zoom += -.1f;
-                    transform.position -= transform.forward;
-                }
-            }
-            if (Mouse.current.scroll.ReadValue().y > 0) // forward
-            {
-                if (zoom <= .8f)
-                {
-                    zoom += .1f;
-                    transform.position += transform.forward;
-                }
-            }
+        //transform.position += new Vector3(0, 0, z);
 
-            //DEBUG - lock onto specified target with keypress
-            if (!camLockState)
+        if (Mouse.current.scroll.ReadValue().y < 0) // back
+        {
+            ResetCameraNotification.SetActive(true);
+            if (zoom >= -.8f)
             {
-                ChangeCameraState(MODE.FOLLOWING, enemyLockOn.transform);
+                zoom += -.1f;
+                transform.position -= transform.forward;
             }
-            if (camLockState)
+        }
+        if (Mouse.current.scroll.ReadValue().y > 0) // forward
+        {
+            if (zoom <= .8f)
             {
-                ChangeCameraState(MODE.FOLLOWING, gm.player.transform);
+                zoom += .1f;
+                transform.position += transform.forward;
             }
         }
 
-        ////DEBUG - lock onto specified target with keypress
-        //if (!camLockState)
-        //{
-        //    ChangeCameraState(MODE.FOLLOWING, enemyLockOn.transform);
-        //}
-        //if (camLockState)
-        //{
-        //    ChangeCameraState(MODE.FOLLOWING, gm.player.transform);
-        //}
-
+        //DEBUG - lock onto specified target with keypress
+        if (!camLockState)
+        {
+            ChangeCameraState(MODE.FOLLOWING, enemyLockOn.transform);
+        }
+        if (camLockState)
+        {
+            ChangeCameraState(MODE.FOLLOWING, gm.player.transform);
+        }
     }
 
 

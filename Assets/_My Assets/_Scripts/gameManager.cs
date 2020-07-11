@@ -207,7 +207,7 @@ public class gameManager : MonoBehaviour
     {
         SharedInventory sI = InventoryManagement.Instance.sharedInventory.GetComponentInChildren<SharedInventory>();
 
-        pauseMenu.SetActive(false);
+        pauseMenu.gameObject.SetActive(false);
 
         SetCanPause(false);
 
