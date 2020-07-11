@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.00.00">
+	<object class="AudioFile" id="{9a5234d5-56b2-4c7c-bb85-2b1ea7db2b20}">
+		<property name="assetPath">
+			<value>UI/ui_save_beacon_loopable.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>5.25</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{90eccefb-ebf6-42a4-82a9-d479c0771509}</destination>
+		</relationship>
+	</object>
+</objects>

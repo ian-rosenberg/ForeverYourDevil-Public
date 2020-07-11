@@ -16,8 +16,7 @@ MonoBehaviour:
   HasSourceProject: 0
   HasPlatforms: 0
   sourceProjectPath: 
-  sourceBankPath: D:\Unity\Unity Projects\FYD\Assets\_My Assets\FMOD\FYD FMOD Project\FMOD
-    Banks\Desktop
+  sourceBankPath: Assets\_My Assets\FMOD\FYD FMOD Project\FMOD Banks\Desktop
   SourceBankPathUnformatted: 
   AutomaticEventLoading: 1
   BankLoadType: 0
@@ -47,9 +46,9 @@ MonoBehaviour:
     Value: 0
   OverlaySettings:
   - Platform: 1
-    Value: 0
+    Value: 1
   - Platform: 2
-    Value: 0
+    Value: 1
   - Platform: 20
     Value: 0
   LoggingSettings:
@@ -79,6 +78,7 @@ MonoBehaviour:
   - Master
   Banks:
   - Dialogue
+  - MenuUI
   - Music
   BanksToLoad: []
   LiveUpdatePort: 9264
