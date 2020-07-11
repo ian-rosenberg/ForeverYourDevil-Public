@@ -228,7 +228,7 @@ public class PlayerController : PartyMember
             {
                 gameManager.clickIndicator.SetActive(true);
                 gameManager.clickIndicAnim.SetTrigger("On");
-                gameManager.clickIndicator.transform.position = hit.point + new Vector3(0, 2f, 0);
+                gameManager.clickIndicator.transform.position = hit.point + new Vector3(0, 1f, 0);
 
                 //Move player/agent to hit point
                 agent.SetDestination(hit.point);
