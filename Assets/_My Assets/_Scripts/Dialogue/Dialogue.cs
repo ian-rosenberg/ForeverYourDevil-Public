@@ -36,6 +36,12 @@ public class Dialogue : MonoBehaviour
     //public AudioSpectrum spectrumManager;
     //public VoiceLineSyncer voiceManager;
     public FMOD.Studio.EventInstance dialogueAudio;              /**Voice line audio source*/
+    private bool characterTalking = false;
+    private FMOD.Studio.PLAYBACK_STATE fmodState;
+    FMOD.DSP dsp = new FMOD.DSP();
+    FMOD.DSP_METERING_INFO meterInfo = new FMOD.DSP_METERING_INFO();
+    FMOD.ChannelGroup channelGroup;
+    bool loaded;
 
     [Header("Display")]
     public GameObject Canvas;               /**Canvas holding dialogue box, etc*/
@@ -96,6 +102,10 @@ public class Dialogue : MonoBehaviour
                 skip = true;
                 Debug.Log("Skip = true");
             }
+        }
+        if (gm.gameState == gameManager.STATE.TALKING)
+        {
+            CheckDialogueVolume();
         }
     }
 
@@ -183,6 +193,7 @@ public class Dialogue : MonoBehaviour
 
             //Play Audio
             dialogueAudio.start();
+            StartCoroutine(GetChannelGroup());
 
             Debug.Log(LeftmostChar.sprite.name);
             Debug.Log(RightmostChar.sprite.name);
@@ -361,4 +372,56 @@ public class Dialogue : MonoBehaviour
         textBoxFrame.color = frameColor;
         nameBoxFrame.color = frameColor;
     }
+
+    #region Check Dialogue Volume
+    void CheckDialogueVolume()
+    {
+        //dialogueAudio.getPlaybackState(out fmodState);
+        //if (fmodState == FMOD.Studio.PLAYBACK_STATE.PLAYING) { characterTalking = true; }
+        //else { characterTalking = false; }
+
+        if (GetRMS() > -30.0f) { characterTalking = true; }
+        else { characterTalking = false; }
+    }
+
+    IEnumerator GetChannelGroup()
+    {
+        if (dialogueAudio.isValid())
+        {
+            while (dialogueAudio.getChannelGroup(out channelGroup) != FMOD.RESULT.OK)
+            {
+                yield return new WaitForEndOfFrame();
+                loaded = false;
+            }
+
+            channelGroup.getDSP(0, out dsp);
+            dsp.setMeteringEnabled(false, true);
+
+            loaded = true;
+        }
+        else
+        {
+            Debug.Log("There is no instance");
+            yield return null;
+        }
+    }
+
+    float GetRMS()
+    {
+        float rms = 0f;
+
+        dsp.getMeteringInfo(System.IntPtr.Zero, out meterInfo);
+        for (int i = 0; i < meterInfo.numchannels; i++)
+        {
+            rms += meterInfo.rmslevel[i] * meterInfo.rmslevel[i];
+        }
+
+        rms = Mathf.Sqrt(rms / (float)meterInfo.numchannels);
+
+        float db = rms > 0 ? 20.0f * Mathf.Log10(rms * Mathf.Sqrt(2.0f)) : -80.0f;
+
+        if (db > 10.0f) { db = 10.0f; }
+        return db;
+    }
+    #endregion
 }
