@@ -24,8 +24,10 @@ public class ItemDropped : MonoBehaviour
 
         transform.localScale *= itemScale;
 
-        pickupIndicator = GetComponentInChildren<MeshRenderer>().gameObject;
+        pickupIndicator = GetComponentInChildren<Animator>().gameObject;
         pickupIndicator.SetActive(false);
+
+        pickupIndicator.transform.localScale /= (itemScale + 1);
     }
 
     private void OnTriggerStay(Collider other)

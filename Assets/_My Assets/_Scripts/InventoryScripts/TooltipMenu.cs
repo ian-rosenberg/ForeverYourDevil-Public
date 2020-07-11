@@ -7,54 +7,61 @@ using System;
 
 public class TooltipMenu : MonoBehaviour
 {
-    public Color selectColor;
-    public Color unSelectColor;
-
     public GameObject use;
     public GameObject move;
     public GameObject drop;
+    public GameObject cancel;
 
-    private GameObject selected = null;
-    private GameObject prevSelected = null;
+    public GameObject selected = null;
+    public GameObject prevSelected = null;
+    
+    private Color selectColor;
+    private Color unSelectColor;
 
     #region Player Actions
     public PlayerControls pControls;
+
+    private void Start()
+    {
+        selected = use;
+        unSelectColor = new Color(0.6431373f, 0.5764706f, 0.4470589f, 1f);
+        selectColor = new Color(0.8584906f, 0.3567862f, 0f, 1f);
+        selected.GetComponent<Image>().color = selectColor;
+
+        prevSelected = selected;
+    }
 
     private void OnEnable()
     {
         pControls = new PlayerControls();
 
-        pControls.UI.Cancel.performed += ReturnToPreviousMenu;
         pControls.UI.Navigate.performed += HandleTooltipNavigation;
         pControls.UI.Interact.performed += AcceptMenuItem;
 
-        selected = use;
-        selected.GetComponent<Image>().color = selectColor;
-        unSelectColor = GetComponent<Image>().color;
-
         pControls.UI.Interact.Enable();
         pControls.UI.Navigate.Enable();
-        pControls.UI.Cancel.Enable();
     }
 
     private void OnDisable()
     {
-        pControls.UI.Cancel.performed -= ReturnToPreviousMenu;
         pControls.UI.Navigate.performed -= HandleTooltipNavigation;
         pControls.UI.Interact.performed -= AcceptMenuItem;
 
-        selected.GetComponent<Image>().color = unSelectColor;
-        selected = null;
+        selected = use;
+
+        use.GetComponent<Image>().color = selectColor;
+        move.GetComponent<Image>().color = unSelectColor;
+        drop.GetComponent<Image>().color = unSelectColor;
+        cancel.GetComponent<Image>().color = unSelectColor;
 
 
         pControls.UI.Interact.Disable();
         pControls.UI.Navigate.Disable();
-        pControls.UI.Cancel.Disable();
     }
 
     private void AcceptMenuItem(InputAction.CallbackContext obj)
     {
-        if(selected == drop)
+        if (selected == drop)
         {
             Inventory current = InventoryManagement.Instance.GetCurrentInventory();
 
@@ -62,26 +69,26 @@ public class TooltipMenu : MonoBehaviour
 
             current.DropItem(obj);
 
-            if(!slot.inUse)
-            {
-                gameObject.SetActive(false);
-            }
+            CloseMenu();
 
+            SharedInventory sI = InventoryManagement.Instance.sharedInventory.GetComponentInChildren<SharedInventory>();
+
+            if (sI.totalItems == 0)
+                sI.CloseInventory();
+        }
+        else if(selected == cancel)
+        {
             CloseMenu();
         }
     }
 
-    private void CloseMenu()
+    public void CloseMenu()
     {
         InventoryManagement invMan = GetComponentInParent<InventoryManagement>();
+        
+        SendMessageUpwards("CloseTooltip");    
+        
         invMan.EnableInventoryInput();
-
-        SendMessageUpwards("CloseTooltip");        
-    }
-
-    private void ReturnToPreviousMenu(InputAction.CallbackContext obj)
-    {
-        SendMessageUpwards("CloseTooltip");
     }
     #endregion
 
@@ -105,14 +112,30 @@ public class TooltipMenu : MonoBehaviour
             if(selected == use)
             {
                 selected = move;
+
+                move.GetComponent<SelectToolTipClick>().move = true;
+
                 prevSelected = use;
             }
             else if(selected == move)
             {
                 selected = drop;
+
+                move.GetComponent<SelectToolTipClick>().drop = true;
+
+
                 prevSelected = move;
             }
-            else if (selected == drop)
+            else if(selected == drop)
+            {
+                selected = cancel;
+
+                move.GetComponent<SelectToolTipClick>().cancel = true;
+
+
+                prevSelected = drop;
+            }
+            else if (selected == cancel)
             {
                 return;
             }
@@ -126,47 +149,75 @@ public class TooltipMenu : MonoBehaviour
             else if (selected == move)
             {
                 selected = use;
+
+                move.GetComponent<SelectToolTipClick>().use = true;
+
+
                 prevSelected = move;
             }
             else if (selected == drop)
             {
                 selected = move;
+
+                move.GetComponent<SelectToolTipClick>().move = true;
+
+
                 prevSelected = drop;
+            }
+            else if (selected == cancel)
+            {
+                selected = drop;
+
+                move.GetComponent<SelectToolTipClick>().drop = true;
+
+
+                prevSelected = cancel;
             }
         }
 
-        selected.GetComponent<Image>().color = selectColor;
-            
-        prevSelected.GetComponent<Image>().color = unSelectColor;
-        
+        ChangeSelectionColor();
     }
-    
-    public void HandleTooltipNavigation(GameObject tooltipItem)
+
+    public void ChangeSelectionColor()
     {
-        if (gameManager.Instance.gameState != gameManager.STATE.PAUSED)
-            return;
+        selected.GetComponent<Image>().color = selectColor;
 
-        if (tooltipItem == null)
-            return;
+        prevSelected.GetComponent<Image>().color = unSelectColor;
+    }
 
-        prevSelected = selected;
+    public void UnSelectLastClickedOption()
+    {
+        SelectToolTipClick[] items = GetComponentsInChildren<SelectToolTipClick>();
 
-        if (tooltipItem == use || tooltipItem == drop || tooltipItem == move)
-            selected = tooltipItem;
+        GameObject go = null; 
 
-
-        if(prevSelected == selected)
+        foreach (SelectToolTipClick tip in items)
         {
-            InputAction.CallbackContext o = new InputAction.CallbackContext();
+            if (tip.currentlySelected)
+            {
+                go = tip.gameObject;
 
-            AcceptMenuItem(o);
+                tip.currentlySelected = false;
+
+                go.GetComponent<Image>().color = unSelectColor; 
+                
+                if (go == use)
+                {
+                    prevSelected = use;
+                }
+                else if (go == move)
+                {
+                    prevSelected = move;
+                }
+                else if (go == drop)
+                {
+                    prevSelected = drop;
+                }
+                else if (go == cancel)
+                {
+                    prevSelected = cancel;
+                }
+            } 
         }
-
-
-        if (selected != null)
-           selected.GetComponent<Image>().color = selectColor;
-            
-        if(prevSelected != null && prevSelected != selected)
-            prevSelected.GetComponent<Image>().color = unSelectColor;        
     }
 }

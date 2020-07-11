@@ -78,7 +78,6 @@ public class InventoryManagement : MonoBehaviour
     public List<GameObject> inventoryObjs;//The inventories in use, may have to change to dict to support the different characters
     public GameObject sharedInventory;
 
-    public GameObject blurShader;
     public GameObject sharedInventoryPrefab;
     public GameObject personalInventoryPrefab;
 
@@ -87,10 +86,11 @@ public class InventoryManagement : MonoBehaviour
     public int numInventories;
 
     private Inventory currentInventory;
+    
+    //Input bools to make sure actions only get fired once, if necessary
+    [Header("Input booleans")]
+    private bool uiKeyPress = false;//UI Navigate Action
 
-    private bool secondFire = false;
-
-    private bool tooltipOpen = false;
 
     #region Player Actions
     public PlayerControls pControls;
@@ -100,19 +100,35 @@ public class InventoryManagement : MonoBehaviour
         pControls = new PlayerControls();
 
         pControls.UI.Navigate.performed += HandleUIKeypress;
-        pControls.UI.Interact.performed += AcceptSelection;
+        pControls.UI.Navigate.performed += ctx => uiKeyPress = true;
+        pControls.UI.Navigate.canceled += ctx => uiKeyPress = false;
 
+        pControls.UI.Interact.performed += AcceptSelection;
+        pControls.UI.SecondaryInteract.performed += AcceptSelection;
+
+        pControls.UI.Cancel.performed += CancelSelection;
+
+        pControls.UI.SecondaryInteract.Enable();
         pControls.UI.Interact.Enable();
         pControls.UI.Navigate.Enable();
+        pControls.UI.Cancel.Enable();
     }
 
     private void OnDisable()
     {
         pControls.UI.Navigate.performed -= HandleUIKeypress;
-        pControls.UI.Interact.performed -= AcceptSelection;
+        pControls.UI.Navigate.performed -= ctx => uiKeyPress = true;
+        pControls.UI.Navigate.canceled -= ctx => uiKeyPress = false;
 
+        pControls.UI.Interact.performed -= AcceptSelection;
+        pControls.UI.SecondaryInteract.performed -= AcceptSelection;
+
+        pControls.UI.Cancel.performed -= CancelSelection;
+
+        pControls.UI.SecondaryInteract.Disable();
         pControls.UI.Interact.Disable();
         pControls.UI.Navigate.Disable();
+        pControls.UI.Cancel.Disable();
     }
     #endregion
 
@@ -130,16 +146,21 @@ public class InventoryManagement : MonoBehaviour
 
         CreateSharedInventory();
 
-        AddPorridge();
-
         SetInventoriesInactive();
+
+        currentInventory.SetIndex(0);
     }
 
     public void HandleUIKeypress(InputAction.CallbackContext context)
-    {
-        if (secondFire)
+    { 
+        if (!uiKeyPress && sharedInventory.activeInHierarchy)
+            return;
+
+        if (currentInventory.GetSelected() == null)
         {
-            secondFire = false;
+            currentInventory.SelectItemByIndex(0);
+            uiKeyPress = false;
+
             return;
         }
 
@@ -173,38 +194,34 @@ public class InventoryManagement : MonoBehaviour
                 inv.SetIndex(-4);
         }
 
-        if (inv.inventorySlots[inv.selectedIndex] != null)
+        GameObject newSlotObj = inv.inventorySlots[inv.selectedIndex];
+        GameObject oldSlotObj = inv.inventorySlots[oldIndex];
+
+        InventorySlot slot = newSlotObj.GetComponent<InventorySlot>();
+        InventorySlot oldSlot = oldSlotObj.GetComponent<InventorySlot>();
+
+        if (oldSlot.Selected())
         {
-            GameObject newSlotObj = inv.inventorySlots[inv.selectedIndex];
-            GameObject oldSlotObj = inv.inventorySlots[oldIndex];
-
-            InventorySlot slot = newSlotObj.GetComponent<InventorySlot>();
-            InventorySlot oldSlot = oldSlotObj.GetComponent<InventorySlot>();
-
-            if (oldSlot.Selected())
-            {
-                oldSlot.UnSelect();
-            }
-
-            slot.Select();
+            oldSlot.UnSelect();
         }
 
-        secondFire = true;
+        slot.Select();
+      
+
+        uiKeyPress = false;
     }
 
     public void AddPorridge()
     {
         SharedInventory sI = sharedInventory.GetComponentInChildren<SharedInventory>();
         sI.AddSingleItem(itemList.Consumables[0]);
-        sI.AddSingleItem(itemList.Consumables[0]);
-
-        sI.AddSingleItem(itemList.Consumables[1]);
     }
 
     private void CreateItemDatabase(string path)
     {
         TextAsset json = Resources.Load<TextAsset>(path);
 
+        itemImages = new Dictionary<object, Sprite>();
         itemImages = new Dictionary<object, Sprite>();
 
         itemList = new Items();
@@ -305,18 +322,40 @@ public class InventoryManagement : MonoBehaviour
         Inventory i = currentInventory.GetComponent<Inventory>();
         InventorySlot selected = i.GetSelected();
 
-        if (!selected.Selected())
+        if (selected.child == null)
             return;
 
-        tooltipMenu.SetActive(true); 
+        tooltipMenu.SetActive(true);
 
-        tooltipOpen = true;
-
-        pControls.UI.Interact.performed -= AcceptSelection;
+        DisableInventoryInput();
 
         tooltipMenu.transform.SetAsLastSibling();
 
         currentInventory.GetComponentInChildren<Inventory>().DisableSelection();
+    }
+
+    private void CancelSelection(InputAction.CallbackContext obj)
+    {
+        if (!obj.performed)
+            return;
+        
+        if (tooltipMenu.activeInHierarchy)
+        {
+            CloseTooltip();
+            EnableInventoryInput();
+        }
+        else if(sharedInventory.activeInHierarchy)
+        {
+            SharedInventory sI = sharedInventory.GetComponentInChildren<SharedInventory>();
+                
+            sI.CloseInventory();
+
+            sI.GetSelected().UnSelect();
+
+            sI.ResetInventory();
+
+            sI.DisableSelection();
+        }
     }
 
     public Inventory GetCurrentInventory()
@@ -327,20 +366,41 @@ public class InventoryManagement : MonoBehaviour
     public void CloseTooltip()
     {
         tooltipMenu.SetActive(false);
-        tooltipOpen = false;
+    }
 
-        pControls.UI.Interact.performed += AcceptSelection;
+    public void ChangedStateTo(gameManager.STATE newState)
+    {
+        switch (newState)
+        {
+            case gameManager.STATE.START:
+                Debug.LogError("Cannot switch GM State to START. This should not happen.");
+                break;
+            case gameManager.STATE.TRAVELING:
+                DisableInventoryInput();
+                break;
+            case gameManager.STATE.COMBAT:
+                //open personal inventory
+                break;
+            case gameManager.STATE.PAUSED:
+                break;
+            case gameManager.STATE.TALKING:
+                break;
+        }
     }
 
     public void EnableInventoryInput()
     {
         pControls.UI.Navigate.performed += HandleUIKeypress;
         pControls.UI.Interact.performed += AcceptSelection;
+        pControls.UI.SecondaryInteract.performed += AcceptSelection;
+        pControls.UI.Cancel.performed += CancelSelection;
     }
 
     public void DisableInventoryInput()
     {
         pControls.UI.Navigate.performed -= HandleUIKeypress;
         pControls.UI.Interact.performed -= AcceptSelection;
+        pControls.UI.SecondaryInteract.performed -= AcceptSelection;
+        pControls.UI.Cancel.performed -= CancelSelection;
     }
 }

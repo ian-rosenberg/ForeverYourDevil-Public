@@ -11,21 +11,32 @@ public class ItemDetails : MonoBehaviour
     public TextMeshProUGUI itemDescription;
     public TextMeshProUGUI effects;
 
-    public Image itemImage;
-    public Image blank;
+    public Sprite blank;
 
+    public Image itemImage;
+    
     private InventoryManagement invManager;
 
     private void Awake()
     {
         invManager = InventoryManagement.Instance;
 
+        Image[] imgs = GetComponentsInChildren<Image>();
+        foreach(Image img in imgs)
+        {
+            if(img.gameObject != this.gameObject)
+            {
+                itemImage = img;
+            }
+        }
+
+
         itemName.text = "";
         itemDescription.text = "Description:\n";
         effectDescription.text = "Effect Description:\n";
         effects.text = "Effects:\n";
 
-        itemImage.sprite = null;
+        itemImage.sprite = blank;
     }
 
     public void Clear()
@@ -35,14 +46,11 @@ public class ItemDetails : MonoBehaviour
         effectDescription.text = "Effect Description:\n";
         effects.text = "Effects:\n";
 
-        itemImage.sprite = null;
+        itemImage.sprite = blank;
     }
 
     public void SetDetails(ItemBase item)
     {
-        if (item == null)
-            return;
-
         Color newColor = itemImage.material.color;
 
         newColor.a = 255;
@@ -55,6 +63,10 @@ public class ItemDetails : MonoBehaviour
         itemImage.material.SetColor("_Color", newColor );
 
         itemImage.sprite = invManager.GetItemImage(item);
-
+    }
+    
+    public void SetBlankImage()
+    {
+        GetComponent<Image>().sprite = blank;
     }
 }

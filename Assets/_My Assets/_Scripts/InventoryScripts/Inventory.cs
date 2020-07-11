@@ -10,22 +10,36 @@ using System;
 
 public class Inventory : MonoBehaviour
 {
+
+    
     [Header("Inventory Base Class")]
     private int slotIndices;
     private InventorySlot selectedItem;
 
+    [Header("Inventory Scrolling")]
+    private int numRows;
+    private int numCols;
+    
+    public int[] visibleRows;
 
-    public Dictionary<object, GameObject> inventorySlots;
+    public float rowSpacing;
+
+    public RectTransform rTransform;
+
     public int selectedIndex = 0;
+    public int oldRow = 0;
+    public int currentRow = 0;
+    
+    public Dictionary<object, GameObject> inventorySlots;
+
     public int totalSlots;
     public int totalItems;
 
     public GameObject elementOwnerPrefab;//The grid space in which an item can reside
     public GameObject itemDrop;
 
-
     public bool canSelect = true;
-
+    
     public void AddSlot()
     {
         if (inventorySlots == null)
@@ -36,6 +50,7 @@ public class Inventory : MonoBehaviour
         }
 
         GameObject slotClone = Instantiate(elementOwnerPrefab, transform);
+        slotClone.GetComponentInChildren<HighlightSelf>().SetEmptySlotImage();
 
         inventorySlots.Add(slotIndices++, slotClone);
         totalSlots++;
@@ -75,7 +90,6 @@ public class Inventory : MonoBehaviour
                 slot.quantity++;
 
                 slot.SetQuantityText();
-                slot.inUse = true;
 
                 totalItems++;
                 return;
@@ -86,12 +100,12 @@ public class Inventory : MonoBehaviour
         {
             GameObject go = inventorySlots[i];
             InventorySlot slot = go.GetComponent<InventorySlot>();
-            ItemBase child = slot.child;
 
-            if (child == null || !slot.inUse)
+            if (!slot.inUse)
             {
                 slot.child = item;
-                slot.currentImg.sprite = Resources.Load<Sprite>(item.Icon);
+                slot.img.sprite = Resources.Load<Sprite>(item.Icon);
+                slot.GetComponentInChildren<HighlightSelf>().UnHighlight();
 
                 slot.quantity++;
 
@@ -108,6 +122,18 @@ public class Inventory : MonoBehaviour
         AddSlotWithItem(item);
     }
 
+    public void GetIndexBySlot(GameObject slot)
+    {
+        for (int i = 0; i < inventorySlots.Values.Count; i++)
+        {
+            if (inventorySlots[i] == slot)
+            {
+                SelectItemByIndex(i);
+                break;
+            }
+        }
+    }
+
     public void ExpandInventory(int slots)
     {
         for (int i = 0; i < slots; i++)
@@ -117,8 +143,12 @@ public class Inventory : MonoBehaviour
 
         foreach (KeyValuePair<object, GameObject> pair in inventorySlots)
         {
-            pair.Value.GetComponent<InventorySlot>().ownerInventory = this.gameObject;
+            pair.Value.GetComponent<InventorySlot>().ownerInventory = this;
         }
+
+        numCols = GetComponent<GridLayoutGroup>().constraintCount;
+
+        numRows = slots / numCols;
     }
 
     public InventorySlot GetLastSelected()
@@ -133,7 +163,7 @@ public class Inventory : MonoBehaviour
 
         return null;
     }
-    
+
     public InventorySlot GetSelected()
     {
         return inventorySlots[selectedIndex].GetComponent<InventorySlot>();
@@ -164,17 +194,146 @@ public class Inventory : MonoBehaviour
 
         if (curSlot.quantity == 0)
         {
-            curSlot.currentImg.sprite = null;
-
-            curSlot.EmptySlot();
+            curSlot.EmptySlot(); 
+            
+            if(selectedIndex > 0)
+                SetIndex(-1);
         }
         else
             curSlot.SetQuantityText();
+
+        totalItems--;
+    }
+    
+    public void DropItem()
+    {
+        InventorySlot curSlot = inventorySlots[selectedIndex].GetComponent<InventorySlot>();
+        Transform pT = gameManager.Instance.player.transform;
+
+        if (curSlot == null)
+            return;
+
+        if (curSlot.child == null)
+            return;
+
+        if (curSlot.quantity < 1)
+            return;
+
+        curSlot.quantity--;
+
+
+        GameObject item = Instantiate(itemDrop, pT);
+
+        item.transform.SetParent(gameManager.Instance.gameObject.transform);
+        item.GetComponent<ItemDropped>().SetItem(curSlot.child);
+        item.transform.position = new Vector3(pT.position.x, pT.position.y + item.GetComponent<SpriteRenderer>().bounds.size.y / 4, pT.position.z);
+
+        if (curSlot.quantity == 0)
+        {
+            curSlot.EmptySlot(); 
+            
+            if(selectedIndex > 0)
+                SetIndex(-1);
+
+            SelectItemByIndex(selectedIndex);
+        }
+        else
+            curSlot.SetQuantityText();
+
+        totalItems--;
+    }
+
+    public void ResetInventory()
+    {
+        while(selectedIndex > 0)
+        {
+            SetIndex(-1);
+        }
     }
 
     public void SetIndex(int val)
     {
+        oldRow = currentRow;
+
+        inventorySlots[selectedIndex].GetComponent<InventorySlot>().UnSelect();
+
         selectedIndex += val;
+
+        currentRow = selectedIndex / numCols;
+        
+        if (selectedIndex >= totalSlots)
+        {
+            selectedIndex = totalSlots - 1;
+        }
+        else if (selectedIndex < 0)
+        {
+            selectedIndex = 0;
+        }
+
+        selectedItem = inventorySlots[selectedIndex].GetComponent<InventorySlot>();
+        selectedItem.Select();
+
+        if (oldRow == currentRow)
+            return;
+
+        if (val == numCols)
+        {
+            if (oldRow == visibleRows[2] &&
+                oldRow != currentRow &&
+                currentRow < numRows)
+            {
+                for (int i = 0; i < visibleRows.Length; i++)
+                {
+                    visibleRows[i] += 1;
+                }
+
+                ShiftInventory(true);
+            }
+        }
+        else if (val == -numCols)
+        {
+            if (oldRow == visibleRows[0] &&
+                oldRow != currentRow &&
+                currentRow >= 0)
+            {
+                for (int i = 0; i < visibleRows.Length; i++)
+                {
+                    visibleRows[i] -= 1;
+                }
+
+                ShiftInventory(false);
+            }
+        }
+        else if (Mathf.Abs(val) == 1)
+        {
+            if (currentRow != oldRow)
+            {
+                if (val == 1 &&
+                    oldRow != currentRow &&
+                    oldRow == visibleRows[2])
+                {
+                    for (int i = 0; i < visibleRows.Length; i++)
+                    {
+                        visibleRows[i] += 1;
+                    }
+
+                    ShiftInventory(true);
+                }
+                else if (val == -1 &&
+                        oldRow != currentRow &&
+                        oldRow == visibleRows[0])
+                {
+                    for (int i = 0; i < visibleRows.Length; i++)
+                    {
+                        visibleRows[i] -= 1;
+                    }
+
+                    ShiftInventory(false);
+                }
+            }
+        }
+
+        selectedItem.Select();
     }
 
     public void DisableSelection()
@@ -184,11 +343,39 @@ public class Inventory : MonoBehaviour
 
     public void SelectItemByIndex(int index)
     {
-        if (index <= inventorySlots.Count && index >= 0)
+        InventorySlot oSlot = inventorySlots[selectedIndex].GetComponent<InventorySlot>();
+
+        oSlot.UnSelect();
+
+        if (index >= inventorySlots.Count && index <= 0)
             selectedIndex = 0;
         else
             selectedIndex = index;
 
-        selectedItem = inventorySlots[index].GetComponent<InventorySlot>();
+        InventorySlot iS = inventorySlots[index].GetComponent<InventorySlot>();
+
+        selectedItem = iS;
+
+        iS.Select();
+    }
+
+    public void ShiftInventory(bool shiftDown)
+    {
+        if (shiftDown)
+        {
+            rTransform.localPosition += new Vector3(0, rowSpacing, 0);  
+        }
+        else
+        {
+            rTransform.localPosition -= new Vector3(0, rowSpacing, 0);
+        }
+    }
+
+    public void UnSelectAll()
+    {
+        foreach(GameObject go in inventorySlots.Values)
+        {
+            go.GetComponent<InventorySlot>().UnSelect();
+        }
     }
 }

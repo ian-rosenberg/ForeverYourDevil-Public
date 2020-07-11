@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem.Interactions;
 
 public class gameManager : MonoBehaviour
 {
@@ -48,7 +50,7 @@ public class gameManager : MonoBehaviour
 
     [Header("Click Indicator")]
     public GameObject clickIndicator; //Has 2 particles, one for normal and one for turning off.
-
+    
     public Animator clickIndicAnim;
 
     [Header("Inventory Management")]
@@ -77,8 +79,9 @@ public class gameManager : MonoBehaviour
     [Header("Player Controls For Game")]
     public PlayerControls pControls;
 
-    #region Player Actions
+    public GameObject resetText;
 
+    #region Player Actions
     private void OnEnable()
     {
         player = PlayerController.Instance;
@@ -112,7 +115,8 @@ public class gameManager : MonoBehaviour
         prevState = STATE.START; //Start out of combat\
         clickIndicator.SetActive(false);
         sceneName = SceneManager.GetActiveScene().name;
-        invMan = GetComponentInChildren<InventoryManagement>();
+    
+	InventoryManagement.Instance.DisableInventoryInput();
     }
 
     public IEnumerator ClickOff()
@@ -153,6 +157,7 @@ public class gameManager : MonoBehaviour
         }
     }
 
+
     /**
      * @brief Change the state of the game and update all dependant classes's game states
      */
@@ -179,7 +184,8 @@ public class gameManager : MonoBehaviour
         {
             ChangeState(STATE.PAUSED);
             Time.timeScale = 0;
-            invMan.EnableInventoryInput();
+
+            resetText.SetActive(false);
         }
     }
 
@@ -191,23 +197,35 @@ public class gameManager : MonoBehaviour
             Time.timeScale = 1;
             player.agent.ResetPath();
 
-            invMan.DisableInventoryInput();
+            InventoryManagement.Instance.DisableInventoryInput();
+
+            resetText.SetActive(true);
         }
     }
 
     public void OpenInventory()
     {
-        pauseMenu.gameObject.SetActive(false);
+        SharedInventory sI = InventoryManagement.Instance.sharedInventory.GetComponentInChildren<SharedInventory>();
+
+        pauseMenu.SetActive(false);
 
         SetCanPause(false);
 
-        InventoryManagement.Instance.SetSharedInventoryActive(true);
+        if (!sI.gameObject.activeInHierarchy)
+        {
+            InventoryManagement.Instance.SetSharedInventoryActive(true);
+
+            InventoryManagement.Instance.EnableInventoryInput();
+        }
+        
+        sI.SelectItemByIndex(0);
     }
 
     public void SetCanPause(bool pause)
     {
         canPause = pause;
     }
+
 
     #endregion Pausing
 

@@ -23,9 +23,9 @@
                 },
                 {
                     "name": "ManualTravel",
-                    "type": "Value",
+                    "type": "PassThrough",
                     "id": "ed077dfc-df69-4877-b2cb-7e5455abfc8f",
-                    "expectedControlType": "Vector2",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
                 },
@@ -59,7 +59,7 @@
                     "id": "87ae3d39-87df-4eee-8e9b-c811e6243ddc",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Press"
+                    "interactions": "Press(behavior=2)"
                 }
             ],
             "bindings": [
@@ -168,7 +168,7 @@
                     "path": "<Keyboard>/downArrow",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard&Mouse",
+                    "groups": "",
                     "action": "ManualTravel",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -179,7 +179,7 @@
                     "path": "<Keyboard>/leftArrow",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard&Mouse",
+                    "groups": "",
                     "action": "ManualTravel",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -190,7 +190,7 @@
                     "path": "<Keyboard>/rightArrow",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard&Mouse",
+                    "groups": "",
                     "action": "ManualTravel",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -234,7 +234,7 @@
                     "path": "<Keyboard>/e",
                     "interactions": "Press",
                     "processors": "",
-                    "groups": "Keyboard&Mouse",
+                    "groups": "",
                     "action": "Use",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -251,7 +251,7 @@
                     "id": "ba7f699d-397a-4a24-880a-9fe898ebc144",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "Press"
                 },
                 {
                     "name": "Interact",
@@ -268,6 +268,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "Press"
+                },
+                {
+                    "name": "SecondaryInteract",
+                    "type": "Button",
+                    "id": "9b519174-903a-47ed-ba2d-42f1baa6ccda",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press"
                 }
             ],
             "bindings": [
@@ -275,7 +283,7 @@
                     "name": "WASD",
                     "id": "f8c42ab5-77ea-4905-aff2-9b4ac9a33e08",
                     "path": "2DVector",
-                    "interactions": "Press",
+                    "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Navigate",
@@ -330,7 +338,7 @@
                     "name": "ArrowKeys",
                     "id": "360010e4-264b-4de3-b582-fe7c667f9a46",
                     "path": "2DVector",
-                    "interactions": "Press",
+                    "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Navigate",
@@ -451,7 +459,7 @@
                     "name": "",
                     "id": "5009826b-5237-4e07-93e5-2fa04e3da9c6",
                     "path": "<Keyboard>/e",
-                    "interactions": "Press(behavior=2)",
+                    "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Interact",
@@ -477,6 +485,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Cancel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6e43457a-da90-4f2c-a49f-807aaab9d458",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "SecondaryInteract",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

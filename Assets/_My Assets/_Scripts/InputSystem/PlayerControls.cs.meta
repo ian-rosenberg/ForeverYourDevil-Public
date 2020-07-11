@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/_My Assets/_Scripts/InventoryScripts/ItemDropped.cs.meta
+guid: b567bdb15a3572e429ef331a99f2bb45
+=======
 guid: a98c7fafb9136ba40a74cba491dc085f
+>>>>>>> InventoryInputSystem:Assets/_My Assets/_Scripts/InputSystem/PlayerControls.cs.meta
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2

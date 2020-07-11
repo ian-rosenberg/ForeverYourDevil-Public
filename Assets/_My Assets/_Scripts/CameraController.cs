@@ -121,12 +121,13 @@ public class CameraController : MonoBehaviour
 
         //Debug.Log(Mouse.current.scroll.ReadValue().y);
 
-        //Zoom in and out with mouse wheel.
-        //float z = Mathf.Clamp(Mouse.current.scroll, -.8f, .8f);
+            //Debug.Log(Mouse.current.scroll.ReadValue().y);
 
-        //transform.position += new Vector3(0, 0, z);
-        if (gm.gameState != gameManager.STATE.PAUSED)
-        {
+            //Zoom in and out with mouse wheel.
+            //float z = Mathf.Clamp(Mouse.current.scroll, -.8f, .8f);
+
+            //transform.position += new Vector3(0, 0, z);
+            
             if (Mouse.current.scroll.ReadValue().y < 0) // back
             {
                 ResetCameraNotification.SetActive(true);
@@ -143,6 +144,16 @@ public class CameraController : MonoBehaviour
                     zoom += .1f;
                     transform.position += transform.forward;
                 }
+            }
+
+            //DEBUG - lock onto specified target with keypress
+            if (!camLockState)
+            {
+                ChangeCameraState(MODE.FOLLOWING, enemyLockOn.transform);
+            }
+            if (camLockState)
+            {
+                ChangeCameraState(MODE.FOLLOWING, gm.player.transform);
             }
         }
 

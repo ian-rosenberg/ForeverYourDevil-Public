@@ -16,7 +16,7 @@ public class PlayerController : PartyMember
 {
     [Header("Player Combat")]
     public TileGrid grid; // the grid we are currently navigating
-
+    
     private bool combatMoving;
 
     [Header("Inventory Management")]
@@ -32,15 +32,15 @@ public class PlayerController : PartyMember
     public List<AStarNode> path; //current path - x == x, y == z
     public List<AStarNode> prevPath; //The last path to un-highlight - x == x, y == z
     public List<AStarNode> lockedPath; //The path to walk along on click - x == x, y == z
-
+    
     private AStarNode selected;
 
     [Header("Behavior")]
     [SerializeField]
     private bool canPickup = false;
-
+    
     public Action currentBehavior; //Function pointer for player behavior (changed by gameManager)
-
+    
     private bool sprint = false;
 
     [Header("Player Actions")]
@@ -64,12 +64,13 @@ public class PlayerController : PartyMember
     private void OnEnable()
     {
         pControls = new PlayerControls();
-
-        pControls.Player.LeftClick.performed += AutoTravel;
+        
+	pControls.Player.LeftClick.performed += AutoTravel;
         pControls.Player.LeftClick.performed += CombatTravel;
         pControls.Player.Use.performed += Pickup;
         pControls.Player.Sprint.performed += Sprint;
         pControls.Player.ManualTravel.performed += context => axes = context.ReadValue<Vector2>();
+
         pControls.Player.ManualTravel.canceled += context => axes = Vector2.zero;
 
         pControls.Player.LeftClick.Enable();
@@ -109,13 +110,12 @@ public class PlayerController : PartyMember
 
         gameManager = gameManager.Instance;
         invManager = InventoryManagement.Instance;
-
-        currentBehavior = Player_Travelling;
+    
+	currentBehavior = Player_Travelling;
     }
 
     private void Update()
     {
-        
         //Apply current behavior
         currentBehavior();
 
@@ -160,8 +160,8 @@ public class PlayerController : PartyMember
     private void Sprint(InputAction.CallbackContext context)
     {
         sprint = !sprint;
-
-        if (sprint)
+        
+	if (sprint)
             agent.speed = sprintSpeed;
         else
             agent.speed = normalSpeed;
@@ -176,7 +176,7 @@ public class PlayerController : PartyMember
 
     public void Player_Travelling()
     {
-        //Set animator (need to change)
+       //Set animator (need to change)
         if (!anim.GetBool("Traveling"))
         {
             anim.SetBool("Traveling", true);
@@ -206,8 +206,8 @@ public class PlayerController : PartyMember
     {
         if (gameManager.gameState != gameManager.STATE.TRAVELING)
             return;
-
-        //Automatic travel via Input System
+        
+	//Automatic travel via Input System
         if (!anim.GetBool("Traveling"))
         {
             anim.SetBool("Traveling", true);
@@ -287,7 +287,8 @@ public class PlayerController : PartyMember
             //Check hit layer
             if (hit.transform.gameObject.layer == 9) //If click ground
             {
-                //if (selected == null || selected != grid.NearestGridNode(hit.point))
+                
+		//if (selected == null || selected != grid.NearestGridNode(hit.point))
                 //{
                 prevPath = path;
 
@@ -374,7 +375,7 @@ public class PlayerController : PartyMember
         }
 
         if (newState != gameManager.STATE.TRAVELING)
-        {
+        { 
             pControls.Player.Use.performed -= Pickup;
 
             if (newState == gameManager.STATE.COMBAT)
@@ -382,7 +383,7 @@ public class PlayerController : PartyMember
                 pControls.Player.Sprint.started -= Sprint;
                 pControls.Player.ManualTravel.performed -= context => axes = context.ReadValue<Vector2>();
             }
-        }
+        } 
         else
         {
             pControls.Player.Use.performed += Pickup;
