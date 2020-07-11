@@ -1,0 +1,405 @@
+#!/bin/bash
+
+# EzMerge - a UI wizard that assists with the merging of conflicts in a Git Repository.
+# To run, place this file within the root folder of your Git Repository, then type ./EzMerge
+
+# Author: Omar Ilyas
+
+#Function to check if input is a yes or no
+YesNo(){
+	if [[ "$1" =~ [yY][eE][sS]|[yY] ]]; #Yes or Y
+        then
+	echo 1
+
+        elif [[ "$1" =~ [nN][oO]|[nN] ]]; #No or N
+        then
+        echo 0
+
+        else #neither
+        echo 2
+        fi
+}
+
+#Program begins here----------------------------------------------------------------------------------------
+
+#Check if branch is already merging. If already merging, stop wizard
+git merge HEAD &> /dev/null
+returnCode=$?
+if [ $returnCode -ne 0 ]
+then
+    printf "\x1b[31mEzMerge: \x1b[0m Merging currently in progress. Cannot run EZMerge.\n\nPlease stop the current merging progress and try again. To stop the merge, use\n\tgit merge --abort.\n"
+    exit
+fi
+
+#If not merging, begin program
+printf "\n --------------------------------------------------------- EzMerge -------------------------------------------------------------\n"
+printf "|																|"
+printf "\n|  Welcome to EZMerge! This program will attempt to merge a specified branch to this one.   					|\n"
+printf "|  If there are any conflicts, this program will go through them one by one and help you decide what to do with each one.	|\n"
+printf "|																|"
+printf "\n -------------------------------------------------------------------------------------------------------------------------------\n\n"
+
+#Get list of branches
+listOfBranches=$(git branch | sed 's/\  //;s/\*//;s/\ //')
+currentBranch=$(git branch | grep \* | sed 's/\  //;s/\*//;s/\ //')
+
+printf "List of Branches in Current Repository:/\x1b[32m\n"
+printf "$listOfBranches\x1b[0m"
+
+
+#Check if branch is already supplied
+if [ -z "$1" ];
+  then #No Branch Supplied
+
+   printf "\n\nTo begin, enter the name of a branch you would like to merge. (Press Ctrl+C to quit): "  
+   read -r branchName
+
+else #Branch Supplied
+   branchName=$1
+   fi
+
+#Confirm branchName
+
+for (( ; ; ))
+do   	
+	printf "\n\nThe branch you entered to merge is \x1b[32m$branchName\x1b[0m. Is this correct? [Y/N]:  "
+
+	#Check if Y or N entered
+	read -r response
+	yOrN=2
+	declare -i yOrN 
+	yOrN=$(YesNo $response)
+
+	if [ "$yOrN" -eq 1 ]; #Yes or N
+	then
+		#Check if valid branch name. If valid, merge. If not, repeat loop.
+		if [[ $(grep -x "$branchName" <<< $listOfBranches) ]]; #If branch is in ListOfBranches, valid
+		then
+			break
+		else
+			printf "\n\x1b[31mError: \x1b[0m Invalid Branch Name. Please try again.\n\n"
+			printf "Enter the name of the branch you would like to merge. (Press Ctrl+C to quit): "
+                	read -r branchName
+                	continue
+		fi
+	elif [ "$yOrN" -eq 0 ]; #No or N
+	then
+		printf "\nEnter the name of the branch you would like to merge. (Press Ctrl+C to quit): "
+		read -r branchName
+		continue
+	else
+		printf "\x1b[31mError: \x1b[0mInvalid Response. Please try again.\n"
+               	continue	
+	fi
+done
+
+printf "\nMerging $currentBranch with @branchName...\n\n"
+
+#Merge Branches
+git merge $branchName
+
+#Check for conflicted files. If conflicts, go to conflict loop. Else, end program.
+
+gitDiff=$(git diff --name-only --diff-filter=U)
+
+
+printf "\n\n---------------------------------------------------------------\n\n"
+
+#Initialize Variables
+	conflictCount=0 #Current conflict we are on
+        skipCount=0 #Number of Skipped Files. If this is >1, commit will not be possible
+        declare -i conflictCount
+        declare -i skipCount
+
+#No Conflicts
+if [[ $gitDiff == "" ]]; then
+	printf "\x1b[32mNo Conflicts Detected! Merge successful!\x1b[0m\n\n"
+	printf "\n\n---------------------------------------------------------------\n\n"
+
+else #Conflicts detected
+	totalConflicts=$(echo -n "$gitDiff" | grep -c '^')
+	declare -i totalConflicts
+	printf "Conflicts(s) Detected!\n\n\x1b[31m$gitDiff\n\n\x1b[0mTotal Conflicts: $totalConflicts"
+
+	printf "\x1b[0m\n\nConflicted files with be shown one at a time. You will have several options for resolving these conflicts, including:\n\n"
+	
+	printf "\x1b[32m1 - $currentBranch (Ours)\x1b[0m - Keep current branch changes, Discard merging branch changes\n" 
+	printf "\x1b[32m2 - $branchName (Theirs)\x1b[0m - Keep merging branch changes, Discard current branch changes\n"
+	printf "\x1b[32m3 - Manual (vim)\x1b[0m - Manually edit the file in Vim to resolve conflict\n"
+	printf "\x1b[32m4 - Skip\x1b[0m - Skip the conflicting file\n\n"
+	
+	printf "\x1b[33m5 - Abort\x1b[0m - Cancel merging process, Restore everything to before merge was performed\n"
+	printf "\x1b[31m6 - Quit\x1b[0m - Quit out of the program while still in the merging process (unsafe)\n\n"
+
+	
+	printf "To choose an option, press the corresponding number to the option. \x1b[33mBE CAREFUL, AS THESE ACTIONS CAN ONLY BE REVERSED THROUGH THE ABORT COMMAND.\x1b[0m\n"
+	read -n1 -r -s -p $'Press any key to continue...\n\n\n'
+
+	#Time to resolve conflicts
+	IFS=$'\n'
+	summary="Conflict	Old Status	FileName		Action\n\n"	#A summary string of all actions performed during resolution process.
+	for line in $gitDiff
+	do
+		for (( ; ; ))
+		do
+		#Statistics
+			conflictsLeft=0
+			declare -i conflictsLeft
+			conflictsLeft=$totalConflicts-$conflictCount
+			
+			conflictsResolved=0
+			declare -i conflictsResolved
+			conflictsResolved=$conflictCount-$skipCount
+		#Display Statistics
+		printf "\n-------------------------------------------------------  Conflict #$conflictCount  ---------------------------------------------------------\n"
+		printf "\nConflicts Resolved: $conflictsResolved \tConflicts Left: $conflictsLeft\tConflicts Skipped: $skipCount\n\n"
+				
+		#Get conflicted file status
+		gitStatus=$(git status $line --short)
+			#printf "Line: $line"	#Debug
+			#printf "$gitStatus"	#Debug
+		gitTrack=${gitStatus:0:2}
+
+		#Check status - DD = both deleted, AU = added by us, UD = deleted by them, 
+		#UA - added by them, DU - unmerged, deleted by us, AA = both added, UU = both modified
+		case $gitTrack in
+			DD)
+				gitTrack="\x1b[31m\tBoth deleted:\x1b[0m2	"
+				printf "$gitTrack"
+				;;
+			AU)
+				gitTrack="\x1b[31m\tAdded by $currentBranch (us):\x1b[0m	"
+                                printf "$gitTrack"
+				;;
+			UD)
+				gitTrack="\x1b[31m\tBoth deleted:\x1b[0m	"
+                                printf "$gitTrack"
+				;;
+			UA)
+				gitTrack="\x1b[31m\tAdded by $branchName (them):\x1b[0m	"
+                                printf "$gitTrack"
+				;;
+			DU)
+				gitTrack="\x1b[31m\tDeleted by $currentBranch (us):\x1b[0m	"
+	                        printf "$gitTrack"
+				;;
+			AA)
+				gitTrack="\x1b[31m\tBoth added:\x1b[0m	"
+                                printf "$gitTrack"
+				;;
+			UU)
+				gitTrack="\x1b[31m\tBoth Modified:\x1b[0m	"
+                                printf "$gitTrack"
+				;;
+			*)
+				gitTrack="\x1b[31m\tError: Cannot read git status.\x1b[0m	"
+                                printf "$gitTrack"
+				;;
+			esac
+
+		#Print Filename
+		printf "${gitStatus:3}\n"
+
+		#Print Options
+		printf "\n---------------------------------------------------------  Options  -----------------------------------------------------------\n\n"
+		printf "\x1b[32m1 - $currentBranch (Ours)	2 - $branchName (Theirs)	3 - Manual (vim)	4 - Skip	\x1b[33m5 - Abort	\x1b[31m6 - Quit(unsafe)\x1b[0m\n\n"
+		read -n1 -s response
+
+		#Perform Action (ask if sure every time)
+		case $response in
+			"1")#Ours
+				printf "\nAre you sure you want to merge \x1b[32m$currentBranch\x1b[0m (ours)? [Y/N]: "
+				read -r response
+				yOrN=$(YesNo $response)
+				if [ "$yOrN" -eq 1 ];
+				then
+					printf "\n\nKeeping $currentBranch (our) changes. Discarding $branchName (their) changes...\n"
+					git checkout --ours $line
+					git add $line
+					summary+="#$conflictCount:	$gitTrack	${gitStatus:3}		Merged $currentBranch (ours)\n"
+					conflictCount+=1
+					
+					#break out of loop and proceed to the next conflict
+					break
+				elif [ "$yOrN" -eq 0 ];
+				then
+					printf "\n"
+					continue
+				else
+			                printf "\n\x1b[31mError: \x1b[0mInvalid Response. Please try again.\n\n"
+					continue
+				fi
+				;;
+			"2")#Theirs
+				printf "\nAre you sure you want to merge \x1b[32m$branchName\x1b[0m (theirs)? [Y/N]: "
+				read -r response
+				yOrN=$(YesNo $response)
+				if [ "$yOrN" -eq 1 ];
+				then
+					printf "\nKeeping $branchName (their) changes. Discarding $currentBranch (our) changes...\n"
+					git checkout --theirs $line
+					git add $line
+                                        summary+="#$conflictCount:	$gitTrack	${gitStatus:3}		Merged $branchName (theirs)\n"
+					conflictCount+=1
+					
+					#break out of loop and proceed to the next conflict
+					break	
+				elif [ "$yOrN" -eq 0 ];
+				then
+					printf "\n"
+					continue
+				else
+			                printf "\n\x1b[31mError: \x1b[0mInvalid Response. Please try again.\n\n"
+					continue
+				fi
+				;;	
+			"3") #Vim
+				printf "\nAre you sure you want to open Vim to manually resolve this conflict? [Y/N]: " 
+				read -r response
+				yOrN=$(YesNo $response)
+				if [ "$yOrN" -eq 1 ];
+				then
+					printf "\nOpening Vim..."
+					vim $line
+					printf "\nClosing Vim..."
+					git add $line
+					summary+="#$conflictCount:	$gitTrack	${gitStatus:3}		Merged manually with Vim\n"
+					conflictCount+=1
+                                        
+					#break out of loop and proceed to the next conflict
+					break
+				elif [ "$yOrN" -eq 0 ];
+				then
+					printf "\n"
+					continue
+				else
+			                printf "\n\x1b[31mError: \x1b[0mInvalid Response. Please try again.\n\n"
+					continue
+				fi
+				;;
+			"4")#Skip
+				printf "\nAre you sure you want to skip this conflicted file? (\x1b[33mWarning:\x1b[0m You cannot commit via this wizard if you skip a file.) [Y/N]: " 
+				read -r response
+				yOrN=$(YesNo $response)
+				if [ "$yOrN" -eq 1 ];
+				then
+					printf "Skipping file...\n"
+					conflictCount+=1
+					skipCount+=1
+					summary+="#$conflictCount:	$gitTrack	${gitStatus:3}		Skipped\n"
+                                        
+					#break out of loop and proceed to the next conflict
+					break
+				elif [ "$yOrN" -eq 0 ];
+				then
+					printf "\n"
+					continue
+				else
+			                printf "\n\x1b[31mError: \x1b[0mInvalid Response. Please try again.\n\n"
+					continue
+				fi
+					;;
+			"5")#Abort
+				printf "\nAre you sure you want to abort the merging process? (\x1b[31mWarning:\x1b[0m All merging progress will be lost.) [Y/N]: "
+				read -r response
+                                yOrN=$(YesNo $response)
+                                if [ "$yOrN" -eq 1 ];
+                                then
+					printf "\nAborting merge...\n\nExitting the program...\n"
+					git merge --abort
+					printf "\n------------------------------------------------------------------------------------------\n\n"
+					exit
+				elif [ "$yOrN" -eq 0 ];
+				then
+					printf "\n"
+					continue
+				else
+			                printf "\n\x1b[31mError: \x1b[0mInvalid Response. Please try again.\n\n"
+					continue
+				fi
+					;;
+			"6")#Quit
+				printf "\nAre you sure you want to exit the wizard without finalizing the merge? (\x1b[31mWarning:\x1b[0m Unsafe: Merge will still be in progress.) [Y/N]: "
+                                read -r response
+				yOrN=$(YesNo $response)
+                                if [ "$yOrN" -eq 1 ];
+                                then
+					printf "\nQuitting merge without aborting!!!\n\nYou must complete or abort the merge manually in order to use this wizard again.\n\nExitting program...\n"
+					printf "\n------------------------------------------------------------------------------------------\n\n"
+					exit
+				elif [ "$yOrN" -eq 0 ];
+				then
+					printf "\n"
+					continue
+				else
+			                printf "\n\x1b[31mError: \x1b[0mInvalid Response. Please try again.\n\n"
+					continue
+				fi
+				;;
+			*)
+				printf "Invalid input. Try again...\n\n"
+				printf "\n"
+				continue
+				;;	
+
+		esac
+		done #End nested for loop
+
+	done #end line by line for loop
+	unset IFS
+	
+	#Conflict Resolution Finished!
+	printf "\n-------------------------------------------------------------\n\n"
+	printf "\n\nAll conflicts resolved!\n\nSummary of Conflict resolutions performed:\n$summary\n\n"
+        read -n1 -r -s -p $'Press any key to continue...\n\n\n'
+
+fi #End if conflict or no conflicts
+
+	#If no skips, ask to commit/push. Else, warn user of skips and exit program
+	if [ "$skipCount" -le 0 ]
+	then
+		for (( ; ; ))
+		do
+		printf "Would you like to commit your merged changes? (\x1b[33mWarning:\x1b[0m This will make your merged changes permenant.) [Y/N]: "
+		read -r response
+		yOrN=$(YesNo $response)
+                if [ "$yOrN" -eq 1 ];
+                then
+                       	printf "\nAdding and Committing All Changes...\n"
+                        git add --all
+			git commit
+			printf "\nClosing text editor...\n\n"
+			printf "\nChanges have been committed. To push this to a remote branch, use\n\tgit push <remote_name> $currentBranch\n\n"
+                        printf "Exitting program...\n\n"
+                        read -n1 -r -s -p $'Press any key to continue...\n\n\n'
+                        printf "\n-------------------------------------------------------------\n\n"
+                        exit
+
+			break
+                elif [ "$yOrN" -eq 0 ];
+                then
+                        printf "\nChanges not committed. Merge is still in progress.\nTo manually commit, use\n\tgit add --all\t\tand\n\tgit commit\n\n"
+                        printf "Exitting program...\n\n"
+			read -n1 -r -s -p $'Press any key to continue...\n\n\n'
+                	printf "\n-------------------------------------------------------------\n\n"
+			exit
+		else
+                        printf "\n\x1b[31mError: \x1b[0mInvalid Response. Please try again.\n\n"
+                        continue
+                fi
+		done
+
+	#If skips >1, end program
+	elif [ "$skipCount" -gt 0 ]
+	then
+		printf "\nSome conflicted files have been skipped. Merge is still in progress.\nTo manually commit, resolve remaining conflicts, then use\n\tgit add --all\t\tand\n\tgit commit\n\n"
+		printf "Exitting program...\n\n"
+		read -n1 -r -s -p $'Press any key to continue...\n\n\n'
+		printf "\n-------------------------------------------------------------\n\n"
+                exit
+	else #This shouldn't happen, but just in case...
+		printf "Exitting program...\n\n"
+                read -n1 -r -s -p $'Press any key to continue...\n\n\n'
+                printf "\n-------------------------------------------------------------\n\n"
+                exit
+	fi
