@@ -38,7 +38,7 @@ public class FollowObject : MonoBehaviour
     }
 
     // Update is called once per frame
-    private void FixedUpdate()
+    private void Update()
     {
         //Position
         if (x_pos) new_pos += new Vector3(target.transform.position.x, 0, 0);

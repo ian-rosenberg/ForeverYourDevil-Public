@@ -46,8 +46,8 @@ public class Door : MonoBehaviour
         gm.player.agent.enabled = false;
         gm.player.anim.SetBool("StayIdle", true);
         //Pause game
-        gm.PauseGame();
-        gm.SetCanPause(false);
+        gm.Game_PauseGame();
+        gm.mainCamera.ChangeCameraState(CameraController.MODE.PAUSED);
         //Play canvas animation
         gm.CanvasAnimator.SetTrigger("Door");
         yield return new WaitForSecondsRealtime(1f);
@@ -72,9 +72,8 @@ public class Door : MonoBehaviour
         //Unpause Player
         gm.player.agent.enabled = true;
         gm.player.anim.SetBool("StayIdle", false);
-        gm.UnPauseGame();
+        gm.Game_UnPauseGame();
         gm.player.agent.isStopped = false;
-        gm.SetCanPause(true);
 
         gm.areaId = areaID;
         //Change music

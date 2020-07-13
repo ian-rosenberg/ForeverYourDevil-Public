@@ -164,7 +164,7 @@ public class InventoryManagement : MonoBehaviour
             return;
         }
 
-        if (gameManager.Instance.gameState != gameManager.STATE.PAUSED)
+        if (gameManager.Instance.gameState != gameManager.STATE.PLAYER_PAUSED)
             return;
 
         Inventory inv = currentInventory.GetComponentInChildren<Inventory>();
@@ -381,7 +381,9 @@ public class InventoryManagement : MonoBehaviour
             case gameManager.STATE.COMBAT:
                 //open personal inventory
                 break;
-            case gameManager.STATE.PAUSED:
+            case gameManager.STATE.PLAYER_PAUSED:
+                break; 
+            case gameManager.STATE.GAME_PAUSED:
                 break;
             case gameManager.STATE.TALKING:
                 break;

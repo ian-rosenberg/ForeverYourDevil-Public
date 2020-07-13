@@ -248,7 +248,7 @@ public class SaveManager : MonoBehaviour
             yield return new WaitForSecondsRealtime(.25f);
             gm.fade.SetActive(false);
             loadingIcon.SetActive(true);
-            gm.SetCanPause(false);
+            gm.AllowPlayerToPause(false);
             gm.ExitPauseMenuFunction();
 
             gm.areaId = save.areaID;
@@ -295,8 +295,8 @@ public class SaveManager : MonoBehaviour
 
             //Play unfade animation and unpause
             loadingIcon.SetActive(false);
-            gm.UnPauseGame();
-            gm.SetCanPause(true);
+            gm.Player_UnPauseGame();
+            gm.AllowPlayerToPause(true);
             SetAllSaveSlotsInteractable(true);
 
             //Show unfade and resume (NEED TO BLOCK PLAYER INPUT TILL FADE IS DONE.)
@@ -350,8 +350,8 @@ public class SaveManager : MonoBehaviour
         SavingCanvas.gameObject.SetActive(true);
         gm.fade.SetActive(true);
         Title.text = "SAVE GAME";
-        gm.PauseGame();
-        gm.SetCanPause(false);
+        gm.Game_PauseGame();
+        gm.AllowPlayerToPause(false);
         UpdateAllSaveSlots();
     }
 
@@ -361,7 +361,7 @@ public class SaveManager : MonoBehaviour
         SavingCanvas.gameObject.SetActive(true);
         gm.fade.SetActive(true);
         Title.text = "LOAD GAME";
-        gm.PauseGame();
+        gm.Player_PauseGame();
         UpdateAllSaveSlots();
     }
 
@@ -384,8 +384,8 @@ public class SaveManager : MonoBehaviour
         if (saveMode)
         {
             gm.fade.SetActive(false);
-            gm.UnPauseGame();
-            gm.SetCanPause(true);
+            gm.Game_UnPauseGame();
+            gm.AllowPlayerToPause(true);
         }
     }
 

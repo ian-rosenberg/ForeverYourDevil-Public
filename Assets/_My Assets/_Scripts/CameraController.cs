@@ -101,7 +101,7 @@ public class CameraController : MonoBehaviour
     public void Camera_Following()
     {
         //Camera Reset
-        if (camReset && !isCameraReseting && gm.gameState != gameManager.STATE.PAUSED)
+        if (camReset && !isCameraReseting)
         {
             StartCoroutine(ResetCamera());
         }
@@ -240,7 +240,11 @@ public class CameraController : MonoBehaviour
     //            ChangeCameraState(MODE.COMBAT);
     //            break;
 
-    //        case gameManager.STATE.PAUSED:
+    //        case gameManager.STATE.PLAYER_PAUSED:
+    //            ChangeCameraState(MODE.PAUSED);
+    //            break;
+            
+    //        case gameManager.STATE.GAME_PAUSED:
     //            //ChangeCameraState(MODE.PAUSED);
     //            break;
 
@@ -286,14 +290,15 @@ public class CameraController : MonoBehaviour
                 case MODE.STATIONARY:
                     Debug.Log("Reached Stationary Case.");
                     cameraBehavior = Camera_Stationary;
-                    followScript.enabled = false;
                     if (target)
                     {
                         followScript.transform.position = target.position;
                     }
+                    followScript.enabled = false;
                     break;
 
                 case MODE.PAUSED:
+                    Debug.Log("Camera: Reached Paused Case.");
                     cameraBehavior = Camera_Paused;
                     followScript.enabled = false;
                     break;

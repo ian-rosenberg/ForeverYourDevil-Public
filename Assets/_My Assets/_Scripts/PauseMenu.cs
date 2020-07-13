@@ -13,7 +13,7 @@ public class PauseMenu : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        resume.onClick.AddListener( delegate { gameManager.Instance.UnPauseGame(); } );
+        resume.onClick.AddListener( delegate { gameManager.Instance.Player_UnPauseGame(); } );
 
         inventory.onClick.AddListener(delegate { gameManager.Instance.OpenInventory(); });
 

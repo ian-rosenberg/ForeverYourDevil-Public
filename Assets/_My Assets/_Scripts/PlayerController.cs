@@ -365,7 +365,10 @@ public class PlayerController : PartyMember
                 currentBehavior = Player_Combat;
                 break;
 
-            case gameManager.STATE.PAUSED:
+            case gameManager.STATE.PLAYER_PAUSED:
+                currentBehavior = Player_Paused;
+                break;
+            case gameManager.STATE.GAME_PAUSED:
                 currentBehavior = Player_Paused;
                 break;
 

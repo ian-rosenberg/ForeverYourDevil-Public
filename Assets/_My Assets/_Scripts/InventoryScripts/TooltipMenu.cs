@@ -94,7 +94,7 @@ public class TooltipMenu : MonoBehaviour
 
     public void HandleTooltipNavigation(InputAction.CallbackContext context)
     {
-        if (gameManager.Instance.gameState != gameManager.STATE.PAUSED)
+        if (gameManager.Instance.gameState != gameManager.STATE.PLAYER_PAUSED)
             return;
 
         Vector2 movement = context.ReadValue<Vector2>();

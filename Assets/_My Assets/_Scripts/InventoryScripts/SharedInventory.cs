@@ -36,7 +36,7 @@ public class SharedInventory : Inventory
 
         sI.UnSelectAll();
 
-        gameManager.Instance.SetCanPause(true);
+        gameManager.Instance.AllowPlayerToPause(true);
 
         gameManager.Instance.pauseMenu.gameObject.SetActive(true);
     }

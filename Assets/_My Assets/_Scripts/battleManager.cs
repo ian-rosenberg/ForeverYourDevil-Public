@@ -80,7 +80,11 @@ public class battleManager : MonoBehaviour
                 StartCoroutine(player_turn());
                 break;
 
-            case gameManager.STATE.PAUSED:
+            case gameManager.STATE.PLAYER_PAUSED:
+
+                break;
+            
+            case gameManager.STATE.GAME_PAUSED:
 
                 break;
 

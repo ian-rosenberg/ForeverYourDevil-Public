@@ -52,7 +52,7 @@ public class gameManager : MonoBehaviour
 
     [Header("Click Indicator")]
     public GameObject clickIndicator; //Has 2 particles, one for normal and one for turning off.
-    
+
     public Animator clickIndicAnim;
 
     [Header("Inventory Management")]
@@ -71,7 +71,16 @@ public class gameManager : MonoBehaviour
         }
     }
 
-    public enum STATE { START, TRAVELING, COMBAT, PAUSED, TALKING }
+    /** STATE KEY
+     * NULL - NULL STATE, should not be used unless in a default case or if you know what you're doing.
+     * START - Start of the game, initialize all systems
+     * TRAVELING - Player is in the overworld, not in combat
+     * COMBAT - Player is in a turn based combat mode, not in overworld
+     * GAME_PAUSED - Game has paused without player input. Player has no control over this
+     * PLAYER_PAUSED - Player has paused the game with input. Player can unpause at any time in this state.
+     * TALKING - Player is speaking with NPC in VN Dialogue System
+     */
+    public enum STATE { NULL, START, TRAVELING, COMBAT, GAME_PAUSED, PLAYER_PAUSED, TALKING }
 
     public STATE gameState; //Current State of the game
     private STATE prevState; //Previous State of the game (before pausing)
@@ -117,8 +126,8 @@ public class gameManager : MonoBehaviour
         prevState = STATE.START; //Start out of combat\
         clickIndicator.SetActive(false);
         sceneName = SceneManager.GetActiveScene().name;
-    
-	InventoryManagement.Instance.DisableInventoryInput();
+
+        InventoryManagement.Instance.DisableInventoryInput();
     }
 
     public IEnumerator ClickOff()
@@ -140,16 +149,16 @@ public class gameManager : MonoBehaviour
             case InputActionPhase.Performed:
                 if (canPause)
                 {
-                    if (gameState == STATE.PAUSED)
+                    if (gameState == STATE.PLAYER_PAUSED)
                     {
                         StartCoroutine(ExitPauseMenu());
-                        
+
                     }
-                    else
+                    else //Player is able to pause and has not paused already
                     {
                         pauseMenu.gameObject.SetActive(true);
                         fade.SetActive(true);
-                        PauseGame();
+                        Player_PauseGame();
                     }
                 }
                 break;
@@ -166,7 +175,7 @@ public class gameManager : MonoBehaviour
 
     public void ChangeState(STATE state)
     {
-        if (state != gameState && state != STATE.START) //Make sure state is not a duplicate
+        if (state != gameState && state != STATE.START && state != STATE.NULL) //Make sure state is not a duplicate or null
         {
             //If state is valid, change it.
             prevState = gameState;
@@ -180,28 +189,69 @@ public class gameManager : MonoBehaviour
 
     #region Pausing
 
-    public void PauseGame()
+    /**
+     * @brief Pauses the game with player input. This cannot be done if canPause is false or if already paused.
+     */
+    public void Player_PauseGame()
     {
-        if (gameState != STATE.PAUSED)
+        if (gameState != STATE.GAME_PAUSED && gameState != STATE.PLAYER_PAUSED)
         {
-            ChangeState(STATE.PAUSED);
+            ChangeState(STATE.PLAYER_PAUSED);
+            mainCamera.ChangeCameraState(CameraController.MODE.PAUSED);
             Time.timeScale = 0;
-
-            resetText.SetActive(false);
         }
     }
 
-    public void UnPauseGame()
+    /**
+     * @brief Pauses the game without player input. This cannot be done if already paused. (Must change CameraState Separately)
+     */
+    public void Game_PauseGame()
     {
-        if (gameState == STATE.PAUSED)
+        if (gameState != STATE.GAME_PAUSED)
+        {
+            ChangeState(STATE.GAME_PAUSED);
+            Time.timeScale = 0;
+
+            //Player cannot pause when game pauses.
+            AllowPlayerToPause(false);
+        }
+    }
+
+    /**
+     * @brief Unpauses the game with player input. Cannot do this if not paused or if gameState = GAME_PAUSED.
+     */
+    public void Player_UnPauseGame()
+    {
+        if (gameState == STATE.PLAYER_PAUSED)
         {
             ChangeState(prevState);
+            mainCamera.ChangeCameraState(mainCamera.prevMode);
             Time.timeScale = 1;
             player.agent.ResetPath();
 
             InventoryManagement.Instance.DisableInventoryInput();
 
-            resetText.SetActive(true);
+        }
+    }
+    /**
+     * @brief Unpauses the game without. Cannot do this if not paused.
+     * @param newState the state to go to when unPause is finished (will be previous state if none specified)
+     */
+    public void Game_UnPauseGame(STATE newState = STATE.NULL)
+    {
+        if (gameState == STATE.GAME_PAUSED || gameState == STATE.PLAYER_PAUSED)
+        {
+            if (newState == STATE.NULL) //If no state provided, unpause to previous state
+                ChangeState(prevState);
+            else
+                ChangeState(newState);
+            Time.timeScale = 1;
+            player.agent.ResetPath();
+
+            InventoryManagement.Instance.DisableInventoryInput();
+
+            //Player must be allowed to pause when game unpauses.
+            AllowPlayerToPause(true);
         }
     }
 
@@ -211,7 +261,7 @@ public class gameManager : MonoBehaviour
 
         pauseMenu.gameObject.SetActive(false);
 
-        SetCanPause(false);
+        AllowPlayerToPause(false);
 
         if (!sI.gameObject.activeInHierarchy)
         {
@@ -219,11 +269,12 @@ public class gameManager : MonoBehaviour
 
             InventoryManagement.Instance.EnableInventoryInput();
         }
-        
+
         sI.SelectItemByIndex(0);
     }
 
-    public void SetCanPause(bool pause)
+
+    public void AllowPlayerToPause(bool pause)
     {
         canPause = pause;
     }
@@ -238,8 +289,8 @@ public class gameManager : MonoBehaviour
         // StartCoroutine(ScreenCap());
         Debug.Log("Triggering Combat");
         enemyCombatTriggerer = enemy;
-        PauseGame();
-        SetCanPause(false);
+        Game_PauseGame();
+        AllowPlayerToPause(false);
         CanvasAnimator.SetTrigger("Battle");
         player.anim.SetTrigger("CombatTrigger");
         StartCoroutine(LoadCombatDelay());
@@ -255,7 +306,7 @@ public class gameManager : MonoBehaviour
     public void LoadCombatants()
     {
         Debug.Log("Loading Combatants");
-        UnPauseGame();
+        Game_UnPauseGame();
 
         //Turn on Battlefield
         normalWorld.SetActive(false);
@@ -279,7 +330,7 @@ public class gameManager : MonoBehaviour
         //Change the GameState to Combat
         ChangeState(STATE.COMBAT);
         CanvasAnimator.SetTrigger("Loaded");
-        SetCanPause(true);
+        AllowPlayerToPause(true);
     }
 
     #endregion Entering Combat
@@ -302,13 +353,13 @@ public class gameManager : MonoBehaviour
     {
         //Play animation
         pauseMenu.SetTrigger("Exit");
-        SetCanPause(false);
+        AllowPlayerToPause(false);
         yield return new WaitForSecondsRealtime(0.283f);
         pauseMenu.gameObject.SetActive(false);
         fade.SetActive(false);
 
         //Unpause
-        UnPauseGame();
-        SetCanPause(true);
+        Player_UnPauseGame();
+        AllowPlayerToPause(true);
     }
 }
