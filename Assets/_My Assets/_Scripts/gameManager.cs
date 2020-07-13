@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem.Interactions;
+using UnityEngine.EventSystems;
 
 public class gameManager : MonoBehaviour
 {
@@ -44,6 +45,7 @@ public class gameManager : MonoBehaviour
     #endregion SOME VARIABLES IN THIS REGION MAY BE REMOVED ONCE COMBAT TRANSITION SYSTEM IS IMPROVED
 
     [Header("Menus")]
+
     public Animator pauseMenu;
 
     public Animator CanvasAnimator;
