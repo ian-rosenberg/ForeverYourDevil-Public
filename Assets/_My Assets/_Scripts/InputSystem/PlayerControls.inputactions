@@ -254,6 +254,14 @@
                     "interactions": "Press"
                 },
                 {
+                    "name": "Submit",
+                    "type": "Button",
+                    "id": "16b02f26-f27a-4b0d-a3fb-3585174f3fd9",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
                     "name": "Interact",
                     "type": "Button",
                     "id": "669f1a91-d8ad-4cd5-a55b-0c74a06452be",
@@ -684,6 +692,17 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "TrackedDeviceOrientation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6a1e1e5f-0413-4b73-bb76-86a1688ec38d",
+                    "path": "*/{Submit}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Submit",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

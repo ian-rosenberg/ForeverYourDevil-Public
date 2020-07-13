@@ -267,6 +267,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""interactions"": ""Press""
                 },
                 {
+                    ""name"": ""Submit"",
+                    ""type"": ""Button"",
+                    ""id"": ""16b02f26-f27a-4b0d-a3fb-3585174f3fd9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
                     ""name"": ""Interact"",
                     ""type"": ""Button"",
                     ""id"": ""669f1a91-d8ad-4cd5-a55b-0c74a06452be"",
@@ -699,6 +707,17 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""TrackedDeviceOrientation"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6a1e1e5f-0413-4b73-bb76-86a1688ec38d"",
+                    ""path"": ""*/{Submit}"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Submit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -778,6 +797,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
+        m_UI_Submit = m_UI.FindAction("Submit", throwIfNotFound: true);
         m_UI_Interact = m_UI.FindAction("Interact", throwIfNotFound: true);
         m_UI_Cancel = m_UI.FindAction("Cancel", throwIfNotFound: true);
         m_UI_SecondaryInteract = m_UI.FindAction("SecondaryInteract", throwIfNotFound: true);
@@ -919,6 +939,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputActionMap m_UI;
     private IUIActions m_UIActionsCallbackInterface;
     private readonly InputAction m_UI_Navigate;
+    private readonly InputAction m_UI_Submit;
     private readonly InputAction m_UI_Interact;
     private readonly InputAction m_UI_Cancel;
     private readonly InputAction m_UI_SecondaryInteract;
@@ -934,6 +955,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         private @PlayerControls m_Wrapper;
         public UIActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Navigate => m_Wrapper.m_UI_Navigate;
+        public InputAction @Submit => m_Wrapper.m_UI_Submit;
         public InputAction @Interact => m_Wrapper.m_UI_Interact;
         public InputAction @Cancel => m_Wrapper.m_UI_Cancel;
         public InputAction @SecondaryInteract => m_Wrapper.m_UI_SecondaryInteract;
@@ -956,6 +978,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Navigate.started -= m_Wrapper.m_UIActionsCallbackInterface.OnNavigate;
                 @Navigate.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnNavigate;
                 @Navigate.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnNavigate;
+                @Submit.started -= m_Wrapper.m_UIActionsCallbackInterface.OnSubmit;
+                @Submit.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnSubmit;
+                @Submit.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnSubmit;
                 @Interact.started -= m_Wrapper.m_UIActionsCallbackInterface.OnInteract;
                 @Interact.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnInteract;
                 @Interact.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnInteract;
@@ -993,6 +1018,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Navigate.started += instance.OnNavigate;
                 @Navigate.performed += instance.OnNavigate;
                 @Navigate.canceled += instance.OnNavigate;
+                @Submit.started += instance.OnSubmit;
+                @Submit.performed += instance.OnSubmit;
+                @Submit.canceled += instance.OnSubmit;
                 @Interact.started += instance.OnInteract;
                 @Interact.performed += instance.OnInteract;
                 @Interact.canceled += instance.OnInteract;
@@ -1085,6 +1113,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     public interface IUIActions
     {
         void OnNavigate(InputAction.CallbackContext context);
+        void OnSubmit(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
         void OnCancel(InputAction.CallbackContext context);
         void OnSecondaryInteract(InputAction.CallbackContext context);
