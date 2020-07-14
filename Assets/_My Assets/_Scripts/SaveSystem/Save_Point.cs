@@ -7,6 +7,8 @@ public class Save_Point : MonoBehaviour
     gameManager gm;
     SaveManager sm;
 
+    [Tooltip("The distance that the player must be in to interact with the save point")]
+    public float distanceRange;
     public GameObject talkIndicator;
     bool canActivate;
 
@@ -29,11 +31,11 @@ public class Save_Point : MonoBehaviour
     }
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.layer == 10) //10 = player
+        if (other.gameObject.layer == 10 && Vector3.Distance(other.transform.position, transform.position) > distanceRange) //10 = player
         {
             talkIndicator.SetActive(true);
             canActivate = true;
-            gm.skyBoxDirectionalLerpValue=0.62f;
+            gm.skyBoxDirectionalLerpValue = 0.62f;
         }
     }
 

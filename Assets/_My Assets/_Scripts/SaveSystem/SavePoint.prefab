@@ -5064,8 +5064,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8474255099143423}
   - component: {fileID: 8474255099143422}
-  - component: {fileID: 8474255099143417}
   - component: {fileID: 8474255099143416}
+  - component: {fileID: 5727719943676948412}
+  - component: {fileID: 888012387742423046}
   m_Layer: 0
   m_Name: SavePoint
   m_TagString: Untagged
@@ -5109,19 +5110,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!135 &8474255099143417
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8474255099143420}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 4.037714
-  m_Center: {x: 0, y: -1.04, z: -0.04599762}
 --- !u!114 &8474255099143416
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5134,5 +5122,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ead4ae9695d79d4b86620b340a06897, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SaveCanvas: {fileID: 0}
+  distanceRange: 2
   talkIndicator: {fileID: 8474254763222089}
+--- !u!114 &5727719943676948412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8474255099143420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/UI Sounds/ui_save_beacon
+  PlayEvent: 3
+  StopEvent: 4
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 1
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 24.15015
+--- !u!65 &888012387742423046
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8474255099143420}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 36.4, y: 1, z: 36.4}
+  m_Center: {x: 0, y: 0, z: 0}
