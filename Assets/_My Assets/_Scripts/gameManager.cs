@@ -137,6 +137,11 @@ public class gameManager : MonoBehaviour
         //clickIndicator.SetActive(false);
     }
 
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+
     private void FixedUpdate()
     {
         skyBoxDirectionalLightLerp();

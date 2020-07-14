@@ -6,20 +6,20 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/_My Assets/_Scenes/Cutscene.unity
-    guid: d548153a2372962478d74d84cab4309c
-  - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
-  - enabled: 1
-    path: Assets/_My Assets/_Scenes/Ledoux_Test.unity
-    guid: 47b8a90cebb14cc4d8b76033b4793f4e
   - enabled: 1
     path: Assets/_My Assets/_Scenes/SceneMerge.unity
     guid: 669a6fe298b7a414cbc058b80206a3d5
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 1
+    path: Assets/_My Assets/_Scenes/DontDestroyTest.unity
+    guid: 2bb43eff73a11f74abc53d813120181e
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 795a07584c8165f499853aba9236fc0f,
       type: 2}

@@ -237,8 +237,94 @@ public class SaveManager : MonoBehaviour
         //Change scene if it is not the same as the current scene.
         if (!save.sceneName.Equals(gm.sceneName))
         {
-            //Play fade animation followed by scene transition
-            SceneManager.LoadScene(save.sceneName);
+            string oldSceneName = gm.sceneName;
+
+            //Play fade animation followed by transition and loading icon
+            SavingCanvas.SetBool("isLoading", true);
+            yield return new WaitForSecondsRealtime(.25f);
+            gm.fade.SetActive(false);
+            loadingIcon.SetActive(true);
+            gm.AllowPlayerToPause(false);
+            gm.ExitPauseMenuFunction();
+            
+            //Start Loading Scene
+            AsyncOperation loading = SceneManager.LoadSceneAsync(save.sceneName);
+
+           // AsyncOperation unLoading = SceneManager.UnloadSceneAsync(gm.sceneName);
+
+            //Stay in loading screen until loading is finished
+            while (!loading.isDone){ //&&!unLoading.isDone) {
+                yield return null;
+            }
+
+            //Load finished scene
+            gm.areaId = save.areaID;
+            gm.sceneName = save.sceneName;
+            stat.startTime = save.playTime;
+
+            //Adjust player properties
+            gm.player.health = save.playerHealth;
+            gm.player.maxHealth = save.playerMaxHealth;
+            gm.player.tolerance = save.playerTolerance;
+            gm.player.maxTolerance = save.playerMaxTolerance;
+            gm.player.stamina = save.playerStamina;
+            gm.player.maxStamina = save.playerMaxStamina;
+
+            //Adjust player position
+            gm.player.agent.isStopped = true;
+            gm.player.agent.ResetPath();
+            gm.player.agent.enabled = false;
+            gm.player.anim.SetBool("StayIdle", true);
+            gm.player.transform.position = new Vector3(save.playerPosition[0], save.playerPosition[1], save.playerPosition[2]); //May have to make gameManager start position for sceneName
+            gm.player.transform.rotation = new Quaternion(save.playerRotation[0], save.playerRotation[1], save.playerRotation[2], save.playerRotation[3]);
+
+            //current leader
+            gm.Leader = save.currentLeader;
+            for (int i = 0; i < gm.partyMembers.Length; i++)
+            {
+                gm.partyMembers[i] = save.partyMembers[i];
+            }
+            for (int i = 0; i < gm.extraMembers.Length; i++)
+            {
+                gm.extraMembers[i] = save.extraMembers[i];
+            }            //party Members
+
+            //Adjust camera (Assuming camera is traveling and following player)
+            //gm.mainCamera.ChangeCameraState((CameraController.MODE)save.cameraMode, gm.player.transform);
+            gm.mainCamera.ChangeCameraState(CameraController.MODE.FOLLOWING, gm.player.transform);
+            gm.mainCamera.QuickResetCamera();
+
+            //Adjust world settings
+            //RenderSettings.skybox = Resources.Load<Material>("/Skyboxes/SkySerie Freebie/" + save.skybox);
+            //DynamicGI.UpdateEnvironment();
+
+            ////Start Unloading PreviousScene
+            //Debug.Log("SCENE NAME: " + oldSceneName);
+            //loading = SceneManager.UnloadSceneAsync(oldSceneName);
+
+            ////Stay in loading screen until loading is finished
+            //while (!loading.isDone)
+            //{ //&&!unLoading.isDone) {
+            //    yield return null;
+            //}
+
+            //Play unfade animation and unpause
+            loadingIcon.SetActive(false);
+            gm.Player_UnPauseGame();
+            gm.AllowPlayerToPause(true);
+            SetAllSaveSlotsInteractable(true);
+
+            //Show unfade and resume (NEED TO BLOCK PLAYER INPUT TILL FADE IS DONE.)
+            yield return new WaitForSecondsRealtime(1f);
+            SavingCanvas.SetBool("isLoading", false);
+            yield return new WaitForSecondsRealtime(0.183f);
+
+            //Unpause Player
+            gm.player.agent.enabled = true;
+            gm.player.agent.isStopped = false;
+            gm.player.anim.SetBool("StayIdle", false);
+            //Turn off Canvas
+            SavingCanvas.gameObject.SetActive(false);
         }
         //If same scene, reload player position, properties, etc.
         else
@@ -358,6 +444,7 @@ public class SaveManager : MonoBehaviour
     public void ShowLoadMenu()
     {
         saveMode = false;
+        gm.pauseMenu.SetTrigger("Load");
         SavingCanvas.gameObject.SetActive(true);
         gm.fade.SetActive(true);
         Title.text = "LOAD GAME";
@@ -375,6 +462,7 @@ public class SaveManager : MonoBehaviour
         //Exit menu
         //Play animation
         SavingCanvas.SetTrigger("Exit");
+        gm.pauseMenu.SetTrigger("Unload");
         yield return new WaitForSecondsRealtime(delay);
 
         //Turn off canvas
