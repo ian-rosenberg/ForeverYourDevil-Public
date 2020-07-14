@@ -31,11 +31,17 @@ public class Save_Point : MonoBehaviour
     }
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.layer == 10 && Vector3.Distance(other.transform.position, transform.position) > distanceRange) //10 = player
+        if (other.gameObject.layer == 10 && Vector3.Distance(other.transform.position, transform.position) < distanceRange) //10 = player
         {
             talkIndicator.SetActive(true);
             canActivate = true;
             gm.skyBoxDirectionalLerpValue = 0.62f;
+        }
+        else
+        {
+            talkIndicator.SetActive(false);
+            canActivate = false;
+            gm.skyBoxDirectionalLerpValue = 1f;
         }
     }
 

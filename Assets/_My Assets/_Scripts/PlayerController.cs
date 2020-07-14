@@ -65,7 +65,7 @@ public class PlayerController : PartyMember
     {
         pControls = new PlayerControls();
         
-	pControls.Player.LeftClick.performed += AutoTravel;
+	    pControls.Player.LeftClick.performed += AutoTravel;
         pControls.Player.LeftClick.performed += CombatTravel;
         pControls.Player.Use.performed += Pickup;
         pControls.Player.Sprint.performed += Sprint;

@@ -5122,7 +5122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ead4ae9695d79d4b86620b340a06897, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanceRange: 2
+  distanceRange: 4.5
   talkIndicator: {fileID: 8474254763222089}
 --- !u!114 &5727719943676948412
 MonoBehaviour:
