@@ -48,7 +48,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""id"": ""25fb6ba2-c195-4c2d-a09b-d7cec199a4fa"",
                     ""expectedControlType"": ""Axis"",
                     ""processors"": """",
-                    ""interactions"": ""Press""
+                    ""interactions"": ""Hold""
                 },
                 {
                     ""name"": ""ResetCamera"",
