@@ -2366,6 +2366,7 @@ MonoBehaviour:
   normalWorld: {fileID: 1088832649}
   areaId: Level1
   sceneName: SceneMerge
+  chapterName: 'Chapter _: The Antithesis of Graphic Design'
   battleWorld: {fileID: 1624661013}
   pauseMenu: {fileID: 1093645177}
   CanvasAnimator: {fileID: 581841719555019186}
@@ -2399,6 +2400,8 @@ MonoBehaviour:
   - {fileID: 1115712647}
   - {fileID: 1115712646}
   - {fileID: 1115712645}
+  gm: {fileID: 0}
+  stat: {fileID: 0}
   saveMode: 1
   OutputDirectory: Saves
 --- !u!114 &1045097249
@@ -6100,6 +6103,16 @@ PrefabInstance:
       propertyPath: grid
       value: 
       objectReference: {fileID: 1539110194}
+    - target: {fileID: 3590538486205825694, guid: 456ea23be283ff443a9d3cda45f13747,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 0fefcccd2a0e23440a684af47cc3682e, type: 2}
+    - target: {fileID: 4934818583297454476, guid: 456ea23be283ff443a9d3cda45f13747,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f2467f112caf3254ab8852bbc56775d3, type: 2}
     - target: {fileID: 4934818583679702470, guid: 456ea23be283ff443a9d3cda45f13747,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -6160,6 +6173,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Penny
       objectReference: {fileID: 0}
+    - target: {fileID: 5884413185367414745, guid: 456ea23be283ff443a9d3cda45f13747,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 0fefcccd2a0e23440a684af47cc3682e, type: 2}
     - target: {fileID: 6922622052504382079, guid: 456ea23be283ff443a9d3cda45f13747,
         type: 3}
       propertyPath: playerGUI
