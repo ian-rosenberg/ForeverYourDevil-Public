@@ -40,6 +40,7 @@ public class gameManager : MonoBehaviour
 
     public string areaId = "Level1";
     public string sceneName;
+    public string chapterName = "Chapter _: The Antithesis of Graphic Design";
     public GameObject battleWorld; //Represents battlefield
 
     #endregion SOME VARIABLES IN THIS REGION MAY BE REMOVED ONCE COMBAT TRANSITION SYSTEM IS IMPROVED
@@ -114,6 +115,16 @@ public class gameManager : MonoBehaviour
 
     #endregion Player Actions
 
+    private void Awake()
+    {
+        if (FindObjectsOfType<gameManager>().Length > 1)
+        {
+            Destroy(gameObject);
+        }
+
+        DontDestroyOnLoad(gameObject);
+
+    }
     private void Start()
     {
         skyBoxDirectionalLerpValue = 1f;
@@ -135,11 +146,6 @@ public class gameManager : MonoBehaviour
         clickIndicAnim.SetTrigger("Off");
         yield return new WaitForSeconds(0.25f);
         //clickIndicator.SetActive(false);
-    }
-
-    private void Awake()
-    {
-        DontDestroyOnLoad(gameObject);
     }
 
     private void FixedUpdate()

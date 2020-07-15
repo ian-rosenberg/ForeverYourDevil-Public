@@ -51,6 +51,7 @@ public struct Save
     //Quest status
     //Quests completed
     //Health/tolerance/maxes of every party member
+    //Inventory
 
     /**
      * @brief create a blank save that has a notNull value of 0;
@@ -131,8 +132,8 @@ public class SaveManager : MonoBehaviour
 
     public Save_Slot[] saveSlotList;
 
-    private gameManager gm;
-    private StatManager stat;
+    public gameManager gm;
+    public StatManager stat;
     public bool saveMode = true; //true = Save, false = load;
 
     //Singleton creation
@@ -177,7 +178,7 @@ public class SaveManager : MonoBehaviour
         num,
         gm.areaId,
         gm.sceneName,
-        "Chapter _: The Antithesis of Graphic Design",
+        gm.chapterName,
         stat.GetTimeInSeconds(),
         gm.player.transform.position,
         gm.player.transform.rotation,
