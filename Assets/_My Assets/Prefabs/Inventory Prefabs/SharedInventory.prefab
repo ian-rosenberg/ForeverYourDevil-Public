@@ -192,7 +192,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: -25, y: 151}
+  m_AnchoredPosition: {x: 623.00006, y: 151}
   m_SizeDelta: {x: 150, y: 50}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &3563360100813559948
@@ -244,6 +244,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   up: 1
+  selectColor: {r: 0.55, g: 0.01, b: 0.1, a: 1}
 --- !u!1 &377068021135592949
 GameObject:
   m_ObjectHideFlags: 0
@@ -279,7 +280,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: -25, y: 51}
+  m_AnchoredPosition: {x: 623, y: 51}
   m_SizeDelta: {x: 150, y: 50}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &4240123130868678891
@@ -331,6 +332,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   up: 0
+  selectColor: {r: 0.55, g: 0.01, b: 0.1, a: 1}
 --- !u!1 &1164201967602959613
 GameObject:
   m_ObjectHideFlags: 0
